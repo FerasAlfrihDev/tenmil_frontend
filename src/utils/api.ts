@@ -95,7 +95,7 @@ rateLimitedApiClient.interceptors.response.use(
                 
                 localStorage.removeItem('access');
                 const refreshToken = localStorage.getItem('refresh') || '';
-                const refreshResponse = await apiClient.post('/token/refresh/', {
+                const refreshResponse:any = await apiClient.post('/token/refresh/', {
                     refresh: refreshToken,
                 });
                 
