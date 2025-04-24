@@ -54,7 +54,6 @@ const App: React.FC = () => {
           <BrowserRouter>
             <Routes>
               {/* system pathes */}
-              <Route path="/" element={<Dashboard />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               
