@@ -1,0 +1,72 @@
+// src/styles/_mixins.scss
+
+@import "./_variables";
+
+// Flex Center: For centering content
+@mixin flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+// Flex Layout: For horizontal or vertical flex layouts
+@mixin flex-layout($direction: row, $justify: flex-start, $align: stretch) {
+    display: flex;
+    flex-direction: $direction;
+    justify-content: $justify;
+    align-items: $align;
+}
+
+// Button Style: Reusable button design
+@mixin button($bg-color: $secondary-color, $text-color: $white-color, $hover-bg: $success-color) {
+    background-color: $bg-color;
+    color: $text-color;
+    border: none;
+    border-radius: $border-radius;
+    padding: $spacing-small $spacing-medium;
+    font-family: $font-family-text;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: $hover-bg;
+    }
+}
+
+// Card Style: Reusable card design
+@mixin card($bg-color: $white-color, $text-color: $text-color) {
+    background-color: $bg-color;
+    color: $text-color;
+    border-radius: $border-radius;
+    box-shadow: 0 4px 6px rgba($black-color, 0.1);
+    padding: $spacing-medium;
+}
+
+// Text Ellipsis: For text overflow handling
+@mixin text-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+// Responsive Utilities
+@mixin breakpoint($size) {
+    @if $size == small {
+        @media (max-width: 600px) {
+            @content;
+        }
+    } @else if $size == medium {
+        @media (max-width: 900px) {
+            @content;
+        }
+    } @else if $size == large {
+        @media (max-width: 1200px) {
+            @content;
+        }
+    } @else {
+        @media (min-width: 1201px) {
+            @content;
+        }
+    }
+}
