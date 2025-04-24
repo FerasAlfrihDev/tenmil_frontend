@@ -40,11 +40,11 @@ const ApiTable: React.FC<ApiTableProps> = ({
     // const [selectedRows, setSelectedRows] = useState<any[]>([]);
     // const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    // const [error, setError] = useState<string | null>(null);
 
     const fetchData = async () => {
         setLoading(true);
-        setError(null);
+        // setError(null);
 
         try {
             const response = await apiCall<any[]>(endpoint, 'GET', undefined, {
@@ -54,7 +54,7 @@ const ApiTable: React.FC<ApiTableProps> = ({
             });
             setData(response);
         } catch (err: any) {
-            setError(err.message);
+            // setError(err.message);
         } finally {
             setLoading(false);
         }

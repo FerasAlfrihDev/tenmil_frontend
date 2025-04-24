@@ -7,7 +7,7 @@ import { ApiFormProps } from "../../../types/ApiFormTypes";
 const MeterReadingTab =  () => {
     const id = useParams().id
     
-    const [endPoint, setEndPoint] = useState(`meter-readings/`)
+    const endPoint =`meter-readings/`
     const [data, setData] = useState()
     const [reloadTable, setReloadTable] = useState(false)
 

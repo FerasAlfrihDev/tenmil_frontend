@@ -20,7 +20,7 @@ const ApiSelect:FC<ApiSelectProps> = ({
 }) => {
         const [selected, setSelected] = useState<string | undefined>("0");
         const [options, setOptions] = useState<{"id": string, "name":string}[]>([{"id": "0", "name":`select ${label}`}]);
-        const [loading, setLoading] = useState(false);
+        // const [loading, setLoading] = useState(false);
         const [errors, setErrors] = useState<any[]|null>(null);
 
         const CreateButtonIcon:FC = () => {
@@ -32,7 +32,7 @@ const ApiSelect:FC<ApiSelectProps> = ({
         }
 
         const fetchData = async () => {
-            setLoading(true);
+            // setLoading(true);
             setErrors(null);          
             try {
                 
@@ -41,7 +41,7 @@ const ApiSelect:FC<ApiSelectProps> = ({
             } catch (err: any) {              
                 setErrors(err.response.data.errors);
             } finally {
-                setLoading(false);
+                // setLoading(false);
             }
           };
 

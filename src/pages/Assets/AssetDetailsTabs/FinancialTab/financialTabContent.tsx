@@ -4,34 +4,36 @@ import { useParams } from "react-router";
 import { apiCall } from "../../../../utils/api";
 import '../../../../styles/assetTabsStyles.scss'
 import { ApiForm } from "../../../../components";
+import { ApiFormProps } from "../../../../types/ApiFormTypes";
 
 
 const FianancialTabContent:FC = () => {
-    const [errors, setErrors] = useState<string|null>(null)
-    const [loading, setLoading] = useState(false);
+    // const [errors, setErrors] = useState<string|null>(null)
+    // const [loading, setLoading] = useState(false);
     const [data, setData] = useState<any>();
     const [ isNew, setIsNew] = useState(false)
     const id = useParams().id
     
     const fetchData = async () => {
-        setLoading(true);
-        setErrors(null);
+        // setLoading(true);
+        // setErrors(null);
         try {              
             const response = await apiCall<any[]>(`financial-reports/${id}`, 'GET');
             setData(response);
         } catch (err: any) {              
-            setErrors(err.response.data.errors);
+            // setErrors(err.response.data.errors);
         } finally {
-            setLoading(false);
+            // setLoading(false);
         }
     };
     
 
 
-    const apiFormParams = {
+    const apiFormParams:ApiFormProps = {
         isNew:isNew,
         setMasterData:setData,
         endPoint:'financial-reports',
+        formName:"",
         children:[
             {
                 label:"Asset",

@@ -22,7 +22,7 @@ const ApiTabs:FC<ApiTabsProps> = ({tabs, activeKey, className, intityName, disab
             title={tab.title}
             disabled={tab.disabled||false}
           >
-            <div className="text-center">
+            <div className={className ? `${className} text-center` : "text-center"}>
               {!disabled ? tab.content : <p>Save {intityName} to proceed</p>}
               </div>
           </Tab>

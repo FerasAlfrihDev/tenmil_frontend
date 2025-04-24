@@ -4,6 +4,7 @@ const GeneralTab = () => {
     const apiFormParams = {
          isNew:false,
         endPoint:"assets/equipments",
+        formName:"",
         children: [
           {
             label:"Make",
