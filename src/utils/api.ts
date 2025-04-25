@@ -6,7 +6,11 @@ import rateLimit from 'axios-rate-limit';
 export const getTenantName = (): string|null => {
     const hostname = window.location.hostname; // e.g., tenant_name.domain.com
     const parts = hostname.split('.');
-    return parts.length > 1 ? parts[0] : null; // Assume subdomain is the tenant_name
+    let tenant_name = parts.length > 1 ? parts[0] : null
+    if (tenant_name === 'www'){
+        tenant_name = null
+    }
+    return tenant_name; // Assume subdomain is the tenant_name
 };
 
 // Function to construct the base URL dynamically
