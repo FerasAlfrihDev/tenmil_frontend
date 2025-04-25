@@ -27,7 +27,8 @@ const accessToken = localStorage.getItem('access')
 const apiClient = axios.create({
     baseURL: getBaseUrl(),
     headers: {
-        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
         'Authorization': `Bearer ${accessToken}`
     },
 });
