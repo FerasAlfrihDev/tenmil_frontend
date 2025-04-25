@@ -102,6 +102,7 @@ rateLimitedApiClient.interceptors.response.use(
             localStorage.removeItem('access');
             localStorage.removeItem('refresh');
             window.location.href = `/login?next=${path || ''}`; // Redirect to login page
+            
             // try {
                 
             //     localStorage.removeItem('access');
