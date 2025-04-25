@@ -13,9 +13,9 @@ export const getTenantName = (): string|null => {
 export const getBaseUrl = (): string => {
     const tenantName = getTenantName();
     if (!tenantName) {
-        return `http://localhost:8000/v1/api/`; // Replace 'domain.com' with your actual domain
+        return `https://api.alfrih.com/v1/api/`; // Replace 'domain.com' with your actual domain
     }
-    return `http://${tenantName}.localhost:8000/v1/api/`; // Replace 'domain.com' with your actual domain
+    return `https://${tenantName}.alfrih.com/v1/api/`; // Replace 'domain.com' with your actual domain
 };
 
 // Create an Axios instance
