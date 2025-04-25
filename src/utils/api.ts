@@ -1,6 +1,9 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import axiosRetry from 'axios-retry';
 import rateLimit from 'axios-rate-limit';
+const env = process.env.NODE_ENV;
+console.log("env", env);
+const API_URL = env === 'development' ? `http://localhost:8000/v1/api/` : `https://api.alfrih.com/v1/api/`;
 
 // Function to get the tenant name from the hostname
 export const getTenantName = (): string|null => {
@@ -17,9 +20,11 @@ export const getTenantName = (): string|null => {
 export const getBaseUrl = (): string => {
     const tenantName = getTenantName();
     if (!tenantName) {
-        return `https://api.alfrih.com/v1/api/`; // Replace 'domain.com' with your actual domain
+        return API_URL; 
     }
-    return `https://${tenantName}.alfrih.com/v1/api/`; // Replace 'domain.com' with your actual domain
+    
+    const TENANT_URL = env === 'development' ? `http://${tenantName}.localhost:8000/v1/api/` : `https://${tenantName}.alfrih.com/v1/api/`; 
+    return TENANT_URL; 
 };
 
 // Create an Axios instance
