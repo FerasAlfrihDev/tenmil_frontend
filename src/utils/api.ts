@@ -1,7 +1,9 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import axiosRetry from 'axios-retry';
 import rateLimit from 'axios-rate-limit';
-const env = process.env.NODE_ENV;
+
+
+const env = import.meta.env.VITE_ENVIRONMENT;
 console.log("env", env);
 const API_URL = env === 'development' ? `http://localhost:8000/v1/api/` : `https://api.alfrih.com/v1/api/`;
 
@@ -40,12 +42,8 @@ const apiClient = axios.create({
 
 // Add retry logic
 axiosRetry(apiClient, {
-    retries: 0, // Retry up to 3 times
-    retryDelay: (retryCount) => retryCount * 1000, // Delay 1 second per retry
-    retryCondition: (error) => {
-        // Retry only for network errors or 5xx server errors
-        return error.response?.status! >= 500 || !error.response;
-    },
+    retries: 1,
+  shouldResetTimeout: false,
 });
 
 // Add rate limiting
@@ -84,7 +82,7 @@ rateLimitedApiClient.interceptors.response.use(
             const refreshToken = res.data.refresh;
             localStorage.setItem('access', accessToken);
             localStorage.setItem('refresh', refreshToken);
-            window.location.href = `/${path}`; // Redirect to login page
+            window.location.href = `/${path}`; // Redirect to previous page
         }
         return res;
     },
@@ -101,28 +99,36 @@ rateLimitedApiClient.interceptors.response.use(
             if (path == undefined ||  path == 'login' || path == 'register' || path == 'logout' || path == null) {
                 path = '' 
             }
-            try {
+            localStorage.removeItem('access');
+            localStorage.removeItem('refresh');
+            window.location.href = `/login?next=${path || ''}`; // Redirect to login page
+            // try {
                 
-                localStorage.removeItem('access');
-                const refreshToken = localStorage.getItem('refresh') || '';
-                const refreshResponse:any = await apiClient.post('/token/refresh/', {
-                    refresh: refreshToken,
-                });
+            //     localStorage.removeItem('access');
+            //     const refreshToken = localStorage.getItem('refresh') || '';
+
+            //     const refreshResponse:any = apiClient.post('/token/refresh/', {refresh: refreshToken});
+            //     if (refreshResponse.status === 401) {
+            //     localStorage.removeItem('access');
+            //     localStorage.removeItem('refresh');
+            //     window.location.href = `/login?next=${path || ''}`; // Redirect to login page
+
+            //     }
                 
-                const accessToken = refreshResponse.access; 
-                localStorage.setItem('refresh', refreshToken);
-                localStorage.setItem('access', accessToken);
-                window.location.href = `/${path}`; // Redirect to previous page
+            //     const accessToken = refreshResponse.access; 
+            //     localStorage.setItem('refresh', refreshToken);
+            //     localStorage.setItem('access', accessToken);
+            //     window.location.href = `/${path}`; // Redirect to previous page
 
-                originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
-                return apiClient(originalRequest); // Retry original request
+            //     // originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
+            //     // return apiClient(originalRequest); // Retry original request
 
-            } catch (refreshError) {
-                console.error('Token refresh failed:', refreshError);
-                localStorage.removeItem('access');
-                localStorage.removeItem('refresh');
-                window.location.href = `/login?next=${path || ''}`; // Redirect to login page
-            }
+            // } catch (refreshError) {
+            //     console.error('Token refresh failed:', refreshError);
+            //     localStorage.removeItem('access');
+            //     localStorage.removeItem('refresh');
+            //     window.location.href = `/login?next=${path || ''}`; // Redirect to login page
+            // }
         }
 
         console.error('Response Error:', error);
