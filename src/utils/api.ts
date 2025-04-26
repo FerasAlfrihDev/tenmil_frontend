@@ -102,7 +102,7 @@ rateLimitedApiClient.interceptors.response.use(
             localStorage.removeItem('access');
             localStorage.removeItem('refresh');
             window.location.href = `/login?next=${path || ''}`; // Redirect to login page
-            
+
             // try {
                 
             //     localStorage.removeItem('access');
@@ -131,7 +131,6 @@ rateLimitedApiClient.interceptors.response.use(
             //     window.location.href = `/login?next=${path || ''}`; // Redirect to login page
             // }
         }
-
         console.error('Response Error:', error);
         return Promise.reject(error);
     }
