@@ -25,7 +25,7 @@ export const getBaseUrl = (): string => {
         return API_URL; 
     }
     
-    const TENANT_URL = env === 'development' ? `http://${tenantName}.localhost:8000/v1/api/` : `https://${tenantName}.alfrih.com/v1/api/`; 
+    const TENANT_URL = env === 'development' ? `http://${tenantName}.localhost:8000/v1/api/` : `https://${tenantName}.api.alfrih.com/v1/api/`; 
     return TENANT_URL; 
 };
 
