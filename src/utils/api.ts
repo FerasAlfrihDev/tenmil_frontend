@@ -11,7 +11,7 @@ const API_URL = env === 'development' ? `http://localhost:8000/v1/api/` : `https
 export const getTenantName = (): string|null => {
     const hostname = window.location.hostname; // e.g., tenant_name.domain.com
     const parts = hostname.split('.');
-    let tenant_name = parts.length > 1 ? parts[0] : null
+    let tenant_name = parts.length > 2 ? parts[0] : null
     if (tenant_name === 'www'){
         tenant_name = null
     }
