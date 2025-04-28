@@ -63,6 +63,7 @@ const App: React.FC = () => {
     );
   }
   if (tenantError) {
+    console.log("App tenantError: ", tenantError);
     return <NotFoundPage />; // 🚨 Show 404 for missing tenant
   }
 
