@@ -9,7 +9,7 @@ import { ProtectedRoute } from './components';
 
 const getSubdomain = (): string | null => {
   const parts = window.location.hostname.split('.');
-  if (parts.length > 1) {
+  if (parts.length > 2) {
     return parts[0];
   }
   return null;
