@@ -9,6 +9,8 @@ import { ProtectedRoute } from './components';
 
 const getSubdomain = (): string | null => {
   const parts = window.location.hostname.split('.');
+  console.log("getSubdomain parts: ", parts.length);
+  
   if (parts.length > 2) {
     return parts[0];
   }
@@ -30,6 +32,8 @@ const App: React.FC = () => {
         }
       });
     }
+    
+    console.log("App useEffect subdomain: ", subdomain);
   }, [subdomain, tenant, setTenant]);
   
 
