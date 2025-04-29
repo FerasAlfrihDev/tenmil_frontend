@@ -1,23 +1,16 @@
 import { Routes, Route } from 'react-router-dom';
-import { AdminLayout, DashboardLayout, PublicLayout } from './layouts';
+import { AdminLayout, DashboardHomePage, DashboardLayout, PublicLayout } from './layouts';
 import { useAuth } from './context/AuthContext';
 import { useEffect, useState } from 'react';
 import { fetchTenantBySubdomain } from './utils/fakeApi';
 import { NotFoundPage } from './pages';
 import LoginPage from './pages/Authentication/LoginPage';
 import { ProtectedRoute } from './components';
+import { getTenantName } from './utils/api';
 
-const getSubdomain = (): string | null => {
-  const parts = window.location.hostname.split('.');
-  
-  if (parts.length > 2) {
-    return parts[0];
-  }
-  return null;
-};
 
 const App: React.FC = () => {
-  const subdomain = getSubdomain();
+  const subdomain =getTenantName();
   const { tenant, setTenant } = useAuth();
   const [tenantError, setTenantError] = useState(false); // NEW
 
@@ -73,7 +66,7 @@ const App: React.FC = () => {
                 <DashboardLayout />
             </ProtectedRoute>
           }>
-            {/* <Route index element={<DashboardHome />} /> */}
+            <Route index element={<DashboardHomePage />} />
             {/* <Route path="work-orders" element={<WorkOrdersPage />} />
             <Route path="assets" element={<AssetsPage />} />
             <Route path="reports" element={<ReportsPage />} />
