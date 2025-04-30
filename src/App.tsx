@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import { AdminCompaniesPage, AdminLayout, DashboardHomePage, DashboardLayout, PublicLayout } from './layouts';
+import { AdminCompaniesPage, AdminLayout, DashboardLayout, PublicLayout } from './layouts';
 import { useAuth } from './context/AuthContext';
 import { useEffect, useState } from 'react';
 import { fetchTenantBySubdomain } from './utils/fakeApi';

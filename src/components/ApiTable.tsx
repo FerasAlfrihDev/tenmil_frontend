@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiCall } from './../utils/api';
 import Table from 'react-bootstrap/Table';
-import { Form, Button, InputGroup, Spinner } from 'react-bootstrap';
-import LoadingModal from './LoadingModal';
+import { Form, Button, InputGroup } from 'react-bootstrap';
 import MaintenanceSpinner from './MaintenanceSpinner';
 
 interface ApiTableColumn {
