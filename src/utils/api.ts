@@ -10,7 +10,7 @@ console.log("API_URL", API_URL)
 export const getTenantName = (): string|null => {
     const hostname = window.location.hostname; // e.g., tenant_name.domain.com
     const parts = hostname.split('.');
-    let tenant_name = parts.length > 1 ? parts[0] : null
+    let tenant_name = parts.length > 2 ? parts[0] : null
     if (tenant_name === 'www'){
         tenant_name = null
     }
@@ -20,7 +20,7 @@ export const getTenantName = (): string|null => {
 // Function to construct the base URL dynamically
 export const getBaseUrl = (): string => {
     const tenantName = getTenantName();
-    if (!tenantName) {
+    if (!tenantName || tenantName=='admin') {
         return API_URL; 
     }
     const TENANT_URL = `${API_URL.split("//")[0]}//${tenantName}.${API_URL.split("//")[1]}`;

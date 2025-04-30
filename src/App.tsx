@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import { AdminLayout, DashboardHomePage, DashboardLayout, PublicLayout } from './layouts';
+import { AdminCompaniesPage, AdminLayout, DashboardHomePage, DashboardLayout, PublicLayout } from './layouts';
 import { useAuth } from './context/AuthContext';
 import { useEffect, useState } from 'react';
 import { fetchTenantBySubdomain } from './utils/fakeApi';
@@ -44,10 +44,10 @@ const App: React.FC = () => {
             <AdminLayout />
             </ProtectedRoute>
           }>
-            {/* <Route index element={<AdminHome />} />
-            <Route path="companies" element={<CompaniesPage />} />
-            <Route path="users" element={<UsersPage />} />
-            <Route path="settings" element={<AdminSettingsPage />} /> */}
+            {/* <Route index element={<AdminHome />} /> */}
+            <Route path="admin/companies" element={<AdminCompaniesPage />} />
+            {/* <Route path="users" element={<UsersPage />} /> */}
+            {/* <Route path="settings" element={<AdminSettingsPage />} />  */}
           </Route>
       </Routes>
     );
@@ -66,7 +66,7 @@ const App: React.FC = () => {
                 <DashboardLayout />
             </ProtectedRoute>
           }>
-            <Route index element={<DashboardHomePage />} />
+            {/* <Route index element={<DashboardHomePage />} /> */}
             {/* <Route path="work-orders" element={<WorkOrdersPage />} />
             <Route path="assets" element={<AssetsPage />} />
             <Route path="reports" element={<ReportsPage />} />
