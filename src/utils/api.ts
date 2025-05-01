@@ -167,7 +167,7 @@ export const apiCall = async <T>(
             cache[cacheKey] = response.data;
         }
 
-        return response.data;
+        return response.data.data;
     } catch (error: any) {        
         return Promise.reject(error);
     }
