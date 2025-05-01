@@ -5,7 +5,6 @@ const DashboardHomePage:React.FC = () => {
         <div className="flex flex-col items-center justify-center h-screen">
             <ApiTable
                 endpoint="tenants/tenant"
-                createButtonLink='company'
                 columns={[
                     { key: 'schema_name', label: 'Sub Doamin', type: 'string' },
                     { key: 'name', label: 'Name', type: 'string' }
