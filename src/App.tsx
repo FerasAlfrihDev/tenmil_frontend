@@ -67,7 +67,7 @@ const App: React.FC = () => {
                 <DashboardLayout />
             </ProtectedRoute>
           }>
-          <Route path="/form/:entity/:id" element={<DynamicFormPage />} />
+          <Route path="/form/:encodedEntity/:id" element={<DynamicFormPage />} />
             {/* <Route index element={<DashboardHomePage />} /> */}
             {/* <Route path="work-orders" element={<WorkOrdersPage />} />
             <Route path="assets" element={<AssetsPage />} />

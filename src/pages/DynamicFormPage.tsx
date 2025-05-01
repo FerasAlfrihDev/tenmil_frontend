@@ -2,11 +2,11 @@ import { useLocation, useParams } from 'react-router-dom';
 import ApiForm from '../components/ApiForm';
 
 const DynamicFormPage = () => {
-  const decodeEndpoint = (encoded: string) => encoded.replace('__', '/');
-  const { entity, id } = useParams();
   const { state } = useLocation();
   const formTemplate = state?.formTemplate || [];
-  const decodedEndpoint = decodeEndpoint(entity || '');
+  const decodeEndpoint = (encoded: string) => encoded.replace('__', '/');
+  const { encodedEntity, id } = useParams();
+  const decodedEndpoint = decodeEndpoint(encodedEntity || '');
 
   return (
     <ApiForm
