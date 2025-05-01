@@ -175,7 +175,7 @@ const ApiTable: React.FC<ApiTableProps> = ({
 
         {hasCreateButton && createButtonLink && (
           <Button className="btn btn-primary" onClick={() => handleDynamicFormRoute('new')}>
-            <i className="bi bi-plus-circle me-2" /> {createButtonName || "create"}
+            <i className="bi bi-plus-circle me-2" /> {createButtonName}
           </Button>
         )}
       </div>
@@ -253,14 +253,7 @@ const ApiTable: React.FC<ApiTableProps> = ({
                       return (
                         <td key={col.key} className="text-center">
                           {value ? (
-                            <Button
-                              size="sm"
-                              variant="outline-primary"
-                              className="me-2"
-                              onClick={() => handleDynamicFormRoute(row.id)}
-                            >
-                              <i className="bi bi-pencil" />
-                            </Button>
+                            <i className="bi bi-check-circle-fill text-success"></i>
                           ) : (
                             <i className="bi bi-x-circle-fill text-danger"></i>
                           )}
@@ -289,9 +282,9 @@ const ApiTable: React.FC<ApiTableProps> = ({
                       size="sm"
                       variant="outline-primary"
                       className="me-2"
-                      onClick={() => goToEditPage(row.id)}
+                      onClick={() => handleDynamicFormRoute(row.id)}
                     >
-                      <i className="bi bi-pencil"></i>
+                      <i className="bi bi-pencil" />
                     </Button>
                     <Button
                       size="sm"
