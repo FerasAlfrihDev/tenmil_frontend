@@ -2,7 +2,6 @@ import { FC, useEffect, useState } from "react";
 import { ApiFormProps } from "../types/ApiFormTypes";
 import { Button, ButtonGroup, Col, Row, Card, Form, Spinner, Alert } from "react-bootstrap";
 import { apiCall } from "../utils/api";
-import LoadingModal from "./LoadingModal";
 import InputGroup from "./InputGroup";
 import ApiSelect from "./ApiSelect";
 import { useParams } from "react-router";
