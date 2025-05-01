@@ -14,8 +14,20 @@ const AdminCompaniesPage: React.FC = () => {
           { key: 'name', label: 'Company Name', type: 'string' },
         ]}
         formTemplate={[
-          { component: 'InputGroup', name: 'schema_name', label: 'Subdomain', required: true },
-          { component: 'InputGroup', name: 'name', label: 'Company Name', required: true }
+          {
+            label:"Name",
+            name:"name",
+            size:3,
+            component:"InputGroup",
+            required:true
+          },
+          {
+            label:"Sub Doamin",
+            name:"schema_name",
+            size:3,
+            component:"InputGroup",
+            required:true
+          },
         ]}
       />
     </div>
