@@ -49,7 +49,7 @@ const ApiTable: React.FC<ApiTableProps> = ({
   const navigate = useNavigate();
   
   const handleDynamicFormRoute = (id: string | 'new') => {
-    navigate(`/form/${endpoint}/${id}`, {
+    navigate(`/form/${encodeEndpoint(endpoint)}/${id}`, {
       state: {
         formTemplate: formTemplate || columns.map((col) => ({
           component: 'InputGroup',
@@ -108,6 +108,8 @@ const ApiTable: React.FC<ApiTableProps> = ({
   //   if (!createButtonLink) return;
   //   window.location.href = `${createButtonLink}/${id}`;
   // };
+
+  const encodeEndpoint = (endpoint: string) => endpoint.replace('/', '__');
 
   const handleColumnFilterChange = (key: string, value: any) => {
     setColumnFilters((prev) => ({
