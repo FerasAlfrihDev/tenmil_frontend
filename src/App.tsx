@@ -61,13 +61,13 @@ const App: React.FC = () => {
   return (
     <>
       <Routes>
+        <Route path="/form/:encodedEntity/:id" element={<DynamicFormPage />} />
         <Route path="/login" element={<LoginPage isAdmin={false} />} />
           <Route path="/" element={
             <ProtectedRoute>
                 <DashboardLayout />
             </ProtectedRoute>
           }>
-          <Route path="/form/:encodedEntity/:id" element={<DynamicFormPage />} />
             {/* <Route index element={<DashboardHomePage />} /> */}
             {/* <Route path="work-orders" element={<WorkOrdersPage />} />
             <Route path="assets" element={<AssetsPage />} />
