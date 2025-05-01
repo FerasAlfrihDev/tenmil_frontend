@@ -7,6 +7,7 @@ import { NotFoundPage } from './pages';
 import LoginPage from './pages/Authentication/LoginPage';
 import { ProtectedRoute } from './components';
 import { getTenantName } from './utils/api';
+import DynamicFormPage from './pages/DynamicFormPage';
 
 
 const App: React.FC = () => {
@@ -66,6 +67,7 @@ const App: React.FC = () => {
                 <DashboardLayout />
             </ProtectedRoute>
           }>
+          <Route path="/form/:entity/:id" element={<DynamicFormPage />} />
             {/* <Route index element={<DashboardHomePage />} /> */}
             {/* <Route path="work-orders" element={<WorkOrdersPage />} />
             <Route path="assets" element={<AssetsPage />} />

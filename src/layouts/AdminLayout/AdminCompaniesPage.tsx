@@ -9,10 +9,13 @@ const AdminCompaniesPage: React.FC = () => {
 
       <ApiTable
         endpoint="tenants/tenant"
-        createButtonLink="company"
         columns={[
-          { key: 'schema_name', label: 'Subdomain', type: 'string', sortable: true },
-          { key: 'name', label: 'Company Name', type: 'string', sortable: true }
+          { key: 'schema_name', label: 'Subdomain', type: 'string' },
+          { key: 'name', label: 'Company Name', type: 'string' },
+        ]}
+        formTemplate={[
+          { component: 'InputGroup', name: 'schema_name', label: 'Subdomain', required: true },
+          { component: 'InputGroup', name: 'name', label: 'Company Name', required: true }
         ]}
       />
     </div>

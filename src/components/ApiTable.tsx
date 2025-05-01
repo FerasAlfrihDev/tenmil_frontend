@@ -3,13 +3,14 @@ import { apiCall } from './../utils/api';
 import Table from 'react-bootstrap/Table';
 import { Form, Button, InputGroup } from 'react-bootstrap';
 import MaintenanceSpinner from './MaintenanceSpinner';
+import { useNavigate } from 'react-router-dom';
 
 interface ApiTableColumn {
   key: string;
   label: string;
   type?: 'number' | 'date' | 'string' | 'boolean' | 'object';
   render?: (row: any) => React.ReactNode;
-  sortable?: boolean; // New field
+  sortable?: boolean;
 }
 
 interface ApiTableProps {
@@ -23,6 +24,7 @@ interface ApiTableProps {
   reload?: boolean;
   setReload?: (reload: boolean) => void;
   filters?: any;
+  formTemplate?: any[];
 }
 
 const ApiTable: React.FC<ApiTableProps> = ({
@@ -35,6 +37,7 @@ const ApiTable: React.FC<ApiTableProps> = ({
   reload = false,
   filters = {},
   setReload,
+  formTemplate,
 }) => {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -43,7 +46,22 @@ const ApiTable: React.FC<ApiTableProps> = ({
   const [columnFilters, setColumnFilters] = useState<Record<string, any>>({});
   const [showFilters, setShowFilters] = useState(false);
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' | null }>({ key: '', direction: null });
-
+  const navigate = useNavigate();
+  
+  const handleDynamicFormRoute = (id: string | 'new') => {
+    navigate(`/form/${endpoint}/${id}`, {
+      state: {
+        formTemplate: formTemplate || columns.map((col) => ({
+          component: 'InputGroup',
+          name: col.key,
+          label: col.label,
+          type: col.type === 'date' ? 'date' : 'text',
+          required: true,
+        }))
+      }
+    });
+  };
+  
   const fetchData = async () => {
     setLoading(true);
     setError(null);
@@ -156,9 +174,9 @@ const ApiTable: React.FC<ApiTableProps> = ({
         </div>
 
         {hasCreateButton && createButtonLink && (
-          <a href={`${createButtonLink}/new`} className="btn btn-primary">
-            <i className="bi bi-plus-circle me-2"></i> {createButtonName}
-          </a>
+          <Button className="btn btn-primary" onClick={() => handleDynamicFormRoute('new')}>
+            <i className="bi bi-plus-circle me-2" /> {createButtonName}
+          </Button>
         )}
       </div>
 
@@ -235,7 +253,14 @@ const ApiTable: React.FC<ApiTableProps> = ({
                       return (
                         <td key={col.key} className="text-center">
                           {value ? (
-                            <i className="bi bi-check-circle-fill text-success"></i>
+                            <Button
+                              size="sm"
+                              variant="outline-primary"
+                              className="me-2"
+                              onClick={() => handleDynamicFormRoute(row.id)}
+                            >
+                              <i className="bi bi-pencil" />
+                            </Button>
                           ) : (
                             <i className="bi bi-x-circle-fill text-danger"></i>
                           )}
