@@ -104,10 +104,10 @@ const ApiTable: React.FC<ApiTableProps> = ({
     }
   }, [reload]);
 
-  const goToEditPage = (id: string) => {
-    if (!createButtonLink) return;
-    window.location.href = `${createButtonLink}/${id}`;
-  };
+  // const goToEditPage = (id: string) => {
+  //   if (!createButtonLink) return;
+  //   window.location.href = `${createButtonLink}/${id}`;
+  // };
 
   const handleColumnFilterChange = (key: string, value: any) => {
     setColumnFilters((prev) => ({
