@@ -12,6 +12,7 @@ export type ApiFormProps = {
     setMasterData?: (data: any) => void,
     addAnotherButton?: boolean,
     singleIntityForm?: { [key: string]: any },
+    formTemplate:any[],
    
 
 }

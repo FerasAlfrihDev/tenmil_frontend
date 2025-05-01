@@ -1,4 +1,4 @@
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 import ApiForm from '../components/ApiForm';
 
 const DynamicFormPage = () => {
@@ -7,13 +7,17 @@ const DynamicFormPage = () => {
   const decodeEndpoint = (encoded: string) => encoded.replace('__', '/');
   const { encodedEntity, id } = useParams();
   const decodedEndpoint = decodeEndpoint(encodedEntity || '');
+  const [searchParams] = useSearchParams();
+  const isViewOnly = searchParams.get('view') === 'true';
 
-  return (
+  return (    
     <ApiForm
       formName={decodedEndpoint}
       endPoint={decodedEndpoint}
       isNew={id === 'new'}
       children={formTemplate}
+      viewOnly={isViewOnly}
+      formTemplate={formTemplate}
     />
   );
 };

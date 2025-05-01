@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Col, Row, Card, Form, Spinner, Alert } from "react
 import { apiCall } from "../utils/api";
 import InputGroup from "./InputGroup";
 import ApiSelect from "./ApiSelect";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import ApiSwitch from "./ApiSwitch";
 import TextArea from "./TextArea";
 import MaintenanceSpinner from "./MaintenanceSpinner";
@@ -28,11 +28,26 @@ const ApiForm: FC<ApiFormProps> = ({
     const [id, setId] = useState<string | undefined>(props.isNew ? undefined : params.id);
     const [addNew, setAddNew] = useState(false);
     const [isNew, setIsNew] = useState(props.isNew);
-  
+    const [readOnly, setReadOnly] = useState(viewOnly);
     const handleHiddenFields = (fieldName: string, value: any) => {
       setFormData({ ...formData, [fieldName]: value });
     };
-  
+    const encodeEndpoint = (endpoint: string) => endpoint.replace('/', '__');
+    const navigate = useNavigate();
+    
+    const handleDynamicFormRoute = (id: string | 'new') => {
+      navigate(`/form/${encodeEndpoint(props.endPoint)}/${id}`, {
+        state: {
+          formTemplate: props.children || data.map((col:any) => ({
+            component: 'InputGroup',
+            name: col.key,
+            label: col.label,
+            type: col.type === 'date' ? 'date' : 'text',
+            required: true,
+          }))
+        }
+      });
+    };
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       e.stopPropagation();
@@ -50,12 +65,12 @@ const ApiForm: FC<ApiFormProps> = ({
           setData(response);
   
           if (isNew && !singleIntityForm) {
-            let redirectPath = location.pathname;
-            if (!addNew) {
-              redirectPath = redirectPath.replace("new", `${response.id}`);
+            if (!addNew){
+              setData(null)
+              handleDynamicFormRoute('new')
             }
-            setData(undefined);
-            window.location.href = redirectPath;
+            handleDynamicFormRoute(response.id)
+            
           }
   
           props.setMasterData && (isNew ? props.setMasterData({}) : props.setMasterData(response));
@@ -75,9 +90,6 @@ const ApiForm: FC<ApiFormProps> = ({
       setData({ ...data, ...formData });
     }, [formData]);
     
-    useEffect(() => {
-      console.log(data);
-    }, [data]);
 
     useEffect(() => {
       if (!isNew) {
@@ -86,7 +98,7 @@ const ApiForm: FC<ApiFormProps> = ({
           setErrors(null);
   
           try {
-            const response = await apiCall<any>(singleIntityForm ? props.endPoint : `${props.endPoint}/${id}`, 'GET', {}, singleIntityForm);
+            const response = await apiCall<any>(singleIntityForm ? props.endPoint : `${props.endPoint}/${id}`, 'GET', {}, singleIntityForm);            
             setData(response);
             if (singleIntityForm) setId(response.id);
           } catch (err: any) {
@@ -114,6 +126,18 @@ const ApiForm: FC<ApiFormProps> = ({
   
         <Card className="shadow-sm border-0">
           <Card.Body>
+            {readOnly && (
+              <div className="d-flex justify-content-end mb-3">
+                <Button
+                  variant="outline-primary"
+                  onClick={() => {
+                    setReadOnly(false)
+                  }}
+                >
+                  <i className="bi bi-pencil me-2" /> Edit
+                </Button>
+              </div>
+            )}
             <Form onSubmit={handleSubmit} noValidate validated={validated}>
               <h5 className="mb-4 fw-bold text-primary">{formName}</h5>
   
@@ -121,17 +145,17 @@ const ApiForm: FC<ApiFormProps> = ({
                 <Row>
                   {props.children?.map((child: any) => (
                     <Col key={child.name}>
-                      {renderFormField(child, setFormData, formData)}
+                      {renderFormField(child, setFormData, formData, data, readOnly)}
                     </Col>
                   ))}
                 </Row>
               ) : (
                 <>
-                  {props.children?.map((child: any) => renderFormField(child, setFormData, formData))}
+                  {props.children?.map((child: any) => renderFormField(child, setFormData, formData, data, readOnly))}
                 </>
               )}
   
-              {!viewOnly && (
+              {!readOnly && (
                 <ButtonGroup className="d-flex justify-content-end mt-4">
                   <Button variant="primary" type="submit" disabled={loading}>
                     {loading ? (
@@ -161,7 +185,7 @@ const ApiForm: FC<ApiFormProps> = ({
                         </>
                       ) : (
                         <>
-                          <i className="bi bi-node-plus me-2"></i> Save and Add Another
+                          <i className="bi bi-node-plus me-2">Save and Add Another</i> 
                         </>
                       )}
                     </Button>
@@ -176,7 +200,7 @@ const ApiForm: FC<ApiFormProps> = ({
   };
   
   // Helper to render child fields
-  function renderFormField(child: any, setFormData: any, formData: any) {
+  function renderFormField(child: any, setFormData: any, formData: any, data:any, readOnly: boolean) {
     const handelInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
       };
@@ -193,7 +217,8 @@ const ApiForm: FC<ApiFormProps> = ({
         return (
           <InputGroup
             {...child}
-            value={child.value}
+            disabled={readOnly || child.disabled}
+            value={formData[child.name] ?? data?.[child.name] ?? child.value ?? ''}
             onChange={handelInputChange}
           />
         );
@@ -201,7 +226,8 @@ const ApiForm: FC<ApiFormProps> = ({
         return (
           <TextArea
             {...child}
-            value={child.value}
+            disabled={readOnly || child.disabled}
+            value={formData[child.name] ?? data?.[child.name] ?? child.value ?? ''}
             onChange={handelInputChange}
           />
         );
@@ -209,7 +235,8 @@ const ApiForm: FC<ApiFormProps> = ({
         return (
           <ApiSelect
             {...child}
-            value={child.value}
+            disabled={readOnly || child.disabled}
+            value={formData[child.name] ?? data?.[child.name] ?? child.value ?? ''}
             handelSelectChange={handelSelectChange}
           />
         );
@@ -217,7 +244,8 @@ const ApiForm: FC<ApiFormProps> = ({
         return (
           <ApiSwitch
             {...child}
-            value={child.value}
+            disabled={readOnly || child.disabled}
+            value={formData[child.name] ?? data?.[child.name] ?? child.value ?? ''}
             handelSwitchChange={handelSwitchChange}
           />
         );

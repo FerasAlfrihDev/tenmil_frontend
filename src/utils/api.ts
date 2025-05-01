@@ -10,7 +10,7 @@ console.log("API_URL", API_URL)
 export const getTenantName = (): string|null => {
     const hostname = window.location.hostname; // e.g., tenant_name.domain.com
     const parts = hostname.split('.');
-    let tenant_name = parts.length > 2 ? parts[0] : null
+    let tenant_name = parts.length > 1 ? parts[0] : null
     if (tenant_name === 'www'){
         tenant_name = null
     }
@@ -167,7 +167,7 @@ export const apiCall = async <T>(
             cache[cacheKey] = response.data;
         }
 
-        return response.data.data;
+        return response.data;
     } catch (error: any) {        
         return Promise.reject(error);
     }

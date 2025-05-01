@@ -9,6 +9,8 @@ const AdminCompaniesPage: React.FC = () => {
 
       <ApiTable
         endpoint="tenants/tenant"
+        hasCreateButton={true}
+        clickToView={true}
         columns={[
           { key: 'schema_name', label: 'Subdomain', type: 'string' },
           { key: 'name', label: 'Company Name', type: 'string' },

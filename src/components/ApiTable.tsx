@@ -19,25 +19,25 @@ interface ApiTableProps {
   paginate?: boolean;
   pageSize?: number;
   hasCreateButton?: boolean;
-  createButtonLink?: string;
   createButtonName?: string;
   reload?: boolean;
   setReload?: (reload: boolean) => void;
   filters?: any;
   formTemplate?: any[];
+  clickToView?: boolean;
 }
 
 const ApiTable: React.FC<ApiTableProps> = ({
   endpoint,
   columns,
   hasCreateButton = true,
-  createButtonLink,
   createButtonName = 'Create',
   pageSize = 10,
   reload = false,
   filters = {},
   setReload,
   formTemplate,
+  clickToView=false,
 }) => {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -47,7 +47,8 @@ const ApiTable: React.FC<ApiTableProps> = ({
   const [showFilters, setShowFilters] = useState(false);
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' | null }>({ key: '', direction: null });
   const navigate = useNavigate();
-  
+  const encodeEndpoint = (endpoint: string) => endpoint.replace('/', '__');
+
   const handleDynamicFormRoute = (id: string | 'new') => {
     navigate(`/form/${encodeEndpoint(endpoint)}/${id}`, {
       state: {
@@ -109,8 +110,6 @@ const ApiTable: React.FC<ApiTableProps> = ({
   //   window.location.href = `${createButtonLink}/${id}`;
   // };
 
-  const encodeEndpoint = (endpoint: string) => endpoint.replace('/', '__');
-
   const handleColumnFilterChange = (key: string, value: any) => {
     setColumnFilters((prev) => ({
       ...prev,
@@ -132,8 +131,14 @@ const ApiTable: React.FC<ApiTableProps> = ({
     }
   };
 
-  const handleDelete = (id: string) => {
-    console.log('Delete item with ID:', id);
+  const handleDelete = async(id: string) => {
+    try{
+      await apiCall<any[]>(`${endpoint}/${id}`, 'DELETE');
+      fetchData();
+    }catch {
+      setError("Something went wrong while deleting the data");
+    }
+
     // Here you can later open a modal, confirm, then call a DELETE API
   };
 
@@ -175,7 +180,7 @@ const ApiTable: React.FC<ApiTableProps> = ({
           </Button>
         </div>
 
-        {hasCreateButton && createButtonLink && (
+        {hasCreateButton && (
           <Button className="btn btn-primary" onClick={() => handleDynamicFormRoute('new')}>
             <i className="bi bi-plus-circle me-2" /> {createButtonName}
           </Button>
@@ -240,14 +245,20 @@ const ApiTable: React.FC<ApiTableProps> = ({
                 </td>
               </tr>
             </tbody>
-          ) : data.length > 0 ? (
+          ) : data ? (
             <tbody>
               {data.map((row, index) => (
                 <tr
-                  key={index}
-                  style={{ cursor: 'pointer' }}
-                  className="table-hover-row"
-                >
+                key={index}
+                style={{ cursor: clickToView ? 'pointer' : 'default' }}
+                className="table-hover-row"
+                onClick={() => {
+                  if (clickToView) {
+                    // const encoded = encodeEndpoint(endpoint);
+                    handleDynamicFormRoute(`${row.id}?view=true`)
+                  }
+                }}
+              >
                   {columns.map((col) => {
                     let value = row[col.key];
 
@@ -280,21 +291,28 @@ const ApiTable: React.FC<ApiTableProps> = ({
 
                   {/* Actions Column */}
                   <td className="text-center">
-                    <Button
-                      size="sm"
-                      variant="outline-primary"
-                      className="me-2"
-                      onClick={() => handleDynamicFormRoute(row.id)}
-                    >
-                      <i className="bi bi-pencil" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline-danger"
-                      onClick={() => handleDelete(row.id)}
-                    >
-                      <i className="bi bi-trash"></i>
-                    </Button>
+                  <Button
+                    size="sm"
+                    variant="outline-primary"
+                    className="me-2"
+                    onClick={(e) => {
+                      e.stopPropagation(); // 🚫 Prevent row click
+                      handleDynamicFormRoute(row.id);
+                    }}
+                  >
+                    <i className="bi bi-pencil" />
+                  </Button>
+
+                  <Button
+                    size="sm"
+                    variant="outline-danger"
+                    onClick={(e) => {
+                      e.stopPropagation(); // 🚫 Prevent row click
+                      handleDelete(row.id);
+                    }}
+                  >
+                    <i className="bi bi-trash" />
+                  </Button>
                   </td>
                 </tr>
               ))}
