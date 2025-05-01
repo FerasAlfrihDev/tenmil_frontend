@@ -8,6 +8,7 @@ import ApiSelect from "./ApiSelect";
 import { useParams } from "react-router";
 import ApiSwitch from "./ApiSwitch";
 import TextArea from "./TextArea";
+import MaintenanceSpinner from "./MaintenanceSpinner";
 // import ErrorAlert from "./ErrorAlert";
 
 const ApiForm: FC<ApiFormProps> = ({
@@ -105,7 +106,7 @@ const ApiForm: FC<ApiFormProps> = ({
   
     return (
       <div className="api-form-container">
-        {loading && <LoadingModal loading={loading} />}
+        {loading && <MaintenanceSpinner size={64} />}
         {errors?.error && <Alert variant="danger">{errors.error}</Alert>}
   
         <Card className="shadow-sm border-0">
