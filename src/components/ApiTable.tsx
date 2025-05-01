@@ -175,7 +175,7 @@ const ApiTable: React.FC<ApiTableProps> = ({
 
         {hasCreateButton && createButtonLink && (
           <Button className="btn btn-primary" onClick={() => handleDynamicFormRoute('new')}>
-            <i className="bi bi-plus-circle me-2" /> {createButtonName}
+            <i className="bi bi-plus-circle me-2" /> {createButtonName || "create"}
           </Button>
         )}
       </div>
