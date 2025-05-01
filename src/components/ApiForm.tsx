@@ -74,7 +74,11 @@ const ApiForm: FC<ApiFormProps> = ({
     useEffect(() => {
       setData({ ...data, ...formData });
     }, [formData]);
-  
+    
+    useEffect(() => {
+      console.log(data);
+    }, [data]);
+
     useEffect(() => {
       if (!isNew) {
         const fetchData = async () => {
