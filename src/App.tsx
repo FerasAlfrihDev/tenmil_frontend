@@ -39,6 +39,7 @@ const App: React.FC = () => {
   if (subdomain === 'admin') {
     return (
       <Routes>
+        <Route path="/form/:encodedEntity/:id" element={<DynamicFormPage />} />
         <Route path="/login" element={<LoginPage isAdmin={true} />} />
           <Route path="/" element={
             <ProtectedRoute>
