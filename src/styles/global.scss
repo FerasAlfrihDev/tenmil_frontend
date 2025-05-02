@@ -12,7 +12,13 @@
     }
   }
   
-  .maintenance-spinner {
-    padding: 1rem;
+  .modal-content {
+    background-color: transparent !important;
+    box-shadow: none; // optional: removes shadow if you want a floating look
+    border: none;     // optional: removes border
+  }
+  
+  .modal-body {
+    background-color: transparent !important;
   }
   

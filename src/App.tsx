@@ -39,7 +39,6 @@ const App: React.FC = () => {
   if (subdomain === 'admin') {
     return (
       <Routes>
-        <Route path="/form/:encodedEntity/:id" element={<DynamicFormPage />} />
         <Route path="/login" element={<LoginPage isAdmin={true} />} />
           <Route path="/" element={
             <ProtectedRoute>
@@ -47,6 +46,7 @@ const App: React.FC = () => {
             </ProtectedRoute>
           }>
             {/* <Route index element={<AdminHome />} /> */}
+            <Route path="/form/:encodedEntity/:id" element={<DynamicFormPage />} />
             <Route path="admin/companies" element={<AdminCompaniesPage />} />
             {/* <Route path="users" element={<UsersPage />} /> */}
             {/* <Route path="settings" element={<AdminSettingsPage />} />  */}
@@ -62,13 +62,13 @@ const App: React.FC = () => {
   return (
     <>
       <Routes>
-        <Route path="/form/:encodedEntity/:id" element={<DynamicFormPage />} />
         <Route path="/login" element={<LoginPage isAdmin={false} />} />
           <Route path="/" element={
             <ProtectedRoute>
                 <DashboardLayout />
             </ProtectedRoute>
           }>
+            <Route path="/form/:encodedEntity/:id" element={<DynamicFormPage />} />
             {/* <Route index element={<DashboardHomePage />} /> */}
             {/* <Route path="work-orders" element={<WorkOrdersPage />} />
             <Route path="assets" element={<AssetsPage />} />
