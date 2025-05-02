@@ -11,10 +11,10 @@ export const getTenantName = () => {
     const hostname = window.location.hostname; // e.g., tenant_name.domain.com
     const parts = hostname.split('.');
     let tenant_name;
-    if (import.meta.env.VITE_ENVIRONMENT ===  "development") {
-        parts.length > 1 ?   parts[0] :  null
-    } else {
+    if (import.meta.env.VITE_ENVIRONMENT ===  "production") {
         parts.length > 2 ?   parts[0] :  null
+    } else {
+        parts.length > 1 ?   parts[0] :  null
     }
     if (tenant_name === 'www'){
         tenant_name = null
