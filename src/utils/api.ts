@@ -12,9 +12,9 @@ export const getTenantName = () => {
     const parts = hostname.split('.');
     let tenant_name;
     if (import.meta.env.VITE_ENVIRONMENT ===  "production") {
-        parts.length > 2 ?   parts[0] :  null
+        tenant_name = parts.length > 2 ?   parts[0] :  null
     } else {
-        parts.length > 1 ?   parts[0] :  null
+        tenant_name = parts.length > 1 ?   parts[0] :  null
     }
     if (tenant_name === 'www'){
         tenant_name = null
