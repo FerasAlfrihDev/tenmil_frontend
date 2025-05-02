@@ -10,7 +10,7 @@ console.log("API_URL", API_URL)
 export const getTenantName = (): string|null => {
     const hostname = window.location.hostname; // e.g., tenant_name.domain.com
     const parts = hostname.split('.');
-    let tenant_name = parts.length > 1 ? parts[0] : null
+    let tenant_name = import.meta.env.VITE_ENVIRONMENT ===  "development" ? (parts.length > 1 ?   parts[0] :  null) : (parts.length > 2 ?   parts[0] :  null)
     if (tenant_name === 'www'){
         tenant_name = null
     }
