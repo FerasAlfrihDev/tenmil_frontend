@@ -7,10 +7,15 @@ const API_URL =  import.meta.env.VITE_BASE_URL
 console.log("API_URL", API_URL)
 
 // Function to get the tenant name from the hostname
-export const getTenantName = (): string|null => {
+export const getTenantName = () => {
     const hostname = window.location.hostname; // e.g., tenant_name.domain.com
     const parts = hostname.split('.');
-    let tenant_name = import.meta.env.VITE_ENVIRONMENT ===  "development" ? (parts.length > 1 ?   parts[0] :  null) : (parts.length > 2 ?   parts[0] :  null)
+    let tenant_name;
+    if (import.meta.env.VITE_ENVIRONMENT ===  "development") {
+        parts.length > 1 ?   parts[0] :  null
+    } else {
+        parts.length > 2 ?   parts[0] :  null
+    }
     if (tenant_name === 'www'){
         tenant_name = null
     }
