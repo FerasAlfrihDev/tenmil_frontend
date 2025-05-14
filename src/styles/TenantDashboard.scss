@@ -1,0 +1,70 @@
+.tenant-dashboard {
+    .stat-card {
+      background-color: #fff;
+      border-left: 4px solid #6D4C41;
+      transition: transform 0.2s ease;
+    }
+  
+    .hover-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    }
+  
+    .stat-value {
+      color: #6D4C41;
+      font-size: 1.75rem;
+    }
+  
+    .chart-placeholder {
+      width: 100%;
+      height: 200px;
+      border: 2px dashed #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #aaa;
+      background-color: #f9f9f9;
+      border-radius: 6px;
+    }
+  
+    .task-list,
+    .activity-log {
+      list-style: none;
+      padding-left: 0;
+  
+      li {
+        font-size: 0.95rem;
+        color: #333;
+  
+        i {
+          font-size: 1rem;
+          color: #6D4C41;
+        }
+      }
+    }
+  
+    .asset-table {
+      th {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        color: #666;
+      }
+  
+      td {
+        vertical-align: middle;
+      }
+    }
+  
+    .badge.bg-success {
+      background-color: #6D4C41 !important;
+    }
+  
+    .badge.bg-danger {
+      background-color: #C62828 !important;
+    }
+  
+    .progress-bar {
+      font-size: 0.75rem;
+    }
+  }
+  

@@ -5,6 +5,7 @@ const DashboardHomePage:React.FC = () => {
         <div className="flex flex-col items-center justify-center h-screen">
             <ApiTable
                 endpoint="tenants/tenant"
+                tableName="Tenants"
                 columns={[
                     { key: 'schema_name', label: 'Sub Doamin', type: 'string' },
                     { key: 'name', label: 'Name', type: 'string' }

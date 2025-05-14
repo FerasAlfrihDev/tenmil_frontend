@@ -1,13 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
-import { AdminCompaniesPage, AdminLayout, DashboardLayout, PublicLayout } from './layouts';
+import { AdminLayout, DashboardLayout, PublicLayout } from './layouts';
 import { useAuth } from './context/AuthContext';
 import { useEffect, useState } from 'react';
 import { fetchTenantBySubdomain } from './utils/fakeApi';
-import { NotFoundPage } from './pages';
+import { AdminCompaniesPage, AdminUsersPage, DynamicFormPage, NotFoundPage, TenantDashboardPage, TenantWorkOrderPage, TennantAssetsPage } from './pages';
 import LoginPage from './pages/Authentication/LoginPage';
 import { ProtectedRoute } from './components';
 import { getTenantName } from './utils/api';
-import DynamicFormPage from './pages/DynamicFormPage';
 
 
 const App: React.FC = () => {
@@ -27,6 +26,9 @@ const App: React.FC = () => {
     }
   }, [subdomain, tenant, setTenant]);
   
+  if (tenantError) {
+    return <NotFoundPage />; // 🚨 Show 404 for missing tenant
+  }
 
   if (!subdomain) {
     return (
@@ -45,19 +47,17 @@ const App: React.FC = () => {
             <AdminLayout />
             </ProtectedRoute>
           }>
-            {/* <Route index element={<AdminHome />} /> */}
-            <Route path="/form/:encodedEntity/:id" element={<DynamicFormPage />} />
-            <Route path="admin/companies" element={<AdminCompaniesPage />} />
-            {/* <Route path="users" element={<UsersPage />} /> */}
-            {/* <Route path="settings" element={<AdminSettingsPage />} />  */}
-          </Route>
+          {/* <Route index element={<AdminHome />} /> */}
+          <Route path="/form/:encodedEntity/:id" element={<DynamicFormPage />} />
+          {/* <Route path="/generated/:encodedEntity/:id" element={<GeneratedEntityPage />} /> */}
+          <Route path="admin/companies" element={<AdminCompaniesPage />} />
+          <Route path="admin/users" element={<AdminUsersPage />} />
+          {/* <Route path="settings" element={<AdminSettingsPage />} />  */}
+        </Route>
       </Routes>
     );
   }
-  if (tenantError) {
-    return <NotFoundPage />; // 🚨 Show 404 for missing tenant
-  }
-
+  
   // Tenant dashboard layout with nested routing
   return (
     <>
@@ -69,8 +69,11 @@ const App: React.FC = () => {
             </ProtectedRoute>
           }>
             <Route path="/form/:encodedEntity/:id" element={<DynamicFormPage />} />
-            {/* <Route index element={<DashboardHomePage />} /> */}
-            {/* <Route path="work-orders" element={<WorkOrdersPage />} />
+            {/* <Route path="/generated/:encodedEntity/:id" element={<GeneratedEntityPage />} /> */}
+            <Route index element={<TenantDashboardPage />} />
+            <Route path="/work-orders" element={<TenantWorkOrderPage />} />
+            <Route path="/assets" element={<TennantAssetsPage />} />
+            {/* 
             <Route path="assets" element={<AssetsPage />} />
             <Route path="reports" element={<ReportsPage />} />
             <Route path="settings" element={<SettingsPage />} /> */}
