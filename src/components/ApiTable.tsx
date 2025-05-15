@@ -27,6 +27,7 @@ interface ApiTableProps {
   clickToView?: boolean;
   tableName: string;
   useGeneratedPage?: boolean;
+  detailsPageLink?: string;
 }
 
 const ApiTable: React.FC<ApiTableProps> = ({
@@ -41,8 +42,12 @@ const ApiTable: React.FC<ApiTableProps> = ({
   formTemplate,
   clickToView = false,
   tableName,
-  useGeneratedPage = false,
+  useGeneratedPage = true,
+  detailsPageLink=null
 }) => {
+  if (!useGeneratedPage && !detailsPageLink) {
+    throw new Error('Either useGeneratedPage or detailsPageLink must be provided');
+  }
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -56,8 +61,8 @@ const ApiTable: React.FC<ApiTableProps> = ({
 
   const handleRoute = (id: string | 'new', isView: boolean = false) => {
     const path = useGeneratedPage
-      ? `/generated/${encodeEndpoint(endpoint)}/${id}`
-      : `/form/${encodeEndpoint(endpoint)}/${id}`;
+      ? `/form/${encodeEndpoint(endpoint)}/${id}`
+      : `${detailsPageLink}/${id}`;
 
     navigate(path, {
       state: {
@@ -68,7 +73,7 @@ const ApiTable: React.FC<ApiTableProps> = ({
           type: col.type === 'date' ? 'date' : 'text',
           required: true,
         })),
-        ...(isView ? { viewOnly: true } : {})
+        ...({viewOnly: isView})
       }
     });
   };

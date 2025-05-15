@@ -7,7 +7,8 @@ const TennantAssetsPage: React.FC = () => {
       tableName="Assets"
       hasCreateButton={true}
       clickToView={true}
-      useGeneratedPage={false}
+      useGeneratedPage={false}      
+      detailsPageLink={`/assets`}
       columns={[
         { key: 'code', label: 'Code', type: 'string' },
         { key: 'name', label: 'Name', type: 'string' },

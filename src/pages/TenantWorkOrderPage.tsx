@@ -8,6 +8,7 @@ const TenantWorkOrderPage: React.FC = () => {
       hasCreateButton={true}
       clickToView={true}
       useGeneratedPage={false}
+      detailsPageLink={`/work-orders`}
       columns={[
         { key: 'asset', label: 'Asset', type: 'object' },
         { key: 'status', label: 'Status', type: 'object' },

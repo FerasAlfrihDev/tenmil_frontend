@@ -8,7 +8,7 @@ const DynamicFormPage = () => {
   const { encodedEntity, id } = useParams();
   const decodedEndpoint = decodeEndpoint(encodedEntity || '');
   const [searchParams] = useSearchParams();
-  const isViewOnly = searchParams.get('view') === 'true';
+  const isViewOnly = searchParams.get('viewOnly') === 'true';
 
   return (    
     <ApiForm
