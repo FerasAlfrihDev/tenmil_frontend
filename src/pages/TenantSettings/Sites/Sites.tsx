@@ -9,6 +9,8 @@ const Sites:FC= () => {
                 <ApiTable
                     tableName="Sites"
                     endpoint="company/site"
+                    useGeneratedPage={false}
+                    detailsPageLink="sites"
                     columns={[
                         { key: 'code', label: 'Code' },
                         { key: 'name', label: 'Name' },
@@ -19,6 +21,8 @@ const Sites:FC= () => {
                 <ApiTable
                     tableName="Locations"
                     endpoint="company/location"
+                    useGeneratedPage={false}
+                    detailsPageLink="locations"
                     columns={[
                         { key: 'site', label: 'Site', type:"object"},
                         { key: 'address', label: 'Address' },

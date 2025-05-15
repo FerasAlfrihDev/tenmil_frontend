@@ -8,6 +8,8 @@ const WorkOrderTables:FC = () => {
                 <ApiTable
                     tableName="Work Order Status"
                     endpoint="work-orders/status"
+                    useGeneratedPage={false}
+                    detailsPageLink="work-order-status"
                     columns={[
                         { key: 'name', label: 'Name' },
                         { key: 'control', label: 'Control' , type:"object"},

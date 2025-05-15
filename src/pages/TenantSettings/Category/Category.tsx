@@ -9,7 +9,8 @@ const Category: React.FC = () => {
                 <ApiTable
                     tableName='Categories'
                     endpoint="assets/equipment_category"
-                    // createButtonLink='settings/category'
+                    useGeneratedPage={false}
+                    detailsPageLink="category"
                     columns={[
                         { key: 'name', label: 'Name' },
                         { key: 'slug', label: 'Slug' },
