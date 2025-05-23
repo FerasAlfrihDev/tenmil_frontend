@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { fetchTenantBySubdomain } from './utils/fakeApi';
 import { AdminCompaniesPage, AdminUsersPage, DynamicFormPage, NotFoundPage, TenantAssetsDetailsPage, TenantDashboardPage, TenantReportsPage, TenantWorkOrderDetailsPage, TenantWorkOrderPage, TennantAssetsPage } from './pages';
 import LoginPage from './pages/Authentication/LoginPage';
-import { ProtectedRoute } from './components';
 import { getTenantName } from './utils/api';
 import { MiscCostsTab, MiscCostTabDetails, MiscCostTabNew, WorkOrderChecklistForm, WorkOrderChecklistNew, WorkOrderChicklistTab, WorkOrderLogsForm, WorkOrderLogsTab } from './pages/WorkOrderDetailsTabs';
 import TenantSettingsPage from './pages/TenantSettings/TenantSettingsPage';
@@ -52,11 +51,7 @@ const App: React.FC = () => {
     return (
       <Routes>
         <Route path="/login" element={<LoginPage isAdmin={true} />} />
-          <Route path="/" element={
-            <ProtectedRoute>
-            <AdminLayout />
-            </ProtectedRoute>
-          }>
+          <Route path="/" element={<AdminLayout />}>
           {/* <Route index element={<AdminHome />} /> */}
           <Route path="/form/:encodedEntity/:id" element={<DynamicFormPage />} />
           {/* <Route path="/generated/:encodedEntity/:id" element={<GeneratedEntityPage />} /> */}
@@ -73,11 +68,7 @@ const App: React.FC = () => {
     <>
       <Routes>
         <Route path="/login" element={<LoginPage isAdmin={false} />} />
-          <Route path="/" element={
-            <ProtectedRoute>
-                <DashboardLayout />
-            </ProtectedRoute>
-          }>
+          <Route path="/" element={<DashboardLayout />}>
             <Route path="/form/:encodedEntity/:id" element={<DynamicFormPage />} />
             {/* <Route path="/generated/:encodedEntity/:id" element={<GeneratedEntityPage />} /> */}
             <Route index element={<TenantDashboardPage />} />

@@ -33,7 +33,7 @@ const TenantWorkOrderDetailsPage: React.FC = () => {
         },
       ]
     return (
-        <>
+        <div className="flex-vertical main-content">
             <ApiForm
                 formName='Work Order'
                 endPoint={'work-orders/work_order'}
@@ -50,7 +50,7 @@ const TenantWorkOrderDetailsPage: React.FC = () => {
                 disabled={isNew} 
                 intityName="Work Order"
             />
-        </>
+        </div>
     );
 }
 

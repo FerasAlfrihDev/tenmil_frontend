@@ -7,7 +7,7 @@ type FakeTenant = {
   };
   
   const fakeTenants: FakeTenant[] = [
-    { id: 1, name: "AKM Industries", subdomain: "akm" },
+    { id: 1, name: "Tenmil", subdomain: "tenmil" },
     { id: 2, name: "DXT Solutions", subdomain: "dxt" },
     { id: 3, name: "Pioneer Maintenance", subdomain: "pioneer" },
     { id: 3, name: "TNDC", subdomain: "tndc" },

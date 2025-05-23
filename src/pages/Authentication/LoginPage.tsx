@@ -1,45 +1,59 @@
+// pages/public/LoginPage.tsx
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import { FooterSection } from '../../layouts/PublicLayout';
+import { apiCall } from '../../utils/api';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage: React.FC<{ isAdmin: boolean }> = ({ isAdmin }) => {
-  const { login } = useAuth();
+  const { tenant } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { tenant } = useAuth();
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Fake login
-    login({
-      id: 1,
-      name: isAdmin ? 'Platform Admin' : 'Tenant User',
-      email,
-      role: isAdmin ? 'admin' : 'user'
-    });
-
-    navigate('/');
+    setLoading(true);
+    setError(null);
+  
+    try {
+      const res = await apiCall<any>('/users/login', 'POST', JSON.stringify({
+        email,
+        password,
+        is_admin: isAdmin,
+      }));
+      
+      // Store tokens
+      localStorage.setItem('access', res.data.access);
+      localStorage.setItem('refresh', res.data.refresh);
+      
+      // Redirect back to next page or home
+      const next = new URLSearchParams(window.location.search).get('next');
+      const safeNext = next && next.startsWith('/') ? next : '/';
+      navigate(safeNext);
+    } catch (err: any) {
+      setError(err.message || 'Login failed');
+    } finally {
+      setLoading(false);
+    }
   };
+  
 
   return (
     <div className="container d-flex flex-column justify-content-center align-items-center bg-light min-vh-100 min-vw-100">
-      {/* Brand */}
       <div className="text-center mb-4">
         <h1 className="text-primary fw-bold">Tenmil</h1>
         <h1 className="text-muted">
-          {isAdmin 
-            ? 'Platform Admin Login' 
-            : tenant?.name 
+          {isAdmin
+            ? 'Platform Admin Login'
+            : tenant?.name
               ? `${tenant.name} Login`
-              : 'Tenant Login'
-          }
+              : 'Tenant Login'}
         </h1>
       </div>
 
-      {/* Login Card */}
       <div className="card shadow p-4" style={{ width: '100%', maxWidth: '400px' }}>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
@@ -66,10 +80,13 @@ const LoginPage: React.FC<{ isAdmin: boolean }> = ({ isAdmin }) => {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary w-100">Login</button>
+          {error && <div className="alert alert-danger">{error}</div>}
+          <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
         </form>
       </div>
-      <FooterSection/>
+      <FooterSection />
     </div>
   );
 };

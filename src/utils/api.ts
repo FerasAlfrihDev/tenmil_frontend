@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import axiosRetry from 'axios-retry';
 import rateLimit from 'axios-rate-limit';
 
@@ -76,70 +76,43 @@ rateLimitedApiClient.interceptors.request.use(
 
 // Response Interceptor
 rateLimitedApiClient.interceptors.response.use(
-    
-    (response: AxiosResponse) => {
-        let res = response.data;
-        let path = location.href
-        path = path.split('?next=')[1];
-        
-        if (res.data?.access) {
-            const accessToken = res.data.access;
-            const refreshToken = res.data.refresh;
-            localStorage.setItem('access', accessToken);
-            localStorage.setItem('refresh', refreshToken);
-            window.location.href = `/${path}`; // Redirect to previous page
-        }
-        return res;
-    },
+    (response) => response, // just return
     async (error: any) => {
-        const originalRequest = error.config;
-
-        // Handle token refresh for 401 Unauthorized
-        if (error.response?.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
-            let path =location.pathname
-            if (path.startsWith('/')){
-                path = path.slice(1)
-            }
-            if (path == undefined ||  path == 'login' || path == 'register' || path == 'logout' || path == null) {
-                path = '' 
-            }
-            localStorage.removeItem('access');
-            localStorage.removeItem('refresh');
-            window.location.href = `/login?next=${path || ''}`; // Redirect to login page
-
-            // try {
-                
-            //     localStorage.removeItem('access');
-            //     const refreshToken = localStorage.getItem('refresh') || '';
-
-            //     const refreshResponse:any = apiClient.post('/token/refresh/', {refresh: refreshToken});
-            //     if (refreshResponse.status === 401) {
-            //     localStorage.removeItem('access');
-            //     localStorage.removeItem('refresh');
-            //     window.location.href = `/login?next=${path || ''}`; // Redirect to login page
-
-            //     }
-                
-            //     const accessToken = refreshResponse.access; 
-            //     localStorage.setItem('refresh', refreshToken);
-            //     localStorage.setItem('access', accessToken);
-            //     window.location.href = `/${path}`; // Redirect to previous page
-
-            //     // originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
-            //     // return apiClient(originalRequest); // Retry original request
-
-            // } catch (refreshError) {
-            //     console.error('Token refresh failed:', refreshError);
-            //     localStorage.removeItem('access');
-            //     localStorage.removeItem('refresh');
-            //     window.location.href = `/login?next=${path || ''}`; // Redirect to login page
-            // }
+      const originalRequest = error.config;
+  
+      if (error.response?.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+  
+        const refreshToken = localStorage.getItem('refresh');
+        if (!refreshToken) {
+          const currentPath = window.location.pathname + window.location.search;
+          const encodedPath = encodeURIComponent(currentPath || '/');
+          window.location.href = `/login?next=${encodedPath}`;
+          return;
         }
-        console.error('Response Error:', error);
-        return Promise.reject(error);
+  
+        try {
+          const refreshResponse = await apiClient.post('/token/refresh/', { refresh: refreshToken });
+          const newAccess = refreshResponse.data.access;
+  
+          localStorage.setItem('access', newAccess);
+          originalRequest.headers['Authorization'] = `Bearer ${newAccess}`;
+  
+          return apiClient(originalRequest);
+        } catch (refreshError) {
+          localStorage.removeItem('access');
+          localStorage.removeItem('refresh');
+  
+          const currentPath = window.location.pathname + window.location.search;
+          const encodedPath = encodeURIComponent(currentPath || '/');
+          window.location.href = `/login?next=${encodedPath}`;
+          return;
+        }
+      }
+  
+      return Promise.reject(error);
     }
-);
+  );
 
 // Reusable API Call Method
 export const apiCall = async <T>(
