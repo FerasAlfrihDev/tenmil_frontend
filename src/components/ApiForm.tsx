@@ -4,7 +4,8 @@ import { Button, ButtonGroup, Col, Row, Card, Form, Spinner, Alert } from "react
 import { apiCall } from "../utils/api";
 import InputGroup from "./InputGroup";
 import ApiSelect from "./ApiSelect";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
+// import { useNavigate, useParams } from "react-router";
 import ApiSwitch from "./ApiSwitch";
 import TextArea from "./TextArea";
 import MaintenanceSpinner from "./MaintenanceSpinner";
@@ -26,28 +27,27 @@ const ApiForm: FC<ApiFormProps> = ({
     const [validated, setValidated] = useState(false);
     const [formData, setFormData] = useState({});
     const [id, setId] = useState<string | undefined>(props.isNew ? undefined : params.id);
-    const [addNew, setAddNew] = useState(false);
+    // const [addNew, setAddNew] = useState(false);
     const [isNew, setIsNew] = useState(props.isNew);
-    const [readOnly, setReadOnly] = useState(viewOnly);
     const handleHiddenFields = (fieldName: string, value: any) => {
       setFormData({ ...formData, [fieldName]: value });
     };
-    const encodeEndpoint = (endpoint: string) => endpoint.replace('/', '__');
-    const navigate = useNavigate();
+    // const encodeEndpoint = (endpoint: string) => endpoint.replace('/', '__');
+    // const navigate = useNavigate();
     
-    const handleDynamicFormRoute = (id: string | 'new') => {
-      navigate(`/form/${encodeEndpoint(props.endPoint)}/${id}`, {
-        state: {
-          formTemplate: props.children || data.map((col:any) => ({
-            component: 'InputGroup',
-            name: col.key,
-            label: col.label,
-            type: col.type === 'date' ? 'date' : 'text',
-            required: true,
-          }))
-        }
-      });
-    };
+    // const handleDynamicFormRoute = (id: string | 'new') => {
+    //   navigate(`/form/${encodeEndpoint(props.endPoint)}/${id}`, {
+    //     state: {
+    //       formTemplate: props.children || data.map((col:any) => ({
+    //         component: 'InputGroup',
+    //         name: col.key,
+    //         label: col.label,
+    //         type: col.type === 'date' ? 'date' : 'text',
+    //         required: true,
+    //       }))
+    //     }
+    //   });
+    // };
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       e.stopPropagation();
@@ -64,14 +64,14 @@ const ApiForm: FC<ApiFormProps> = ({
           const response = await apiCall<any>(url, method, formData);
           setData(response);
   
-          if (isNew && !singleIntityForm) {
-            if (!addNew){
-              setData(null)
-              handleDynamicFormRoute('new')
-            }
-            handleDynamicFormRoute(response.id)
+          // if (isNew && !singleIntityForm) {
+          //   if (!addNew){
+          //     setData(null)
+          //     handleDynamicFormRoute('new')
+          //   }
+          //   handleDynamicFormRoute(response.id)
             
-          }
+          // }
   
           props.setMasterData && (isNew ? props.setMasterData({}) : props.setMasterData(response));
         } catch (err: any) {
@@ -118,7 +118,7 @@ const ApiForm: FC<ApiFormProps> = ({
         child.hidden && handleHiddenFields(child.name, child.value || "");
       });
     }, []);
-  
+
     return (
       <div className="api-form-container">
         {loading && <MaintenanceSpinner size={64} />}
@@ -126,18 +126,6 @@ const ApiForm: FC<ApiFormProps> = ({
   
         <Card className="shadow-sm border-0">
           <Card.Body>
-            {readOnly && (
-              <div className="d-flex justify-content-end mb-3">
-                <Button
-                  variant="outline-primary"
-                  onClick={() => {
-                    setReadOnly(false)
-                  }}
-                >
-                  <i className="bi bi-pencil me-2" /> Edit
-                </Button>
-              </div>
-            )}
             <Form onSubmit={handleSubmit} noValidate validated={validated}>
               <h5 className="mb-4 fw-bold text-primary">{formName}</h5>
   
@@ -145,53 +133,52 @@ const ApiForm: FC<ApiFormProps> = ({
                 <Row>
                   {props.children?.map((child: any) => (
                     <Col key={child.name}>
-                      {renderFormField(child, setFormData, formData, data, readOnly)}
+                      {renderFormField(child, setFormData, formData, data)}
                     </Col>
                   ))}
                 </Row>
               ) : (
                 <>
-                  {props.children?.map((child: any) => renderFormField(child, setFormData, formData, data, readOnly))}
+                  {props.children?.map((child: any) => renderFormField(child, setFormData, formData, data))}
                 </>
               )}
   
-              {!readOnly && (
-                <ButtonGroup className="d-flex justify-content-end mt-4">
-                  <Button variant="primary" type="submit" disabled={loading}>
+              
+              <ButtonGroup className="d-flex justify-content-end mt-4">
+                <Button variant="primary" type="submit" disabled={loading}>
+                  {loading ? (
+                    <>
+                      <Spinner animation="border" size="sm" className="me-2" /> Saving...
+                    </>
+                  ) : (
+                    <>
+                      <i className="bi bi-floppy me-2"></i> {submitButtonName}
+                    </>
+                  )}
+                </Button>
+
+                {isNew && addAnotherButton && (
+                  <Button
+                    variant="secondary"
+                    type="button"
+                    disabled={loading}
+                    onClick={() => {
+                      // setAddNew(true);
+                      document.getElementById(`submit-${formName}`)?.click();
+                    }}
+                  >
                     {loading ? (
                       <>
                         <Spinner animation="border" size="sm" className="me-2" /> Saving...
                       </>
                     ) : (
                       <>
-                        <i className="bi bi-floppy me-2"></i> {submitButtonName}
+                        <i className="bi bi-node-plus me-2">Save and Add Another</i> 
                       </>
                     )}
                   </Button>
-  
-                  {isNew && addAnotherButton && (
-                    <Button
-                      variant="secondary"
-                      type="button"
-                      disabled={loading}
-                      onClick={() => {
-                        setAddNew(true);
-                        document.getElementById(`submit-${formName}`)?.click();
-                      }}
-                    >
-                      {loading ? (
-                        <>
-                          <Spinner animation="border" size="sm" className="me-2" /> Saving...
-                        </>
-                      ) : (
-                        <>
-                          <i className="bi bi-node-plus me-2">Save and Add Another</i> 
-                        </>
-                      )}
-                    </Button>
-                  )}
-                </ButtonGroup>
-              )}
+                )}
+              </ButtonGroup>
             </Form>
           </Card.Body>
         </Card>
@@ -200,7 +187,9 @@ const ApiForm: FC<ApiFormProps> = ({
   };
   
   // Helper to render child fields
-  function renderFormField(child: any, setFormData: any, formData: any, data:any, readOnly: boolean) {
+  function renderFormField(child: any, setFormData: any, formData: any, data:any) {
+    console.log("renderFormField", child);
+    
     const handelInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
       };
@@ -217,7 +206,7 @@ const ApiForm: FC<ApiFormProps> = ({
         return (
           <InputGroup
             {...child}
-            disabled={readOnly || child.disabled}
+            disabled={child.disabled || false}
             value={formData[child.name] ?? data?.[child.name] ?? child.value ?? ''}
             onChange={handelInputChange}
           />
@@ -226,7 +215,7 @@ const ApiForm: FC<ApiFormProps> = ({
         return (
           <TextArea
             {...child}
-            disabled={readOnly || child.disabled}
+            disabled={child.disabled || false}
             value={formData[child.name] ?? data?.[child.name] ?? child.value ?? ''}
             onChange={handelInputChange}
           />
@@ -235,7 +224,7 @@ const ApiForm: FC<ApiFormProps> = ({
         return (
           <ApiSelect
             {...child}
-            disabled={readOnly || child.disabled}
+            disabled={child.disabled || false}
             value={formData[child.name] ?? data?.[child.name] ?? child.value ?? ''}
             handelSelectChange={handelSelectChange}
           />
@@ -244,7 +233,7 @@ const ApiForm: FC<ApiFormProps> = ({
         return (
           <ApiSwitch
             {...child}
-            disabled={readOnly || child.disabled}
+            disabled={child.disabled || false}
             value={formData[child.name] ?? data?.[child.name] ?? child.value ?? ''}
             handelSwitchChange={handelSwitchChange}
           />

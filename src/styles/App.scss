@@ -117,8 +117,8 @@ h4, h5, h6{
   left: 0;
   min-width: 100%;
 }
-.bg-light {
-  background-color: $secondary !important;
+.sidebar{
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 .card{
   background-color: $light !important;
@@ -130,6 +130,8 @@ h4, h5, h6{
   border-bottom: 1px solid $secondary !important;
 }
 .nav-link:hover{
-  color: $light !important;
-  background-color: $secondary;
+  color: $warning !important;
+}
+.text-muted{
+  color: $muted !important;
 }

@@ -28,6 +28,7 @@ interface ApiTableProps {
   tableName: string;
   useGeneratedPage?: boolean;
   detailsPageLink?: string;
+  hasActionKeys?:boolean
 }
 
 const ApiTable: React.FC<ApiTableProps> = ({
@@ -40,10 +41,10 @@ const ApiTable: React.FC<ApiTableProps> = ({
   filters = {},
   setReload,
   formTemplate,
-  clickToView = false,
   tableName,
   useGeneratedPage = true,
-  detailsPageLink=null
+  detailsPageLink=null,
+  hasActionKeys=true
 }) => {
   if (!useGeneratedPage && !detailsPageLink) {
     throw new Error('Either useGeneratedPage or detailsPageLink must be provided');
@@ -59,7 +60,7 @@ const ApiTable: React.FC<ApiTableProps> = ({
 
   const encodeEndpoint = (endpoint: string) => endpoint.replace('/', '__');
 
-  const handleRoute = (id: string | 'new', isView: boolean = false) => {
+  const handleRoute = (id: string | 'new') => {
     const path = useGeneratedPage
       ? `/form/${encodeEndpoint(endpoint)}/${id}`
       : `${detailsPageLink}/${id}`;
@@ -73,7 +74,6 @@ const ApiTable: React.FC<ApiTableProps> = ({
           type: col.type === 'date' ? 'date' : 'text',
           required: true,
         })),
-        ...({viewOnly: isView})
       }
     });
   };
@@ -95,7 +95,8 @@ const ApiTable: React.FC<ApiTableProps> = ({
         ...columnFilters,
       };
 
-      const response = await apiCall<any[]>(endpoint, 'GET', undefined, queryParams);
+      const response:any = await apiCall<any[]>(endpoint, 'GET', undefined, queryParams);
+      
       setData(response);
     } catch (err: any) {
       console.error('API Fetch Error:', err);
@@ -178,19 +179,19 @@ const ApiTable: React.FC<ApiTableProps> = ({
               </Button>
             </InputGroup>
 
-            <Button variant="outline-primary" onClick={() => setShowFilters(!showFilters)}>
+            <Button variant="outline-secondary" onClick={() => setShowFilters(!showFilters)}>
               {showFilters ? 'Hide Filters' : 'Show Filters'}
             </Button>
           </div>
 
           {hasCreateButton && (
-            <Button className="btn btn-primary" onClick={() => handleRoute('new')}>
+            <Button className="btn btn-secondary" onClick={() => handleRoute('new')}>
               <i className="bi bi-plus-circle me-2" /> {createButtonName}
             </Button>
           )}
         </div>
 
-        <div className="table-responsive bg-light rounded shadow-sm p-3">
+        <div className="table-responsive api-table rounded shadow-sm">
           <Table hover responsive className="align-middle mb-0">
             <thead className="table-light">
               <tr>
@@ -205,7 +206,7 @@ const ApiTable: React.FC<ApiTableProps> = ({
                     {col.sortable && renderSortIcon(col.key)}
                   </th>
                 ))}
-                <th className="text-uppercase small text-muted fw-bold text-center">Actions</th>
+                {hasActionKeys && <th className="text-uppercase small text-muted fw-bold text-center">Actions</th>}
               </tr>
 
               {showFilters && (
@@ -252,9 +253,9 @@ const ApiTable: React.FC<ApiTableProps> = ({
                 {data.map((row, index) => (
                   <tr
                     key={index}
-                    style={{ cursor: clickToView ? 'pointer' : 'default' }}
+                    style={{ cursor: 'pointer' }}
                     className="table-hover-row"
-                    onClick={() => clickToView && handleRoute(`${row.id}`, true)}
+                    onClick={() => handleRoute(`${row.id}`)}
                   >
                     {columns.map((col) => {
                       let value = row[col.key];
@@ -275,31 +276,22 @@ const ApiTable: React.FC<ApiTableProps> = ({
                       if (col.type === 'date') {
                         value = value ? new Date(value).toLocaleDateString() : '-';
                       }
-                      return <td key={col.key}>{col.render ? col.render(row) : value ?? '-'}</td>;
+                      return <td key={col.key}>{col.render ? col.render(row) : value || '-'}</td>;
                     })}
-                    <td className="text-center">
-                      <Button
-                        size="sm"
-                        variant="outline-primary"
-                        className="me-2"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRoute(row.id);
-                        }}
-                      >
-                        <i className="bi bi-pencil" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline-danger"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(row.id);
-                        }}
-                      >
-                        <i className="bi bi-trash" />
-                      </Button>
-                    </td>
+                    {hasActionKeys && 
+                      <td className="text-center">
+                        <Button
+                          size="sm"
+                          variant="outline-danger"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(row.id);
+                          }}
+                        >
+                          <i className="bi bi-trash" />
+                        </Button>
+                      </td>
+                    }
                   </tr>
                 ))}
               </tbody>

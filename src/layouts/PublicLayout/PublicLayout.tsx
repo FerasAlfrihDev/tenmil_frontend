@@ -28,7 +28,7 @@ const PublicLayout: React.FC = () => {
           <h5 className="mb-4">
             Tenmil CMMS — precision maintenance at your fingertips.
           </h5>
-          <a href="mailto:contact@tenmil.com" className="btn btn-primary btn-lg">
+          <a href="mailto:contact@tenmil.com" className="btn btn-warning btn-lg">
             Request a Demo
           </a>
         </div>
@@ -36,7 +36,7 @@ const PublicLayout: React.FC = () => {
       {/* Features Section */}
       <section className="container py-5 fade-in-up bg-light" id="features">
         <div className="text-center mb-5">
-          <h2 className="fw-bold display-6">Why Choose Tenmil?</h2>
+          <h2 className="fw-bold display-6 text-warning">Why Choose Tenmil?</h2>
           <p className="text-muted fs-5">Reliable maintenance management, precision-crafted for you.</p>
         </div>
 
@@ -90,7 +90,7 @@ const PublicLayout: React.FC = () => {
       {/* Pricing Section */}
       <section className="container py-5 fade-in-up bg-light" id="pricing">
         <div className="text-center mb-5">
-          <h2 className="fw-bold display-6">Pricing Plans</h2>
+          <h2 className="fw-bold display-6 text-warning">Pricing Plans</h2>
           <p className="text-muted fs-5">Choose a plan that's right for your team.</p>
         </div>
 
@@ -100,8 +100,8 @@ const PublicLayout: React.FC = () => {
             <div className="card h-100 shadow-sm border-0 text-center">
               <div className="card-body d-flex flex-column">
                 <h5 className="card-title fw-bold">Starter</h5>
-                <h6 className="card-price my-3">$0<span className="text-muted fs-6">/month</span></h6>
-                <p className="card-text text-muted mb-4">Perfect for small teams starting out.</p>
+                <h6 className="card-price my-3">$0/month</h6>
+                <p className="card-text text-secondary mb-4">Perfect for small teams starting out.</p>
                 <a href="#" className="btn btn-outline-primary mt-auto">Get Started</a>
               </div>
             </div>
@@ -112,8 +112,8 @@ const PublicLayout: React.FC = () => {
             <div className="card h-100 shadow-sm border-primary border-2 text-center">
               <div className="card-body d-flex flex-column">
                 <h5 className="card-title fw-bold text-primary">Pro</h5>
-                <h6 className="card-price my-3">$49<span className="text-muted fs-6">/month</span></h6>
-                <p className="card-text text-muted mb-4">For growing teams that need more power.</p>
+                <h6 className="card-price my-3">$49/month</h6>
+                <p className="card-text text-secondary mb-4">For growing teams that need more power.</p>
                 <a href="#" className="btn btn-primary mt-auto">Choose Pro</a>
               </div>
             </div>
@@ -125,7 +125,7 @@ const PublicLayout: React.FC = () => {
               <div className="card-body d-flex flex-column">
                 <h5 className="card-title fw-bold">Enterprise</h5>
                 <h6 className="card-price my-3">Custom</h6>
-                <p className="card-text text-muted mb-4">Tailored solutions for complex operations.</p>
+                <p className="card-text text-secondary mb-4">Tailored solutions for complex operations.</p>
                 <a href="#" className="btn btn-outline-primary mt-auto">Contact Sales</a>
               </div>
             </div>
@@ -144,7 +144,7 @@ const PublicLayout: React.FC = () => {
           </div>
 
           <div className="col-md-6">
-            <h2 className="fw-bold display-6">Why "Tenmil"?</h2>
+            <h2 className="fw-bold display-6 text-warning">Why "Tenmil"?</h2>
             <p className="text-muted fs-5 mb-4">
               If you've ever worked with tools, you know the legendary story — the 10mm socket, 
               the wrench that always goes missing when you need it most.
@@ -163,11 +163,11 @@ const PublicLayout: React.FC = () => {
       {/* Contact CTA Section */}
       <section className="contact-us-section text-white text-center py-5 fade-in-up" id="contact">
         <div className="container">
-          <h2 className="fw-bold mb-4 text-secondary">Ready to Take Control of Your Maintenance?</h2>
+          <h2 className="fw-bold mb-4 text-warning">Ready to Take Control of Your Maintenance?</h2>
           <p className="mb-4 fs-5 text-light">
             Join the teams that trust Tenmil to streamline their operations.
           </p>
-          <a href="mailto:contact@tenmil.com" className="btn btn-outline-light btn-lg px-5">
+          <a href="mailto:contact@tenmil.com" className="btn btn-warning btn-lg px-5">
             Contact Us
           </a>
         </div>

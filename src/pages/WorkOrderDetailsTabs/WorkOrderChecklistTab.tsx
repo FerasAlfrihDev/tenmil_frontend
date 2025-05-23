@@ -7,7 +7,7 @@ const WorkOrderChicklistTab =  () => {
     <div className="main-container work-order-logs">
         <ApiTable
             tableName="Work Order Checklist"
-            endpoint="work-orders/work_order_checklist"
+            endpoint={`work-orders/work_order_checklist?work_order_id=${workOrderId}`}
             hasCreateButton={true}
             useGeneratedPage={false}
             detailsPageLink={`/work-orders/${workOrderId}/work-order-checklist`}

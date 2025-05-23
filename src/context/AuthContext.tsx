@@ -31,8 +31,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async () => {
     try {
-      const userData: User = await apiCall('/users/user', 'GET');
-      setUser(userData);
+      const userData: User[] = await apiCall('/users/user', 'GET');
+      setUser(userData[0]);
+      localStorage.setItem('user', JSON.stringify(userData[0])); // 🧠 cache it
     } catch (error) {
       logout(); // fallback
       console.error('Failed to fetch user after login:', error);
@@ -51,6 +52,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const token = localStorage.getItem('access');
+    const cachedUser = localStorage.getItem('user');
+
+    if (cachedUser) {
+      setUser(JSON.parse(cachedUser));
+    }
     if (token) login().catch(() => logout());
   }, []);
 

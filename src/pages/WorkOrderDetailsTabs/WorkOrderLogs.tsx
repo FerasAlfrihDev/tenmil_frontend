@@ -11,6 +11,7 @@ const WorkOrderLogsTab =  () => {
                 detailsPageLink='work-orders/work-order-logs'
                 useGeneratedPage={false}
                 hasCreateButton={false}
+                hasActionKeys={false}
                 filters={{work_order_id: id}}
                 columns={[
                     { key: 'user', label: 'User', type: 'object' },

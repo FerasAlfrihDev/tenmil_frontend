@@ -1,15 +1,43 @@
 
 import '../styles/TenantDashboard.scss';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, Row, Col, Table, ProgressBar } from 'react-bootstrap';
+import { apiCall } from '../utils/api';
+import { useNavigate } from 'react-router-dom';
+import { WorkOrderFormTemplate } from '../formTemplates/WorkOrderFormTemplates';
+import { AssetFormTemplate } from '../formTemplates/AssetFormTemplate';
 
 const TenantDashboard: React.FC = () => {
-  const recentActions:[string, string, number][] = [
-    ['Pump A1', 'Online', 90],
-    ['Boiler B3', 'Online', 75],
-    ['Conveyor 9', 'Offline', 0],
-  ]
+  const [data, setData] = React.useState<any>();
+  const navigate = useNavigate()
+
+   const handleRoute = (path:string, type:string) => {
+    const formTemplate= type ==="work-order" ?
+      WorkOrderFormTemplate : AssetFormTemplate
+      
+    navigate(path, {
+        state: {
+          formTemplate: formTemplate
+        }
+      }
+    );
+  };
+
+
+  const fetch = async() => {
+      const url = '/dashboard'
+      const response = await apiCall<any>(url, 'GET')
+      setData(response)
+    }
+
+  useEffect(() => {
+    fetch()
+    console.log("data", data);
+    
+  }, [])
+
+  const recentActions:[string, string, string, number][] = data?.top_assets_utilization
   return (
     <div className="tenant-dashboard container py-4">
       {/* Header */}
@@ -18,10 +46,10 @@ const TenantDashboard: React.FC = () => {
       {/* Quick Stats */}
       <Row className="mb-4 g-4">
         {[
-          { title: 'Open Work Orders', value: 12 },
-          { title: 'Assets in Use', value: 34 },
-          { title: 'Scheduled Maintenance', value: 5 },
-          { title: 'Unassigned Tasks', value: 3 },
+          { title: 'Open Work Orders', value: data?.open_work_orders_count },
+          { title: 'Assets in Use', value: data?.online_assets_count },
+          { title: 'Scheduled Maintenance', value: data?.scheduled_maintenance_count },
+          { title: 'Unassigned Tasks', value: data?.unassigned_taskes_count },
         ].map((stat, index) => (
           <Col md={3} key={index}>
             <Card className="shadow-sm stat-card hover-card h-100">
@@ -40,7 +68,26 @@ const TenantDashboard: React.FC = () => {
           <Card className="shadow-sm h-100 hover-card">
             <Card.Body>
               <h6 className="text-muted small mb-3">Work Orders by Status</h6>
-              <div className="chart-placeholder">[Chart Here]</div>
+              <div className="container">
+                <Table hover responsive  className="mb-0">
+                  <tbody>
+                    {
+                      data?.work_orders_by_status.map((wo:any) =>{
+                        return (
+                          <tr 
+                            key={wo.id}
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => handleRoute(`/work-orders/${wo.id}`, 'work-order')}
+                          >
+                            <td className=''>{wo.code}</td>
+                            <td className=''>{wo.status}</td>
+                          </tr>
+                        )
+                      })
+                    }
+                  </tbody>
+                </Table>
+              </div>
             </Card.Body>
           </Card>
         </Col>
@@ -51,11 +98,7 @@ const TenantDashboard: React.FC = () => {
             <Card.Body>
               <h6 className="text-muted small mb-3">Upcoming Maintenance</h6>
               <ul className="task-list">
-                {[
-                  'Check HVAC filters in Building A',
-                  'Inspect generator oil level',
-                  'Replace worn motor belts',
-                ].map((task, index) => (
+                {data?.upcomming_maintenance.map((task:any, index:number) => (
                   <li key={index} className="mb-2">
                     <i className="bi bi-wrench-adjustable-circle me-2 text-primary"></i>
                     {task}
@@ -74,7 +117,7 @@ const TenantDashboard: React.FC = () => {
           <Card className="shadow-sm hover-card h-100">
             <Card.Body>
               <h6 className="text-muted small mb-3">Top Performing Assets</h6>
-              <Table size="sm" responsive className="asset-table">
+              <Table hover responsive className="asset-table">
                 <thead>
                   <tr>
                     <th>Asset</th>
@@ -83,17 +126,21 @@ const TenantDashboard: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {recentActions.map(([name, status, percent], index) => (
-                    <tr key={index}>
+                  {recentActions?.map(([id, name, status, percent]) => (
+                    <tr 
+                      key={id}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => handleRoute(`/assets/${id}`, 'assets')}
+                    >
                       <td>{name}</td>
                       <td>
-                        <span className={`badge bg-${status === 'Online' ? 'success' : 'danger'}`}>{status}</span>
+                        <span className={`badge ${status == 'Online' ? 'bg-success' : 'bg-danger'}`}>{status}</span>
                       </td>
                       <td>
                         <ProgressBar 
                           now={+percent} 
                           label={`${percent}%`} 
-                          variant={percent > 0 ? 'success' : 'danger'}
+                          variant={percent > 50 ? 'success' : 'danger'}
                         />
                       </td>
                     </tr>
@@ -110,11 +157,7 @@ const TenantDashboard: React.FC = () => {
             <Card.Body>
               <h6 className="text-muted small mb-3">Recent User Activity</h6>
               <ul className="activity-log">
-                {[
-                  'Ali logged in',
-                  'Feras submitted Work Order #3312',
-                  'Maintenance team completed Task #9981',
-                ].map((log, index) => (
+                {data?.recent_user_activity.map((log:any, index:number) => (
                   <li key={index} className="mb-2">
                     <i className="bi bi-person-circle me-2 text-primary"></i>
                     {log}

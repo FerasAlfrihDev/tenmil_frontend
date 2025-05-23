@@ -15,7 +15,8 @@ const InputGroup:FC<InputGroupProps> = ({
   onChange,
   hidden=false,
   disabled=false
-}) => {   
+}) => {
+    
   return (
     <Form.Group className={`mb-${size} api-form-element `}  controlId={name} hidden={hidden}  key={name}>
       <FloatingLabel

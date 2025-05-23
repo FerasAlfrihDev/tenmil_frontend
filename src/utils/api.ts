@@ -92,8 +92,8 @@ rateLimitedApiClient.interceptors.response.use(
         }
   
         try {
-          const refreshResponse = await apiClient.post('/token/refresh/', { refresh: refreshToken });
-          const newAccess = refreshResponse.data.access;
+          const refreshResponse:any = await apiClient.post('/token/refresh/', { refresh: refreshToken });
+          const newAccess = refreshResponse?.access;
   
           localStorage.setItem('access', newAccess);
           originalRequest.headers['Authorization'] = `Bearer ${newAccess}`;
@@ -142,10 +142,10 @@ export const apiCall = async <T>(
         const response = await rateLimitedApiClient(config);
 
         if (useCache) {
-            cache[cacheKey] = response.data;
+            cache[cacheKey] = response.data.data;
         }
 
-        return response.data;
+        return response.data.data;
     } catch (error: any) {        
         return Promise.reject(error);
     }

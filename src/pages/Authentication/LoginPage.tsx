@@ -6,7 +6,7 @@ import { apiCall } from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage: React.FC<{ isAdmin: boolean }> = ({ isAdmin }) => {
-  const { tenant } = useAuth();
+  const { tenant, login } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,9 +26,9 @@ const LoginPage: React.FC<{ isAdmin: boolean }> = ({ isAdmin }) => {
       }));
       
       // Store tokens
-      localStorage.setItem('access', res.data.access);
-      localStorage.setItem('refresh', res.data.refresh);
-      
+      localStorage.setItem('access', res.access);
+      localStorage.setItem('refresh', res.refresh);
+      await login(); // fetch and set user after storing token
       // Redirect back to next page or home
       const next = new URLSearchParams(window.location.search).get('next');
       const safeNext = next && next.startsWith('/') ? next : '/';
