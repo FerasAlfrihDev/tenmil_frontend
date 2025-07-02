@@ -12,19 +12,26 @@ const FianancialTabContent:FC = () => {
     const [data, setData] = useState<any>();
     const [ isNew, setIsNew] = useState(false)
     const id = useParams().id
+
+    useEffect(()=>{
+        const fetchData = async () => {
+            // setLoading(true);
+            // setErrors(null);
+            try {              
+                const response = await apiCall<any[]>(`financial-reports/${id}`, 'GET');
+                setData(response);
+            } catch (err: any) {              
+                // setErrors(err.response.data.errors);
+            } finally {
+                // setLoading(false);
+            }
+        };
+        fetchData();
+        if (data == null || data == undefined)
+            setIsNew(true);
+        else setIsNew(false);
+    },[id])
     
-    const fetchData = async () => {
-        // setLoading(true);
-        // setErrors(null);
-        try {              
-            const response = await apiCall<any[]>(`financial-reports/${id}`, 'GET');
-            setData(response);
-        } catch (err: any) {              
-            // setErrors(err.response.data.errors);
-        } finally {
-            // setLoading(false);
-        }
-    };
     
     const formTemplate = [
         {
@@ -96,12 +103,8 @@ const FianancialTabContent:FC = () => {
         formTemplate:formTemplate
     }
 
-    useEffect(()=>{
-        fetchData();
-        if (data == null || data == undefined)
-            setIsNew(true);
-        else setIsNew(false);
-    },[data])
+    
+
   return(
     <div className="financial-tab">
         <div className="financial-tab-table">

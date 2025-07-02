@@ -42,33 +42,40 @@ export const WorkOrderFormTemplate = [
     size:"3",
     component:"InputGroup",
     required:true
+  },
+  {
+    label:"Starting Meter Reading",
+    name:"starting_meter_reading",
+    size:"3",
+    component:"InputGroup",
+    required:false
+  },
+  {
+    label:"Completion Meter Reading",
+    name:"completion_meter_reading",
+    size:"3",
+    component:"InputGroup",
+    required:false
   },         
   {
     label:"Suggested Start Date",
     name:"suggested_start_date",
     size:3,
     component:"DatePicker",
-    required:true,
+    required:false,
   },
   {
     label:"Completion Date",
     name:"completion_end_date",
     size:3,
     component:"DatePicker",
-    required:true,
+    required:false,
   },
   {
     label:"Description",
     name:"description",
-    size:3,
+    size:6,
     component:"TextArea",
     required:false,
-  },
-  {
-    label:"Amount",
-    name:"amount",
-    size:"3",
-    component:"InputGroup",
-    required:false
-  },   
+  }
 ]

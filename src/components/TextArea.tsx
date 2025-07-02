@@ -20,9 +20,9 @@ const TextArea:FC<TextAreaProps> = ({
       <FloatingLabel
         id={name}
         label={label}
-        className="mb-3"
+        className="mb-6"
       >
-        <Form.Control as="textarea" rows={3} placeholder={label} id={name} name={name} defaultValue={value} required={required} onChange={onChange} disabled={disabled}/>
+        <Form.Control as="textarea" rows={15} style={{ height: '8rem' }} placeholder={label} id={name} name={name} defaultValue={value} required={required} onChange={onChange} disabled={disabled}/>
         {helperMsg && 
           <small>
             {helperMsg}

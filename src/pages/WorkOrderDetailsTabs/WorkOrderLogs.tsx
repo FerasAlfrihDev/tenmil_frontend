@@ -18,6 +18,7 @@ const WorkOrderLogsTab =  () => {
                     { key: 'amount', label: 'Amount', type: 'string' },
                     { key: 'log_type', label: 'Log Type', type: 'string' },                    
                     { key: 'description', label: 'Description', type:'string' },
+                    { key: 'created_at', label: 'Date', type:'date' },
                     
                 ]}/>
         </div>

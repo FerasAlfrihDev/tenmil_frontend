@@ -7,7 +7,7 @@ import { ApiForm, ApiTable } from "../../components";
 const MeterReadingTab =  () => {
     const id = useParams().id
     
-    const endPoint =`meter-readings/`
+    const endPoint =`meter-readings/meter_reading`
     const [data, setData] = useState()
     const [reloadTable, setReloadTable] = useState(false)
 
@@ -42,7 +42,8 @@ const MeterReadingTab =  () => {
     }
      
     return(
-        <div className="main-container assets">
+        <div className="main-container assets">            
+            <ApiForm {...apiFormParams}/>
             <ApiTable
                 tableName="Meter Readings"
                 endpoint={endPoint}
@@ -51,7 +52,7 @@ const MeterReadingTab =  () => {
                 hasCreateButton={false}
                 reload={reloadTable}
                 setReload={setReloadTable}
-                filters={{asset_id: id}}
+                filters={{asset: id}}
                 columns={[
                     { key: 'meter_reading', label: 'Meter Reading', type: 'string' },
                     { key: 'created_at', label: 'Creation Date', type: 'date' },
@@ -59,7 +60,6 @@ const MeterReadingTab =  () => {
                     
                 ]}
             />
-            <ApiForm {...apiFormParams}/>
         </div>
     )
     

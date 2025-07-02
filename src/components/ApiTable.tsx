@@ -58,7 +58,8 @@ const ApiTable: React.FC<ApiTableProps> = ({
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' | null }>({ key: '', direction: null });
   const navigate = useNavigate();
 
-  const encodeEndpoint = (endpoint: string) => endpoint.replace('/', '__');
+  const encodeEndpoint = (endpoint: string) => endpoint.replaceAll('/', '__');
+  
 
   const handleRoute = (id: string | 'new') => {
     const path = useGeneratedPage
@@ -98,6 +99,7 @@ const ApiTable: React.FC<ApiTableProps> = ({
       const response:any = await apiCall<any[]>(endpoint, 'GET', undefined, queryParams);
       
       setData(response);
+      
     } catch (err: any) {
       console.error('API Fetch Error:', err);
       setError('Failed to load data. Please try again.');

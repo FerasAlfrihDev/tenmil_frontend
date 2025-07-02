@@ -10,6 +10,7 @@ const TennantAssetsPage: React.FC = () => {
       clickToView={true}
       useGeneratedPage={false}      
       detailsPageLink={`/assets`}
+      hasActionKeys={false}
       columns={[
         { key: 'code', label: 'Code', type: 'string' },
         { key: 'name', label: 'Name', type: 'string' },

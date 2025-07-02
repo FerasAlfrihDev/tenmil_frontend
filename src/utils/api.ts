@@ -4,7 +4,6 @@ import rateLimit from 'axios-rate-limit';
 
 
 const API_URL =  import.meta.env.VITE_BASE_URL
-console.log("API_URL", API_URL)
 
 // Function to get the tenant name from the hostname
 export const getTenantName = () => {
@@ -40,7 +39,7 @@ const apiClient = axios.create({
     baseURL: getBaseUrl(),
     headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json;charset=UTF-8',
+        // 'Content-Type': 'application/json;charset=UTF-8',
         'Authorization': `Bearer ${accessToken}`
     },
 });
@@ -66,6 +65,17 @@ rateLimitedApiClient.interceptors.request.use(
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
+        // Add JSON Content-Type only if:
+        // 1. It's not a FormData (media upload)
+        // 2. It's not already set
+        // 3. The `noContentType` flag is not set
+        const isFormData = config.data instanceof FormData;
+        const noContentType = config.noContentType || config.headers['X-No-Content-Type'];
+
+        if (!isFormData && !noContentType && !config.headers['Content-Type']) {
+            config.headers['Content-Type'] = 'application/json;charset=UTF-8';
+        }
+
         return config;
     },
     (error: any) => {
@@ -120,10 +130,9 @@ export const apiCall = async <T>(
     method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' = 'GET',
     data?: any,
     queryParams?: Record<string, string | number>,
-    useCache = false
-): Promise<T> => {
-    console.log("apiCall queryParams", queryParams);
-    
+    useCache = false,
+    noContentType=false
+): Promise<T> => {    
     const cache: Record<string, any> = {};
     const cacheKey = `${url}?${JSON.stringify(queryParams)}`;
 
@@ -137,8 +146,12 @@ export const apiCall = async <T>(
             url,
             params: queryParams,
             data,
+            headers:{}
         };
-
+        if (noContentType) {
+            (config as any).noContentType = true;
+            config.headers!['X-No-Content-Type'] = true; // Optional fallback check
+        }
         const response = await rateLimitedApiClient(config);
 
         if (useCache) {

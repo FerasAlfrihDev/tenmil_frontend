@@ -171,3 +171,51 @@
     font-weight: 600;
     cursor: pointer;
 }
+.sm-container{
+    display: flex;
+    flex-direction: column;
+    .sm-header{
+        background: lightgreen;
+        display: flex;
+        justify-content: space-around;
+        align-items: start;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    .sm-section{
+    border: 1px $primary solid;
+    min-height: 2rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    position: relative;
+        big{
+            position: absolute;
+            top: -1rem;
+            left: 1rem;
+            background-color: $light;
+        }    
+    }
+    .sm-next-wo-form {
+        display: flex;
+        padding: 1rem;
+        .sm-next-wo-form-text{
+            margin: auto;
+            margin-left: 1rem;
+            margin-right: 1rem;
+        }
+        .sm-next-wo-or{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            min-height: 100%;
+            margin:1rem;
+            width: 2rem;
+        }
+        .btn{
+            margin: auto;
+            margin-right: 1rem;
+        }
+
+    }
+}

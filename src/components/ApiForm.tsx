@@ -9,6 +9,8 @@ import { useParams } from "react-router";
 import ApiSwitch from "./ApiSwitch";
 import TextArea from "./TextArea";
 import MaintenanceSpinner from "./MaintenanceSpinner";
+import DatePicker from "./DatePicker";
+import MediaUploader from "./MediaUploader";
 // import ErrorAlert from "./ErrorAlert";
 
 const ApiForm: FC<ApiFormProps> = ({
@@ -89,7 +91,6 @@ const ApiForm: FC<ApiFormProps> = ({
     useEffect(() => {
       setData({ ...data, ...formData });
     }, [formData]);
-    
 
     useEffect(() => {
       if (!isNew) {
@@ -98,7 +99,7 @@ const ApiForm: FC<ApiFormProps> = ({
           setErrors(null);
   
           try {
-            const response = await apiCall<any>(singleIntityForm ? props.endPoint : `${props.endPoint}/${id}`, 'GET', {}, singleIntityForm);            
+            const response = await apiCall<any>(singleIntityForm ? props.endPoint : `${props.endPoint}/${id}`, 'GET', {}, singleIntityForm); 
             setData(response);
             if (singleIntityForm) setId(response.id);
           } catch (err: any) {
@@ -117,6 +118,8 @@ const ApiForm: FC<ApiFormProps> = ({
       props.children?.map((child) => {
         child.hidden && handleHiddenFields(child.name, child.value || "");
       });
+      
+      
     }, []);
 
     return (
@@ -188,7 +191,6 @@ const ApiForm: FC<ApiFormProps> = ({
   
   // Helper to render child fields
   function renderFormField(child: any, setFormData: any, formData: any, data:any) {
-    console.log("renderFormField", child);
     
     const handelInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -201,11 +203,16 @@ const ApiForm: FC<ApiFormProps> = ({
     const handelSwitchChange = (name: string, value: boolean) => {
     setFormData({ ...formData, [name]: value });
     };
+    const handelDatePickerChange = (name: string, value: boolean) => {
+    setFormData({ ...formData, [name]: value });
+    };
+
     switch (child.component) {
       case "InputGroup":
         return (
           <InputGroup
             {...child}
+            key={child.name}
             disabled={child.disabled || false}
             value={formData[child.name] ?? data?.[child.name] ?? child.value ?? ''}
             onChange={handelInputChange}
@@ -215,6 +222,7 @@ const ApiForm: FC<ApiFormProps> = ({
         return (
           <TextArea
             {...child}
+            key={child.name}
             disabled={child.disabled || false}
             value={formData[child.name] ?? data?.[child.name] ?? child.value ?? ''}
             onChange={handelInputChange}
@@ -224,6 +232,7 @@ const ApiForm: FC<ApiFormProps> = ({
         return (
           <ApiSelect
             {...child}
+            key={child.name}
             disabled={child.disabled || false}
             value={formData[child.name] ?? data?.[child.name] ?? child.value ?? ''}
             handelSelectChange={handelSelectChange}
@@ -233,11 +242,31 @@ const ApiForm: FC<ApiFormProps> = ({
         return (
           <ApiSwitch
             {...child}
+            key={child.name}
             disabled={child.disabled || false}
             value={formData[child.name] ?? data?.[child.name] ?? child.value ?? ''}
             handelSwitchChange={handelSwitchChange}
           />
         );
+      case "DatePicker":
+        return(
+          <DatePicker 
+            {...child}
+            key={child.name}
+            disabled={child.disabled || false}
+            value={formData[child.name] ?? data?.[child.name] ?? child.value ?? ''}
+            handelSwitchChange={handelDatePickerChange}
+        />
+        )
+      case "MediaUploader":        
+        return(
+          <MediaUploader
+            {...child}
+            key={child.name}
+            onUploadComplete={(name, mediaIds)=> setFormData({ ...formData, [name]: mediaIds })}
+            value={data?.[child.name] ?? null}
+          />
+        )
       default:
         return null;
     }

@@ -12,3 +12,4 @@ export {default as ApiDragNDropItem} from './ApiDragNDropItem';
 export {default as DropArea} from './DropArea';
 export {default as ProtectedRoute} from './ProtectedRoute';
 export {default as MaintenanceSpinner} from './MaintenanceSpinner';
+export {default as MediaUploader} from './MediaUploader';
