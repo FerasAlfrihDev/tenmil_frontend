@@ -1,10 +1,13 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Tab, Tabs } from "react-bootstrap"
 import MeterReadingTriggerForm from "./MeterReadingTriggerForm"
 import TimeTriggerForm from "./TimeTriggerForm"
 
 const SmSettings:React.FC = () => {
     const [selectedTrigger, setSelectedTrigger] = useState<'meter'|'time'>("meter")
+    useEffect(()=>{
+        setSelectedTrigger("meter")
+    }, [])
     return(
         <div className="sm-section">
             <big>SM settings</big>
