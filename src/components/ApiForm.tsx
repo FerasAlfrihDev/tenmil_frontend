@@ -34,22 +34,6 @@ const ApiForm: FC<ApiFormProps> = ({
     const handleHiddenFields = (fieldName: string, value: any) => {
       setFormData({ ...formData, [fieldName]: value });
     };
-    // const encodeEndpoint = (endpoint: string) => endpoint.replace('/', '__');
-    // const navigate = useNavigate();
-    
-    // const handleDynamicFormRoute = (id: string | 'new') => {
-    //   navigate(`/form/${encodeEndpoint(props.endPoint)}/${id}`, {
-    //     state: {
-    //       formTemplate: props.children || data.map((col:any) => ({
-    //         component: 'InputGroup',
-    //         name: col.key,
-    //         label: col.label,
-    //         type: col.type === 'date' ? 'date' : 'text',
-    //         required: true,
-    //       }))
-    //     }
-    //   });
-    // };
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       e.stopPropagation();
@@ -203,8 +187,9 @@ const ApiForm: FC<ApiFormProps> = ({
     const handelSwitchChange = (name: string, value: boolean) => {
     setFormData({ ...formData, [name]: value });
     };
-    const handelDatePickerChange = (name: string, value: boolean) => {
-    setFormData({ ...formData, [name]: value });
+    const handelDatePickerChange = (name: string, value: any) => {
+      console.log("handelDatePickerChange", name, value);      
+      setFormData({ ...formData, [name]: value });
     };
 
     switch (child.component) {
@@ -234,7 +219,7 @@ const ApiForm: FC<ApiFormProps> = ({
             {...child}
             key={child.name}
             disabled={child.disabled || false}
-            value={formData[child.name] ?? data?.[child.name] ?? child.value ?? ''}
+            value={formData[child.name] ?? data?.[child.name] ?? child.value ?? 'Active'}
             handelSelectChange={handelSelectChange}
           />
         );
@@ -255,7 +240,7 @@ const ApiForm: FC<ApiFormProps> = ({
             key={child.name}
             disabled={child.disabled || false}
             value={formData[child.name] ?? data?.[child.name] ?? child.value ?? ''}
-            handelSwitchChange={handelDatePickerChange}
+            onChange={handelDatePickerChange}
         />
         )
       case "MediaUploader":        

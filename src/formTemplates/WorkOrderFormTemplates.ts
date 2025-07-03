@@ -13,11 +13,7 @@ export const WorkOrderFormTemplate = [
     size:"1",
     component:"Select",
     required:true,
-    endpoint:"assets/equipments",
-    hasCreateButton:true,
-    createButtonLink:"/assets/new",
-    createButtonName:"New Asset",
-    createButtonIcon:true
+    endpoint:"assets/equipments"
 
   },
   {
@@ -27,21 +23,21 @@ export const WorkOrderFormTemplate = [
     component:"Select",
     required:true,
     endpoint:"work-orders/status",
-    hasCreateButton:false,
+    defaultValue:"Active"
   },
   {
     label:"Maint Type",
     name:"maint_type",
     size:"3",
     component:"InputGroup",
-    required:true
+    required:false
   },
   {
     label:"Priority",
     name:"priority",
     size:"3",
     component:"InputGroup",
-    required:true
+    required:false
   },
   {
     label:"Starting Meter Reading",

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { apiCall } from './../utils/api';
-import Table from 'react-bootstrap/Table';
-import { Form, Button, InputGroup } from 'react-bootstrap';
+import { Form, Button, InputGroup, Table } from 'react-bootstrap';
 import MaintenanceSpinner from './MaintenanceSpinner';
 import { useNavigate } from 'react-router-dom';
 
@@ -29,7 +28,8 @@ interface ApiTableProps {
   tableName: string;
   useGeneratedPage?: boolean;
   detailsPageLink?: string;
-  hasActionKeys?:boolean
+  hasActionKeys?:boolean;
+  protected_records_field?:string;
 }
 
 const ApiTable: React.FC<ApiTableProps> = ({
@@ -45,7 +45,8 @@ const ApiTable: React.FC<ApiTableProps> = ({
   tableName,
   useGeneratedPage = true,
   detailsPageLink=null,
-  hasActionKeys=true
+  hasActionKeys=true,
+  protected_records_field=null
 }) => {
   if (!useGeneratedPage && !detailsPageLink) {
     throw new Error('Either useGeneratedPage or detailsPageLink must be provided');
@@ -283,6 +284,9 @@ const ApiTable: React.FC<ApiTableProps> = ({
                     })}
                     {hasActionKeys && 
                       <td className="text-center">
+                        {
+                          (protected_records_field && row[protected_records_field]) ?
+                          <span></span> :
                         <Button
                           size="sm"
                           variant="outline-danger"
@@ -293,6 +297,7 @@ const ApiTable: React.FC<ApiTableProps> = ({
                         >
                           <i className="bi bi-trash" />
                         </Button>
+                        }
                       </td>
                     }
                   </tr>

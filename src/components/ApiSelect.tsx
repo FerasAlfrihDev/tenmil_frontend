@@ -13,7 +13,9 @@ const ApiSelect:FC<ApiSelectProps> = ({
     errorMsg,
     value,
     disabled=false,
+    defaultValue
 }) => {
+        
         const [selected, setSelected] = useState<string | undefined>("0");
         const [options, setOptions] = useState<{"id": string, "name":string}[]>([{"id": "0", "name":`select ${label}`}]);
         // const [loading, setLoading] = useState(false);
@@ -43,11 +45,21 @@ const ApiSelect:FC<ApiSelectProps> = ({
 
     useEffect(() => {
         fetchData();
-          
     }, [])
 
-    useEffect(() => {
+    useEffect(() =>{
+        if (options.length > 1 && defaultValue) {
+            
+            let defaultValueObject = options.filter((item) => item.name.toUpperCase() == defaultValue.toUpperCase())[0]
+            if (defaultValueObject) {
+                setSelected(defaultValueObject.id)
+            }
+        }
+    }, [options])
+
+    useEffect(() => {        
         if (value) {
+
             let modified_value = typeof(value) == "string" ? value : value.id
             setSelected(modified_value)
         }

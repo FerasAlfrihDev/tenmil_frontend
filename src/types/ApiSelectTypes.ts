@@ -13,4 +13,5 @@ export type  ApiSelectProps = {
     size?: "sm" | "lg" | undefined,
     errorMsg?:string,
     disabled?: boolean,
+    defaultValue?:string
 }

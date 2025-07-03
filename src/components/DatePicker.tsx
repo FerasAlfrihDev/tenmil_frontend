@@ -12,15 +12,19 @@ const DatePicker:FC<DatePickerProps> = ({
   errorMsg,
   onChange
 }) => {
-   
+
+  const handleOnChange = (e:any) => {
+    onChange(name, e.target.value)
+  }
+
   return (
     <Form.Group className={`mb-${size}`} as={Col} controlId={name} >
       <FloatingLabel
-        controlId={name}
+        id={name}
         label={label}
         className="mb-3"
       >
-        <Form.Control type={'date'} placeholder={label} id={name} name={name} defaultValue={value} required={required} onChange={onChange}/>
+        <Form.Control type={'date'} placeholder={label} id={name} name={name} defaultValue={value} required={required} onChange={(e)=>handleOnChange(e)}/>
       </FloatingLabel>
       <Form.Control.Feedback type="invalid">
           {errorMsg}

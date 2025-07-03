@@ -14,10 +14,7 @@ const ApiSwitch:FC<ApiSwitchProps> = ({
     unSelectedText,
     disabled=false,
 }) => {
-        const [checked, setChecked] = useState<boolean>(value||false);
-        
-
-
+    const [checked, setChecked] = useState<boolean>(value||false);
     const handleOnChange = (item:{value: boolean, name:string}) => {
         setChecked(item.value)
         handelSwitchChange(item.name, item.value)

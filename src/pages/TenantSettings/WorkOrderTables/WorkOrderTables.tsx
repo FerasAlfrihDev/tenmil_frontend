@@ -10,11 +10,12 @@ const WorkOrderTables:FC = () => {
                     endpoint="work-orders/status"
                     useGeneratedPage={false}
                     detailsPageLink="work-order-status"
+                    protected_records_field="is_system_level"
                     columns={[
                         { key: 'name', label: 'Name' },
                         { key: 'control', label: 'Control' , type:"object"},
-                    ]}/>
-
+                    ]}
+                />
             </div>
         </div>
     )

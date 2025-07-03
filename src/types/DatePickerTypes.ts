@@ -5,5 +5,5 @@ export type DatePickerProps = {
     size?:string,
     required?: boolean,
     errorMsg?: string | null,
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    onChange: (name:string, value:string)=> void,
 }
