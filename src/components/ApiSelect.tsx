@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import {  Button, FloatingLabel, Form } from 'react-bootstrap';
+import {   FloatingLabel, Form } from 'react-bootstrap';
 import { ApiSelectProps } from '../types/ApiSelectTypes';
 import { apiCall } from "../utils/api";
 
@@ -11,10 +11,6 @@ const ApiSelect:FC<ApiSelectProps> = ({
     required=false,
     size,
     errorMsg,
-    hasCreateButton=false,
-    createButtonLink="",
-    createButtonName="",
-    createButtonIcon,
     value,
     disabled=false,
 }) => {
@@ -23,13 +19,13 @@ const ApiSelect:FC<ApiSelectProps> = ({
         // const [loading, setLoading] = useState(false);
         const [errors, setErrors] = useState<any[]|null>(null);
 
-        const CreateButtonIcon:FC = () => {
-            return(
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" className="bi bi-plus-circle-fill" viewBox="0 0 16 16">
-                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
-                </svg>
-                )
-        }
+        // const CreateButtonIcon:FC = () => {
+        //     return(
+        //         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" className="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+        //             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+        //         </svg>
+        //         )
+        // }
 
         const fetchData = async () => {
             // setLoading(true);
