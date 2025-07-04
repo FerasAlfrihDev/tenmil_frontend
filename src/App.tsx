@@ -1,21 +1,12 @@
-import { Routes, Route } from 'react-router-dom';
-import { AdminLayout, DashboardLayout, PublicLayout } from './layouts';
+import { Routes } from 'react-router-dom';
+import { PublicLayout } from './layouts';
 import { useAuth } from './context/AuthContext';
 import { useEffect, useState } from 'react';
 import { fetchTenantBySubdomain } from './utils/fakeApi';
-import { AdminCompaniesPage, AdminUsersPage, DynamicFormPage, NotFoundPage, TenantAssetsDetailsPage, TenantDashboardPage, TenantReportsPage, TenantWorkOrderDetailsPage, TenantWorkOrderPage, TennantAssetsPage } from './pages';
-import LoginPage from './pages/Authentication/LoginPage';
+import {  NotFoundPage } from './pages';
+
 import { getTenantName } from './utils/api';
-import { MiscCostsTab, MiscCostTabDetails, MiscCostTabNew, WorkOrderChecklistForm, WorkOrderChecklistNew, WorkOrderChicklistTab, WorkOrderLogsForm, WorkOrderLogsTab } from './pages/WorkOrderDetailsTabs';
-import TenantSettingsPage from './pages/TenantSettings/TenantSettingsPage';
-import Sites from './pages/TenantSettings/Sites/Sites';
-import NewSite from './pages/TenantSettings/Sites/NewSite';
-import SiteDetails from './pages/TenantSettings/Sites/SiteDetails';
-import NewLocation from './pages/TenantSettings/Sites/NewLocation';
-import LocationDetails from './pages/TenantSettings/Sites/LocationDetails';
-import NewCategory from './pages/TenantSettings/Category/NewCategory';
-import CategoryDetails from './pages/TenantSettings/Category/CategoryDetails';
-import NewWorkOrderStatus from './pages/TenantSettings/WorkOrderTables/NewWorkOrderStatus';
+
 
 
 const App: React.FC = () => {
@@ -50,15 +41,15 @@ const App: React.FC = () => {
   if (subdomain === 'admin') {
     return (
       <Routes>
-        <Route path="/login" element={<LoginPage isAdmin={true} />} />
-          <Route path="/" element={<AdminLayout />}>
+        {/* <Route path="/login" element={<LoginPage isAdmin={true} />} />
+          <Route path="/" element={<AdminLayout />}> */}
           {/* <Route index element={<AdminHome />} /> */}
-          <Route path="/form/:encodedEntity/:id" element={<DynamicFormPage />} />
+          {/* <Route path="/form/:encodedEntity/:id" element={<DynamicFormPage />} /> */}
           {/* <Route path="/generated/:encodedEntity/:id" element={<GeneratedEntityPage />} /> */}
-          <Route path="admin/companies" element={<AdminCompaniesPage />} />
-          <Route path="admin/users" element={<AdminUsersPage />} />
+          {/* <Route path="admin/companies" element={<AdminCompaniesPage />} />
+          <Route path="admin/users" element={<AdminUsersPage />} /> */}
           {/* <Route path="settings" element={<AdminSettingsPage />} />  */}
-        </Route>
+        {/* </Route> */}
       </Routes>
     );
   }
@@ -67,11 +58,11 @@ const App: React.FC = () => {
   return (
     <>
       <Routes>
-        <Route path="/login" element={<LoginPage isAdmin={false} />} />
+        {/* <Route path="/login" element={<LoginPage isAdmin={false} />} />
           <Route path="/" element={<DashboardLayout />}>
-            <Route path="/form/:encodedEntity/:id" element={<DynamicFormPage />} />
+            <Route path="/form/:encodedEntity/:id" element={<DynamicFormPage />} /> */}
             {/* <Route path="/generated/:encodedEntity/:id" element={<GeneratedEntityPage />} /> */}
-            <Route index element={<TenantDashboardPage />} />
+            {/* <Route index element={<TenantDashboardPage />} />
             <Route path="/reports" element={<TenantReportsPage />} />
 
             <Route path="/settings" element={<TenantSettingsPage />} />
@@ -100,12 +91,12 @@ const App: React.FC = () => {
             <Route path="/work-orders/:workOrderId/work-order-misc-cost/:id" element={<MiscCostTabDetails />} />
 
             <Route path="/assets" element={<TennantAssetsPage />} />
-            <Route path="/assets/:id" element={<TenantAssetsDetailsPage />} />
+            <Route path="/assets/:id" element={<TenantAssetsDetailsPage />} /> */}
             {/* 
             <Route path="assets" element={<AssetsPage />} />
             <Route path="reports" element={<ReportsPage />} />
             <Route path="settings" element={<SettingsPage />} /> */}
-          </Route>
+          {/* </Route> */}
       </Routes>
     </>
   );

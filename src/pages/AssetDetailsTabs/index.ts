@@ -1,9 +1,0 @@
-export {default as MeterReadingTab} from './MeterReadingTab'
-export {default as PartsTab} from './PartsTab'
-export {default as ScheduleMaintnanceTab} from './SMTab/ScheduleMaintnanceTab'
-export {default as FinancialTab} from './FinancialTab/FinancialTab'
-export {default as AssetLogsTab} from './AssetLogsTab'
-export {default as NextWo} from "./SMTab/NextWo"
-export {default as SmSettingsTab} from "./SMTab/SmSettingsTab"
-export {default as WoLogs} from "./SMTab/WoLogs"
-export {default as SmLogs} from "./SMTab/SmLogs"
