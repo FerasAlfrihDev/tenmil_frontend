@@ -1,322 +1,202 @@
-import React, { useEffect, useState } from 'react';
-import { apiCall } from './../utils/api';
-import { Form, Button, InputGroup, Table } from 'react-bootstrap';
-import MaintenanceSpinner from './MaintenanceSpinner';
-import { useNavigate } from 'react-router-dom';
+import { useQuery } from "@tanstack/react-query";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Plus } from "lucide-react";
+import { apiGet } from "@/utils/apis";
+import GearSpinner from "@/components/ui/gear-spinner";
 
-
-interface ApiTableColumn {
+export interface TableColumn<T = any> {
   key: string;
-  label: string;
-  type?: 'number' | 'date' | 'string' | 'boolean' | 'object';
-  render?: (row: any) => React.ReactNode;
-  sortable?: boolean;
+  header: string;
+  type?: string;
+  render?: (value: any, row: T) => React.ReactNode;
+  className?: string;
 }
 
-interface ApiTableProps {
+interface ApiTableProps<T = any> {
   endpoint: string;
-  columns: ApiTableColumn[];
-  paginate?: boolean;
-  pageSize?: number;
-  hasCreateButton?: boolean;
-  createButtonName?: string;
-  reload?: boolean;
-  setReload?: (reload: boolean) => void;
-  filters?: any;
-  formTemplate?: any[];
-  clickToView?: boolean;
-  tableName: string;
-  useGeneratedPage?: boolean;
-  detailsPageLink?: string;
-  hasActionKeys?:boolean;
-  protected_records_field?:string;
+  secondaryEndpoint?: string; // Optional secondary endpoint to fetch additional data
+  columns: TableColumn<T>[];
+  title?: string;
+  queryKey?: string[];
+  className?: string;
+  emptyMessage?: string;
+  createNewHref?: string;
+  createNewText?: string;
+  editRoutePattern?: string; // e.g., "/assets/edit/{id}"
+  onRowClick?: (row: T) => void;
 }
 
-const ApiTable: React.FC<ApiTableProps> = ({
+const ApiTable = <T extends Record<string, any>>({
   endpoint,
+  secondaryEndpoint,
   columns,
-  hasCreateButton = true,
-  createButtonName = 'Create',
-  pageSize = 10,
-  reload = false,
-  filters = {},
-  setReload,
-  formTemplate,
-  tableName,
-  useGeneratedPage = true,
-  detailsPageLink=null,
-  hasActionKeys=true,
-  protected_records_field=null
-}) => {
-  if (!useGeneratedPage && !detailsPageLink) {
-    throw new Error('Either useGeneratedPage or detailsPageLink must be provided');
-  }
-  const [data, setData] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [globalSearch, setGlobalSearch] = useState('');
-  const [columnFilters, setColumnFilters] = useState<Record<string, any>>({});
-  const [showFilters, setShowFilters] = useState(false);
-  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' | null }>({ key: '', direction: null });
+  title,
+  queryKey,
+  className,
+  emptyMessage = "No data available",
+  createNewHref,
+  createNewText = "Create New",
+  editRoutePattern,
+  onRowClick,
+}: ApiTableProps<T>) => {
   const navigate = useNavigate();
-
-  const encodeEndpoint = (endpoint: string) => endpoint.replaceAll('/', '__');
   
-
-  const handleRoute = (id: string | 'new') => {
-    const path = useGeneratedPage
-      ? `/form/${encodeEndpoint(endpoint)}/${id}`
-      : `${detailsPageLink}/${id}`;
-
-    navigate(path, {
-      state: {
-        formTemplate: formTemplate || columns.map((col) => ({
-          component: 'InputGroup',
-          name: col.key,
-          label: col.label,
-          type: col.type === 'date' ? 'date' : 'text',
-          required: true,
-        })),
-      }
-    });
-  };
-
-  const fetchData = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      let orderingParam = '';
-      if (sortConfig.key) {
-        orderingParam = sortConfig.direction === 'desc' ? `-${sortConfig.key}` : sortConfig.key;
-      }
-
-      const queryParams = {
-        ...filters,
-        search: globalSearch || undefined,
-        ordering: orderingParam || undefined,
-        ...columnFilters,
-      };
-
-      const response:any = await apiCall<any[]>(endpoint, 'GET', undefined, queryParams);
+  const {
+    data,
+    isLoading,
+    error,
+    isError,
+  } = useQuery({
+    queryKey: queryKey || (secondaryEndpoint ? [endpoint, secondaryEndpoint] : [endpoint]),
+    queryFn: async () => {
+      const promises = [apiGet(endpoint)];
       
-      setData(response);
-      
-    } catch (err: any) {
-      console.error('API Fetch Error:', err);
-      setError('Failed to load data. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      fetchData();
-    }, 300);
-
-    return () => clearTimeout(delayDebounce);
-  }, [endpoint, pageSize, globalSearch, columnFilters, sortConfig]);
-
-  useEffect(() => {
-    if (reload) {
-      fetchData();
-      setReload && setReload(false);
-    }
-  }, [reload]);
-
-  const handleColumnFilterChange = (key: string, value: any) => {
-    setColumnFilters((prev) => ({
-      ...prev,
-      [key]: value || undefined,
-    }));
-  };
-
-  const handleSort = (key: string) => {
-    if (sortConfig.key === key) {
-      if (sortConfig.direction === 'asc') {
-        setSortConfig({ key, direction: 'desc' });
-      } else if (sortConfig.direction === 'desc') {
-        setSortConfig({ key: '', direction: null });
-      } else {
-        setSortConfig({ key, direction: 'asc' });
+      // Add secondary endpoint if provided
+      if (secondaryEndpoint) {
+        promises.push(apiGet(secondaryEndpoint));
       }
-    } else {
-      setSortConfig({ key, direction: 'asc' });
+      
+      const responses = await Promise.all(promises);
+      
+      // Extract data from responses
+      const primaryData = responses[0].data.data || responses[0].data;
+      const secondaryData = secondaryEndpoint && responses[1] 
+        ? responses[1].data.data || responses[1].data 
+        : [];
+      
+      // Add source metadata to each row
+      const primaryWithSource = Array.isArray(primaryData) 
+        ? primaryData.map((item: any) => ({ ...item, _dataSource: 'primary' }))
+        : [];
+        
+      const secondaryWithSource = Array.isArray(secondaryData) 
+        ? secondaryData.map((item: any) => ({ ...item, _dataSource: 'secondary' }))
+        : [];
+      
+      // Combine data arrays
+      return [...primaryWithSource, ...secondaryWithSource];
+    },
+  });
+
+  const handleRowClick = (row: T) => {
+    if (onRowClick) {
+      onRowClick(row);
+    } else if (editRoutePattern && row.id) {
+      const editRoute = editRoutePattern.replace("{id}", row.id.toString());
+      navigate(editRoute);
     }
   };
 
-  const handleDelete = async (id: string) => {
-    try {
-      await apiCall<any[]>(`${endpoint}/${id}`, 'DELETE');
-      fetchData();
-    } catch {
-      setError("Something went wrong while deleting the data");
+  const isRowClickable = Boolean(onRowClick || editRoutePattern);
+
+  const renderCell = (column: TableColumn<T>, row: T) => {
+    const value = row[column.key];
+    if (column.render) {
+      return column.render(value, row);
     }
+    if (column.type === "object" && value && typeof value === "object") {
+      return value.name || value.id || "";
+    }
+    return value?.toString() || "";
   };
 
-  const renderSortIcon = (key: string) => {
-    if (sortConfig.key !== key) return <i className="bi bi-arrow-down-up ms-1"></i>;
-    if (sortConfig.direction === 'asc') return <i className="bi bi-arrow-up ms-1"></i>;
-    if (sortConfig.direction === 'desc') return <i className="bi bi-arrow-down ms-1"></i>;
-    return null;
-  };
-
-  return (
-    <div className="container py-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h4 className="fw-bold text-primary mb-0">{tableName}</h4>
-      </div>
-
-      <div className="api-table-container">
-        <div className="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
-          <div className="d-flex gap-2">
-            <InputGroup style={{ maxWidth: '300px' }}>
-              <Form.Control
-                type="text"
-                placeholder="Search..."
-                value={globalSearch}
-                onChange={(e) => setGlobalSearch(e.target.value)}
-              />
-              <Button variant="outline-secondary">
-                <i className="bi bi-search"></i>
-              </Button>
-            </InputGroup>
-
-            <Button variant="outline-secondary" onClick={() => setShowFilters(!showFilters)}>
-              {showFilters ? 'Hide Filters' : 'Show Filters'}
-            </Button>
-          </div>
-
-          {hasCreateButton && (
-            <Button className="btn btn-secondary" onClick={() => handleRoute('new')}>
-              <i className="bi bi-plus-circle me-2" /> {createButtonName}
-            </Button>
-          )}
-        </div>
-
-        <div className="table-responsive api-table rounded shadow-sm">
-          <Table hover responsive className="align-middle mb-0">
-            <thead className="table-light">
-              <tr>
-                {columns.map((col) => (
-                  <th
-                    key={col.key}
-                    className="text-uppercase small text-muted fw-bold"
-                    style={{ cursor: col.sortable ? 'pointer' : 'default' }}
-                    onClick={() => col.sortable && handleSort(col.key)}
-                  >
-                    {col.label}
-                    {col.sortable && renderSortIcon(col.key)}
-                  </th>
-                ))}
-                {hasActionKeys && <th className="text-uppercase small text-muted fw-bold text-center">Actions</th>}
-              </tr>
-
-              {showFilters && (
-                <tr>
-                  {columns.map((col) => (
-                    <th key={col.key}>
-                      {col.type === 'boolean' || col.type === 'object' ? (
-                        <div className="text-center text-muted small">N/A</div>
-                      ) : (
-                        <Form.Control
-                          size="sm"
-                          type={col.type === 'number' ? 'number' : 'text'}
-                          placeholder="Filter"
-                          value={columnFilters[col.key] || ''}
-                          onChange={(e) => handleColumnFilterChange(col.key, e.target.value)}
-                          className="small-input"
-                        />
-                      )}
-                    </th>
-                  ))}
-                  <th></th>
-                </tr>
-              )}
-            </thead>
-
-            {loading ? (
-              <tbody>
-                <tr>
-                  <td colSpan={columns.length + 1} className="text-center py-5">
-                    <MaintenanceSpinner size={64} />
-                  </td>
-                </tr>
-              </tbody>
-            ) : error ? (
-              <tbody>
-                <tr>
-                  <td colSpan={columns.length + 1} className="text-center text-danger py-5">
-                    {error}
-                  </td>
-                </tr>
-              </tbody>
-            ) : data && data.length > 0 ? (
-              <tbody>
-                {data.map((row, index) => (
-                  <tr
-                    key={index}
-                    style={{ cursor: 'pointer' }}
-                    className="table-hover-row"
-                    onClick={() => handleRoute(`${row.id}`)}
-                  >
-                    {columns.map((col) => {
-                      let value = row[col.key];
-                      if (col.type === 'boolean') {
-                        return (
-                          <td key={col.key} className="text-center">
-                            {value ? (
-                              <i className="bi bi-check-circle-fill text-success"></i>
-                            ) : (
-                              <i className="bi bi-x-circle-fill text-danger"></i>
-                            )}
-                          </td>
-                        );
-                      }
-                      if (col.type === 'object') {
-                        return <td key={col.key}>{value?.name || value?.id || '-'}</td>;
-                      }
-                      if (col.type === 'date') {
-                        value = value ? new Date(value).toLocaleDateString() : '-';
-                      }
-                      return <td key={col.key}>{col.render ? col.render(row) : value || '-'}</td>;
-                    })}
-                    {hasActionKeys && 
-                      <td className="text-center">
-                        {
-                          (protected_records_field && row[protected_records_field]) ?
-                          <span></span> :
-                        <Button
-                          size="sm"
-                          variant="outline-danger"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDelete(row.id);
-                          }}
-                        >
-                          <i className="bi bi-trash" />
-                        </Button>
-                        }
-                      </td>
-                    }
-                  </tr>
-                ))}
-              </tbody>
-            ) : (
-              <tbody>
-                <tr>
-                  <td colSpan={columns.length + 1} className="text-center text-muted py-5">
-                    No records found.
-                  </td>
-                </tr>
-              </tbody>
-            )}
-          </Table>
-        </div>
-      </div>
+  const LoadingSpinner = () => (
+    <div className="flex justify-center items-center py-12">
+      <GearSpinner fullscreen />
     </div>
   );
+
+  const ErrorAlert = () => (
+    <Alert variant="destructive">
+      <AlertDescription>
+        Failed to load data: {error?.message || "Unknown error"}
+      </AlertDescription>
+    </Alert>
+  );
+
+  const EmptyState = () => (
+    <div className="text-center py-8 text-muted-foreground">
+      {emptyMessage}
+    </div>
+  );
+
+  const content = () => {
+    if (isLoading) return <LoadingSpinner />;
+    if (isError) return <ErrorAlert />;
+
+    return (
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {columns.map((column) => (
+                <TableHead key={column.key} className={column.className}>
+                  {column.header}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data && data.length > 0 ? (
+              data.map((row: T, index: number) => (
+                <TableRow 
+                  key={row.id || index}
+                  className={isRowClickable ? "cursor-pointer hover:bg-muted/50 transition-colors" : ""}
+                  onClick={() => isRowClickable && handleRowClick(row)}
+                >
+                  {columns.map((column) => (
+                    <TableCell key={column.key} className={column.className}>
+                      {renderCell(column, row)}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="text-center py-8 text-muted-foreground">
+                  {emptyMessage}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    );
+  };
+
+  if (title) {
+    return (
+      <Card className={className}>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle>{title}</CardTitle>
+            {createNewHref && (
+              <Button asChild size="sm">
+                <Link to={createNewHref}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  {createNewText}
+                </Link>
+              </Button>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent>{content()}</CardContent>
+      </Card>
+    );
+  }
+
+  return <div className={className}>{content()}</div>;
 };
 
 export default ApiTable;

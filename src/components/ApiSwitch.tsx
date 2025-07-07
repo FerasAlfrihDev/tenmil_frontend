@@ -1,51 +1,49 @@
-import { FC, useEffect, useState } from 'react';
-import {   Form } from 'react-bootstrap';
-import { ApiSwitchProps } from '../types/ApiSwitchTypes';
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
-const ApiSwitch:FC<ApiSwitchProps> = ({
-    label,
-    name,
-    handelSwitchChange,
-    required=false,
-    size=3,
-    errorMsg,
-    value,
-    selectedText,
-    unSelectedText,
-    disabled=false,
-}) => {
-    const [checked, setChecked] = useState<boolean>(value||false);
-    const handleOnChange = (item:{value: boolean, name:string}) => {
-        setChecked(item.value)
-        handelSwitchChange(item.name, item.value)
-    }
-    useEffect(() => {
-            if (value) {
-                
-                setChecked(value)
-            }
-              
-        }, [value])
-    
-
-  return (
-    <Form.Group controlId={name} key={name} className={`mb-${size} api-form-element`}>
-      <Form.Label>{label}</Form.Label>
-      <Form.Check 
-            type="switch"
-            id="custom-switch"
-            label={checked ? selectedText : unSelectedText}
-            onChange={()=>handleOnChange({value:!checked, name})}
-            required={required}
-            size={size}
-            checked={checked}
-            disabled={disabled}
-        />
-        <Form.Control.Feedback type="invalid">
-            {errorMsg}
-        </Form.Control.Feedback>
-    </Form.Group>
-  );
+interface ApiSwitchProps {
+  name: string;
+  label?: string;
+  description?: string;
+  checked?: boolean;
+  onChange?: (checked: boolean) => void;
+  className?: string;
+  disabled?: boolean;
 }
+
+const ApiSwitch = ({
+  name,
+  label,
+  description,
+  checked = false,
+  onChange,
+  className,
+  disabled = false,
+}: ApiSwitchProps) => {
+  return (
+    <div className={cn("flex items-center space-x-2", className)}>
+      <Switch
+        id={name}
+        name={name}
+        checked={checked}
+        onCheckedChange={onChange}
+        disabled={disabled}
+      />
+      <div className="grid gap-1.5 leading-none">
+        {label && (
+          <Label htmlFor={name} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            {label}
+          </Label>
+        )}
+        {description && (
+          <p className="text-xs text-muted-foreground">
+            {description}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default ApiSwitch;

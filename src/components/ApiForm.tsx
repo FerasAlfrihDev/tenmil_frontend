@@ -1,260 +1,213 @@
-import { FC, useEffect, useState } from "react";
-import { ApiFormProps } from "../types/ApiFormTypes";
-import { Button, ButtonGroup, Col, Row, Card, Form, Spinner, Alert } from "react-bootstrap";
-import { apiCall } from "../utils/api";
-import InputGroup from "./InputGroup";
-import ApiSelect from "./ApiSelect";
-import { useParams } from "react-router";
-// import { useNavigate, useParams } from "react-router";
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import ApiInput from "./ApiInput";
+import ApiTextArea from "./ApiTextArea";
 import ApiSwitch from "./ApiSwitch";
-import TextArea from "./TextArea";
-import MaintenanceSpinner from "./MaintenanceSpinner";
-import DatePicker from "./DatePicker";
-import MediaUploader from "./MediaUploader";
-// import ErrorAlert from "./ErrorAlert";
+import ApiDatePicker from "./ApiDatePicker";
+import ApiDropDown from "./ApiDropDown";
+import { cn } from "@/lib/utils";
 
-const ApiForm: FC<ApiFormProps> = ({
-    formName,
-    viewOnly = false,
-    oriantation = 'vertical',
-    submitButtonName = 'Save',
-    addAnotherButton = false,
-    singleIntityForm,
-    ...props
-  }) => {
-    const params = useParams();
-    const [errors, setErrors] = useState<any>();
-    const [loading, setLoading] = useState(false);
-    const [data, setData] = useState<any>();
-    const [validated, setValidated] = useState(false);
-    const [formData, setFormData] = useState({});
-    const [id, setId] = useState<string | undefined>(props.isNew ? undefined : params.id);
-    // const [addNew, setAddNew] = useState(false);
-    const [isNew, setIsNew] = useState(props.isNew);
-    const handleHiddenFields = (fieldName: string, value: any) => {
-      setFormData({ ...formData, [fieldName]: value });
-    };
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      e.stopPropagation();
-  
-      setValidated(true);
-  
-      const saveData = async () => {
-        setLoading(true);
-        setErrors(null);
-  
-        try {
-          const method: "POST" | "PATCH" = isNew ? "POST" : "PATCH";
-          const url = isNew ? props.endPoint : `${props.endPoint}/${id}`;
-          const response = await apiCall<any>(url, method, formData);
-          setData(response);
-  
-          // if (isNew && !singleIntityForm) {
-          //   if (!addNew){
-          //     setData(null)
-          //     handleDynamicFormRoute('new')
-          //   }
-          //   handleDynamicFormRoute(response.id)
-            
-          // }
-  
-          props.setMasterData && (isNew ? props.setMasterData({}) : props.setMasterData(response));
-        } catch (err: any) {
-          setErrors(err.response?.data?.errors || { error: "Something went wrong." });
-        } finally {
-          setLoading(false);
-        }
-      };
-  
-      if (e.currentTarget.reportValidity()) {
-        saveData();
-      }
-    };
-  
-    useEffect(() => {
-      setData({ ...data, ...formData });
-    }, [formData]);
+export interface FormField {
+  name: string;
+  type: "input" | "textarea" | "switch" | "datepicker" | "dropdown";
+  label?: string;
+  placeholder?: string;
+  required?: boolean;
+  disabled?: boolean;
+  // Input specific
+  inputType?: "text" | "email" | "password" | "number";
+  // TextArea specific
+  rows?: number;
+  // Switch specific
+  description?: string;
+  // Dropdown specific
+  options?: Array<{ value: string; label: string }>;
+  endpoint?: string;
+  optionValueKey?: string;
+  optionLabelKey?: string;
+  queryKey?: string[];
+}
 
-    useEffect(() => {
-      if (!isNew) {
-        const fetchData = async () => {
-          setLoading(true);
-          setErrors(null);
-  
-          try {
-            const response = await apiCall<any>(singleIntityForm ? props.endPoint : `${props.endPoint}/${id}`, 'GET', {}, singleIntityForm); 
-            setData(response);
-            if (singleIntityForm) setId(response.id);
-          } catch (err: any) {
-            setErrors(err.response?.data?.errors || { error: "Failed to load data." });
-            if (singleIntityForm) {
-              setIsNew(true);
-            }
-          } finally {
-            setLoading(false);
-          }
-        };
-  
-        fetchData();
-      }
-  
-      props.children?.map((child) => {
-        child.hidden && handleHiddenFields(child.name, child.value || "");
-      });
-      
-      
-    }, []);
+interface ApiFormProps {
+  fields: FormField[];
+  title?: string;
+  onSubmit?: (data: Record<string, any>) => void;
+  submitText?: string;
+  className?: string;
+  loading?: boolean;
+  error?: string;
+  initialData?: Record<string, any>;
+  customLayout?: (props: {
+    fields: FormField[];
+    formData: Record<string, any>;
+    handleFieldChange: (name: string, value: any) => void;
+    handleSubmit: (e: React.FormEvent) => void;
+    loading: boolean;
+    error?: string;
+    renderField: (field: FormField) => React.ReactNode;
+  }) => React.ReactNode;
+}
 
-    return (
-      <div className="api-form-container">
-        {loading && <MaintenanceSpinner size={64} />}
-        {errors?.error && <Alert variant="danger">{errors.error}</Alert>}
-  
-        <Card className="shadow-sm border-0">
-          <Card.Body>
-            <Form onSubmit={handleSubmit} noValidate validated={validated}>
-              <h5 className="mb-4 fw-bold text-primary">{formName}</h5>
-  
-              {oriantation === 'horizontal' ? (
-                <Row>
-                  {props.children?.map((child: any) => (
-                    <Col key={child.name}>
-                      {renderFormField(child, setFormData, formData, data)}
-                    </Col>
-                  ))}
-                </Row>
-              ) : (
-                <>
-                  {props.children?.map((child: any) => renderFormField(child, setFormData, formData, data))}
-                </>
-              )}
-  
-              
-              <ButtonGroup className="d-flex justify-content-end mt-4">
-                <Button variant="primary" type="submit" disabled={loading}>
-                  {loading ? (
-                    <>
-                      <Spinner animation="border" size="sm" className="me-2" /> Saving...
-                    </>
-                  ) : (
-                    <>
-                      <i className="bi bi-floppy me-2"></i> {submitButtonName}
-                    </>
-                  )}
-                </Button>
+const ApiForm = ({
+  fields,
+  title,
+  onSubmit,
+  submitText = "Submit",
+  className,
+  loading = false,
+  error,
+  initialData = {},
+  customLayout,
+}: ApiFormProps) => {
+  const [formData, setFormData] = useState<Record<string, any>>(initialData);
 
-                {isNew && addAnotherButton && (
-                  <Button
-                    variant="secondary"
-                    type="button"
-                    disabled={loading}
-                    onClick={() => {
-                      // setAddNew(true);
-                      document.getElementById(`submit-${formName}`)?.click();
-                    }}
-                  >
-                    {loading ? (
-                      <>
-                        <Spinner animation="border" size="sm" className="me-2" /> Saving...
-                      </>
-                    ) : (
-                      <>
-                        <i className="bi bi-node-plus me-2">Save and Add Another</i> 
-                      </>
-                    )}
-                  </Button>
-                )}
-              </ButtonGroup>
-            </Form>
-          </Card.Body>
-        </Card>
-      </div>
-    );
+  const handleFieldChange = (name: string, value: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
-  
-  // Helper to render child fields
-  function renderFormField(child: any, setFormData: any, formData: any, data:any) {
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     
-    const handelInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-      };
+    // Convert Date objects to YYYY-MM-DD format for API submission
+    const processedData = { ...formData };
+    Object.keys(processedData).forEach(key => {
+      if (processedData[key] instanceof Date) {
+        processedData[key] = processedData[key].toISOString().split('T')[0];
+      }
+    });
     
-    const handelSelectChange = (name: string, value: string) => {
-    setFormData({ ...formData, [name]: value });
+    onSubmit?.(processedData);
+  };
+
+  const renderField = (field: FormField) => {
+    const commonProps = {
+      name: field.name,
+      label: field.label,
+      required: field.required,
+      disabled: field.disabled || loading,
+      className: "mb-4",
     };
 
-    const handelSwitchChange = (name: string, value: boolean) => {
-    setFormData({ ...formData, [name]: value });
-    };
-    const handelDatePickerChange = (name: string, value: any) => {
-      console.log("handelDatePickerChange", name, value);      
-      setFormData({ ...formData, [name]: value });
-    };
+    switch (field.type) {
+      case "input":
+        return (
+          <ApiInput
+            key={field.name}
+            {...commonProps}
+            type={field.inputType}
+            placeholder={field.placeholder}
+            value={formData[field.name] || ""}
+            onChange={(value) => handleFieldChange(field.name, value)}
+          />
+        );
 
-    switch (child.component) {
-      case "InputGroup":
+      case "textarea":
         return (
-          <InputGroup
-            {...child}
-            key={child.name}
-            disabled={child.disabled || false}
-            value={formData[child.name] ?? data?.[child.name] ?? child.value ?? ''}
-            onChange={handelInputChange}
+          <ApiTextArea
+            key={field.name}
+            {...commonProps}
+            placeholder={field.placeholder}
+            rows={field.rows}
+            value={formData[field.name] || ""}
+            onChange={(value) => handleFieldChange(field.name, value)}
           />
         );
-      case "TextArea":
-        return (
-          <TextArea
-            {...child}
-            key={child.name}
-            disabled={child.disabled || false}
-            value={formData[child.name] ?? data?.[child.name] ?? child.value ?? ''}
-            onChange={handelInputChange}
-          />
-        );
-      case "Select":
-        return (
-          <ApiSelect
-            {...child}
-            key={child.name}
-            disabled={child.disabled || false}
-            value={formData[child.name] ?? data?.[child.name] ?? child.value ?? 'Active'}
-            handelSelectChange={handelSelectChange}
-          />
-        );
-      case "Switch":
+
+      case "switch":
         return (
           <ApiSwitch
-            {...child}
-            key={child.name}
-            disabled={child.disabled || false}
-            value={formData[child.name] ?? data?.[child.name] ?? child.value ?? ''}
-            handelSwitchChange={handelSwitchChange}
+            key={field.name}
+            {...commonProps}
+            description={field.description}
+            checked={formData[field.name] || false}
+            onChange={(checked) => handleFieldChange(field.name, checked)}
           />
         );
-      case "DatePicker":
-        return(
-          <DatePicker 
-            {...child}
-            key={child.name}
-            disabled={child.disabled || false}
-            value={formData[child.name] ?? data?.[child.name] ?? child.value ?? ''}
-            onChange={handelDatePickerChange}
-        />
-        )
-      case "MediaUploader":        
-        return(
-          <MediaUploader
-            {...child}
-            key={child.name}
-            onUploadComplete={(name, mediaIds)=> setFormData({ ...formData, [name]: mediaIds })}
-            value={data?.[child.name] ?? null}
+
+      case "datepicker":
+        return (
+          <ApiDatePicker
+            key={field.name}
+            {...commonProps}
+            placeholder={field.placeholder}
+            value={formData[field.name]}
+            onChange={(date) => handleFieldChange(field.name, date)}
           />
-        )
+        );
+
+      case "dropdown":
+        return (
+          <ApiDropDown
+            key={field.name}
+            {...commonProps}
+            placeholder={field.placeholder}
+            options={field.options}
+            endpoint={field.endpoint}
+            optionValueKey={field.optionValueKey}
+            optionLabelKey={field.optionLabelKey}
+            queryKey={field.queryKey}
+            value={formData[field.name] || ""}
+            onChange={(value) => handleFieldChange(field.name, value)}
+          />
+        );
+
       default:
         return null;
     }
+  };
+
+  // If custom layout is provided, use it
+  if (customLayout) {
+    return (
+      <div className={className}>
+        {customLayout({
+          fields,
+          formData,
+          handleFieldChange,
+          handleSubmit,
+          loading,
+          error,
+          renderField,
+        })}
+      </div>
+    );
   }
-  
-  export default ApiForm;
+
+  const content = (
+    <form onSubmit={handleSubmit} className="space-y-4 h-full flex flex-col">
+      {error && (
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+      
+      <Button type="submit" disabled={loading} className="w-full">
+        {loading ? "Loading..." : "Save"}
+      </Button>
+      
+      <div className="flex-1 overflow-y-auto space-y-4">
+        {fields.map(renderField)}
+      </div>
+    </form>
+  );
+
+  if (title) {
+    return (
+      <Card className={cn("h-full flex flex-col", className)}>
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex-1 overflow-hidden">{content}</CardContent>
+      </Card>
+    );
+  }
+
+  return <div className={cn("space-y-4 h-full", className)}>{content}</div>;
+};
+
+export default ApiForm;

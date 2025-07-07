@@ -1,114 +1,72 @@
-import { Routes, Route } from 'react-router-dom';
-import { AdminLayout, DashboardLayout, PublicLayout } from './layouts';
-import { useAuth } from './context/AuthContext';
-import { useEffect, useState } from 'react';
-import { fetchTenantBySubdomain } from './utils/fakeApi';
-import { AdminCompaniesPage, AdminUsersPage, DynamicFormPage, NotFoundPage, TenantAssetsDetailsPage, TenantDashboardPage, TenantReportsPage, TenantWorkOrderDetailsPage, TenantWorkOrderPage, TennantAssetsPage } from './pages';
-import LoginPage from './pages/Authentication/LoginPage';
-import { getTenantName } from './utils/api';
-import { MiscCostsTab, MiscCostTabDetails, MiscCostTabNew, WorkOrderChecklistForm, WorkOrderChecklistNew, WorkOrderChicklistTab, WorkOrderLogsForm, WorkOrderLogsTab } from './pages/WorkOrderDetailsTabs';
-import TenantSettingsPage from './pages/TenantSettings/TenantSettingsPage';
-import Sites from './pages/TenantSettings/Sites/Sites';
-import NewSite from './pages/TenantSettings/Sites/NewSite';
-import SiteDetails from './pages/TenantSettings/Sites/SiteDetails';
-import NewLocation from './pages/TenantSettings/Sites/NewLocation';
-import LocationDetails from './pages/TenantSettings/Sites/LocationDetails';
-import NewCategory from './pages/TenantSettings/Category/NewCategory';
-import CategoryDetails from './pages/TenantSettings/Category/CategoryDetails';
-import NewWorkOrderStatus from './pages/TenantSettings/WorkOrderTables/NewWorkOrderStatus';
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "next-themes";
+import { AuthProvider } from "./contexts/AuthContext";
+import { Layout } from "./components/Layout";
+import Dashboard from "./pages/Dashboard";
+import Index from "./pages/Index";
+import Assets from "./pages/Assets";
+import CreateAsset from "./pages/CreateAsset";
+import CreateEquipment from "./pages/CreateEquipment";
+import CreateAttachment from "./pages/CreateAttachment";
+import EditAsset from "./pages/EditAsset";
+import Workorders from "./pages/Workorders";
+import Settings from "./pages/Settings";
+import CreateSite from "./pages/CreateSite";
+import EditSite from "./pages/EditSite";
+import CreateLocation from "./pages/CreateLocation";
+import EditLocation from "./pages/EditLocation";
+import CreateEquipmentCategory from "./pages/CreateEquipmentCategory";
+import CreateAttachmentCategory from "./pages/CreateAttachmentCategory";
+import CreateWorkOrder from "./pages/CreateWorkOrder";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import NotFound from "./pages/NotFound";
 
+const queryClient = new QueryClient();
 
-const App: React.FC = () => {
-  const subdomain =getTenantName();
-  const { tenant, setTenant } = useAuth();
-  const [tenantError, setTenantError] = useState(false); // NEW
-
-  useEffect(() => {
-    if (subdomain && subdomain !== 'admin' && !tenant) {
-      fetchTenantBySubdomain(subdomain).then((fetchedTenant) => {
-        if (fetchedTenant) {
-          setTenant(fetchedTenant);
-        } else {
-          setTenantError(true); // Tenant not found
-        }
-      });
-    }
-  }, [subdomain, tenant, setTenant]);
-  
-  if (tenantError) {
-    return <NotFoundPage />; // 🚨 Show 404 for missing tenant
-  }
-
-  if (!subdomain) {
-    return (
-      <>
-        <PublicLayout />
-      </>
-    );
-  }
-
-  if (subdomain === 'admin') {
-    return (
-      <Routes>
-        <Route path="/login" element={<LoginPage isAdmin={true} />} />
-          <Route path="/" element={<AdminLayout />}>
-          {/* <Route index element={<AdminHome />} /> */}
-          <Route path="/form/:encodedEntity/:id" element={<DynamicFormPage />} />
-          {/* <Route path="/generated/:encodedEntity/:id" element={<GeneratedEntityPage />} /> */}
-          <Route path="admin/companies" element={<AdminCompaniesPage />} />
-          <Route path="admin/users" element={<AdminUsersPage />} />
-          {/* <Route path="settings" element={<AdminSettingsPage />} />  */}
-        </Route>
-      </Routes>
-    );
-  }
-  
-  // Tenant dashboard layout with nested routing
-  return (
-    <>
-      <Routes>
-        <Route path="/login" element={<LoginPage isAdmin={false} />} />
-          <Route path="/" element={<DashboardLayout />}>
-            <Route path="/form/:encodedEntity/:id" element={<DynamicFormPage />} />
-            {/* <Route path="/generated/:encodedEntity/:id" element={<GeneratedEntityPage />} /> */}
-            <Route index element={<TenantDashboardPage />} />
-            <Route path="/reports" element={<TenantReportsPage />} />
-
-            <Route path="/settings" element={<TenantSettingsPage />} />
-              
-            <Route path="settings/sites" element={<Sites />} />
-            <Route path="settings/sites/new" element={<NewSite />} />
-            <Route path="settings/sites/:id" element={<SiteDetails />} />
-            <Route path="settings/locations/new" element={<NewLocation />} />
-            <Route path="settings/locations/:id" element={<LocationDetails />} />
-
-            <Route path="settings/category/new" element={<NewCategory />} />
-            <Route path="settings/category/:id" element={<CategoryDetails />} />
-
-            <Route path="settings/work-order-status/new" element={<NewWorkOrderStatus />} />
-            <Route path="settings/work-order-status/:id" element={<CategoryDetails />} />
-
-            <Route path="/work-orders" element={<TenantWorkOrderPage />} />
-            <Route path="/work-orders/:id" element={<TenantWorkOrderDetailsPage />} />
-            <Route path="/work-orders/:workOrderId/work-order-logs" element={<WorkOrderLogsTab />} />
-            <Route path="/work-orders/:workOrderId/work-order-logs/:id" element={<WorkOrderLogsForm />} />
-            <Route path="/work-orders/:workOrderId/work-order-checklist" element={<WorkOrderChicklistTab />} />
-            <Route path="/work-orders/:workOrderId/work-order-checklist/new" element={<WorkOrderChecklistNew />} />
-            <Route path="/work-orders/:workOrderId/work-order-checklist/:id" element={<WorkOrderChecklistForm />} />
-            <Route path="/work-orders/:workOrderId/work-order-misc-cost" element={<MiscCostsTab />} />
-            <Route path="/work-orders/:workOrderId/work-order-misc-cost/new" element={<MiscCostTabNew />} />
-            <Route path="/work-orders/:workOrderId/work-order-misc-cost/:id" element={<MiscCostTabDetails />} />
-
-            <Route path="/assets" element={<TennantAssetsPage />} />
-            <Route path="/assets/:id" element={<TenantAssetsDetailsPage />} />
-            {/* 
-            <Route path="assets" element={<AssetsPage />} />
-            <Route path="reports" element={<ReportsPage />} />
-            <Route path="settings" element={<SettingsPage />} /> */}
-          </Route>
-      </Routes>
-    </>
-  );
-};
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+          <Routes>
+            {/* Public routes without layout */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            
+            {/* Protected routes with layout */}
+            <Route path="/" element={<Layout><Dashboard /></Layout>} />
+            <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
+            <Route path="/assets" element={<Layout><Assets /></Layout>} />
+            <Route path="/assets/create" element={<Layout><CreateAsset /></Layout>} />
+            <Route path="/assets/equipment/create" element={<Layout><CreateEquipment /></Layout>} />
+            <Route path="/assets/attachment/create" element={<Layout><CreateAttachment /></Layout>} />
+            <Route path="/assets/edit/:id" element={<Layout><EditAsset /></Layout>} />
+            <Route path="/workorders" element={<Layout><Workorders /></Layout>} />
+            <Route path="/workorders/create" element={<Layout><CreateWorkOrder /></Layout>} />
+            <Route path="/settings" element={<Layout><Settings /></Layout>} />
+            <Route path="/settings/sites/new" element={<Layout><CreateSite /></Layout>} />
+            <Route path="/settings/sites/edit/:id" element={<Layout><EditSite /></Layout>} />
+            <Route path="/settings/locations/new" element={<Layout><CreateLocation /></Layout>} />
+            <Route path="/settings/locations/edit/:id" element={<Layout><EditLocation /></Layout>} />
+            <Route path="/settings/equipment-categories/new" element={<Layout><CreateEquipmentCategory /></Layout>} />
+            <Route path="/settings/attachment-categories/new" element={<Layout><CreateAttachmentCategory /></Layout>} />
+            
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+        </TooltipProvider>
+      </ThemeProvider>
+    </AuthProvider>
+  </QueryClientProvider>
+);
 
 export default App;
