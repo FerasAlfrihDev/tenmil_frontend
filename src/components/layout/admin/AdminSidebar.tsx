@@ -1,45 +1,35 @@
 // ========================================
-// SIDEBAR COMPONENT
+// ADMIN SIDEBAR COMPONENT
 // ========================================
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard,
-  Truck,
-  Wrench,
-  Package,
-  ShoppingCart,
-  CreditCard,
-  ChartColumn,
+  Building,
   Users,
   Settings
 } from 'lucide-react';
 
-interface SidebarProps {
+interface AdminSidebarProps {
   children?: React.ReactNode;
 }
 
-interface NavItem {
+interface AdminNavItem {
   href: string;
   text: string;
   icon: React.ComponentType<any>;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ children }) => {
-  const defaultNavItems: NavItem[] = [
+const AdminSidebar: React.FC<AdminSidebarProps> = ({ children }) => {
+  const defaultNavItems: AdminNavItem[] = [
     { href: '/', text: 'Dashboard', icon: LayoutDashboard },
-    { href: '/assets', text: 'Assets', icon: Truck },
-    { href: '/work-orders', text: 'Work Orders', icon: Wrench },
-    { href: '/parts', text: 'Parts', icon: Package },
-    { href: '/purchase-orders', text: 'Purchase Orders', icon: ShoppingCart },
-    { href: '/billing', text: 'Billing', icon: CreditCard },
-    { href: '/analytics', text: 'Analytics/Reports', icon: ChartColumn },
+    { href: '/companies', text: 'Companies', icon: Building },
     { href: '/users', text: 'Users', icon: Users },
     { href: '/settings', text: 'Settings', icon: Settings },
   ];
 
-  const renderNavItems = (items: NavItem[]) => {
+  const renderNavItems = (items: AdminNavItem[]) => {
     // Get current path to determine active item using React Router's useLocation
     const location = useLocation();
     const currentPath = location.pathname;
@@ -67,9 +57,23 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   };
 
   return (
-    <aside className="app-sidebar">
+    <aside className="app-sidebar admin-sidebar">
       {children || (
         <nav className="sidebar-nav">
+          <div className="sidebar-header mb-lg">
+            <div className="admin-badge" style={{
+              backgroundColor: 'rgba(168, 85, 247, 0.1)',
+              color: '#a855f7',
+              padding: '0.5vmin 1vmin',
+              borderRadius: '0.3vmin',
+              fontSize: '0.75rem',
+              fontWeight: 'bold',
+              textAlign: 'center',
+              marginBottom: '1vmin'
+            }}>
+              ADMIN PORTAL
+            </div>
+          </div>
           {renderNavItems(defaultNavItems)}
         </nav>
       )}
@@ -77,4 +81,4 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   );
 };
 
-export default Sidebar;
+export default AdminSidebar;

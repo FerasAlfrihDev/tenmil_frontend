@@ -20,6 +20,9 @@ html {
   -moz-osx-font-smoothing: grayscale;
   // Base font size using viewport units
   @include body-text;
+  // Ensure scrolling is allowed
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 body {
@@ -30,7 +33,9 @@ body {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
-  @include responsive-container;
+  // Allow proper scrolling for landing page
+  overflow-x: hidden;
+  overflow-y: auto;
   @include custom-scrollbar;
 }
 

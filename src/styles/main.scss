@@ -13,10 +13,13 @@
 // 3. Layout
 @use 'layout/main-layout';
 
-// 4. Components
+// 4. Pages
+@use 'pages/landing';
+
+// 5. Components
 @use 'components/buttons';
 @use 'components/cards';
 @use 'components/navigation';
 
-// 5. Utilities
+// 6. Utilities
 @use 'utilities/spacing';

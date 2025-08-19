@@ -1,5 +1,9 @@
 import { useState } from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Layout } from './components/layout'
+import { AdminLayout } from './components/layout/admin'
+import { Dashboard, ComingSoon, LandingPage } from './pages'
+import { AdminDashboard, AdminComingSoon } from './pages/admin'
 import apiService from './services/api'
 import { Moon, Sun, Globe, Bell } from 'lucide-react'
 
@@ -109,60 +113,177 @@ function App() {
   // Remove custom sidebar content to use the default sidebar with proper colors and icons
   const sidebarContent = null
 
-  return (
-    <div className={isDarkMode ? 'main-content-dark' : ''}>
+  const subdomainType = apiService.getSubdomainType();
+
+  // Render different layouts based on subdomain type
+  const renderLayout = () => {
+    // Landing page for main domain (localhost with no subdomain)
+    if (subdomainType === 'main') {
+      return <LandingPage />;
+    }
+
+    if (subdomainType === 'admin') {
+      return (
+        <AdminLayout 
+          headerTitle="Tenmil Admin Portal"
+          headerContent={headerContent}
+          sidebarContent={sidebarContent}
+        >
+          <Routes>
+            <Route 
+              path="/" 
+              element={
+                <AdminDashboard 
+                  isDarkMode={isDarkMode} 
+                  count={count} 
+                  setCount={setCount} 
+                />
+              } 
+            />
+            <Route 
+              path="/companies" 
+              element={
+                <AdminComingSoon 
+                  pageName="Company Management" 
+                  description="Manage all companies in the system. Create, edit, and configure company settings, licenses, and permissions."
+                  expectedDate="Q1 2024"
+                />
+              } 
+            />
+            <Route 
+              path="/users" 
+              element={
+                <AdminComingSoon 
+                  pageName="User Administration" 
+                  description="Comprehensive user management across all companies. Manage roles, permissions, and user lifecycle."
+                  expectedDate="Q1 2024"
+                />
+              } 
+            />
+            <Route 
+              path="/settings" 
+              element={
+                <AdminComingSoon 
+                  pageName="System Settings" 
+                  description="Global system configuration, security settings, and administrative controls for the entire platform."
+                  expectedDate="Q1 2024"
+                />
+              } 
+            />
+          </Routes>
+        </AdminLayout>
+      );
+    }
+
+    // Default layout for wildcard subdomains (company/tenant portals)
+    return (
       <Layout 
         headerTitle="Tenmil Dashboard"
         headerContent={headerContent}
         sidebarContent={sidebarContent}
       >
-        <div className="card">
-        <div className="card-header">
-          <h2>Welcome to Tenmil</h2>
-        </div>
-        <div className="card-body">
-          <p>This is your main content area with <strong>smart viewport scaling</strong>. Everything scales smoothly until 1536x695, then locks to fixed sizes with overflow!</p>
-          
-          <div className="mb-lg">
-            <h3>Typography & Spacing Showcase</h3>
-            <p className="text-xs mb-xs">Extra small text (1.2vmin) - XS spacing</p>
-            <p className="text-sm mb-sm">Small text (1.6vmin) - SM spacing</p>
-            <p className="text-base mb-base">Base text (2vmin) - Base spacing</p>
-            <p className="text-md mb-md">Medium text (2.4vmin) - MD spacing</p>
-            <p className="text-lg mb-lg">Large text (3.2vmin) - LG spacing</p>
-          </div>
-
-          <div className="p-md card" style={{ backgroundColor: 'rgba(100, 108, 255, 0.1)' }}>
-            <h4>Spacing Examples</h4>
-            <div className="mt-base">
-              <span className="p-xs" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', marginRight: '0.5rem' }}>XS padding</span>
-              <span className="p-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', marginRight: '0.5rem' }}>SM padding</span>
-              <span className="p-base" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>Base padding</span>
-            </div>
-          </div>
-
-          <div className="mt-lg mb-lg">
-            <h4>System Information</h4>
-            <p>Current subdomain type: <span className="text-primary font-semibold">{apiService.getSubdomainType()}</span></p>
-            <p>API Base URL: <code className="text-sm font-medium">{apiService.getBaseURL()}</code></p>
-            <p className="text-muted text-sm">Responsive scaling ≥1536x695, fixed sizes with overflow below that</p>
-          </div>
-          
-          <div className="mt-xl gap-base" style={{ display: 'flex' }}>
-            <button 
-              className="btn btn-primary" 
-              onClick={() => setCount((count) => count + 1)}
-            >
-              Count is {count}
-            </button>
-            <button className="btn btn-secondary">
-              Smart Scaling
-            </button>
-          </div>
-        </div>
-      </div>
+        <Routes>
+          <Route 
+            path="/" 
+            element={
+              <Dashboard 
+                isDarkMode={isDarkMode} 
+                count={count} 
+                setCount={setCount} 
+              />
+            } 
+          />
+          <Route 
+            path="/assets" 
+            element={
+              <ComingSoon 
+                pageName="Asset Management" 
+                description="Comprehensive asset tracking and maintenance scheduling system. Manage your equipment lifecycle, track maintenance history, and optimize asset performance."
+                expectedDate="Q2 2024"
+              />
+            } 
+          />
+          <Route 
+            path="/work-orders" 
+            element={
+              <ComingSoon 
+                pageName="Work Orders" 
+                description="Create, assign, and track work orders. Streamline your maintenance workflow with automated scheduling and progress tracking."
+                expectedDate="Q1 2024"
+              />
+            } 
+          />
+          <Route 
+            path="/parts" 
+            element={
+              <ComingSoon 
+                pageName="Parts Inventory" 
+                description="Manage spare parts inventory, track stock levels, and automate reordering. Never run out of critical components again."
+                expectedDate="Q2 2024"
+              />
+            } 
+          />
+          <Route 
+            path="/purchase-orders" 
+            element={
+              <ComingSoon 
+                pageName="Purchase Orders" 
+                description="Streamline procurement with digital purchase orders. Track approvals, deliveries, and vendor performance."
+                expectedDate="Q2 2024"
+              />
+            } 
+          />
+          <Route 
+            path="/billing" 
+            element={
+              <ComingSoon 
+                pageName="Billing & Invoicing" 
+                description="Automated billing system with invoice generation, payment tracking, and financial reporting capabilities."
+                expectedDate="Q3 2024"
+              />
+            } 
+          />
+          <Route 
+            path="/analytics" 
+            element={
+              <ComingSoon 
+                pageName="Analytics & Reports" 
+                description="Advanced analytics dashboard with customizable reports, KPI tracking, and performance insights."
+                expectedDate="Q2 2024"
+              />
+            } 
+          />
+          <Route 
+            path="/users" 
+            element={
+              <ComingSoon 
+                pageName="User Management" 
+                description="Manage user accounts, roles, and permissions. Control access level and track user activity."
+                expectedDate="Q1 2024"
+              />
+            } 
+          />
+          <Route 
+            path="/settings" 
+            element={
+              <ComingSoon 
+                pageName="System Settings" 
+                description="Configure system preferences, integrations, and customization options to fit your organization's needs."
+                expectedDate="Q1 2024"
+              />
+            } 
+          />
+        </Routes>
       </Layout>
-    </div>
+    );
+  };
+
+  return (
+    <Router>
+      <div className={isDarkMode ? 'main-content-dark' : ''} style={{ minHeight: '100vh' }}>
+        {renderLayout()}
+      </div>
+    </Router>
   )
 }
 
