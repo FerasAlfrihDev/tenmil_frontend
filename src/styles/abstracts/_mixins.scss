@@ -1,0 +1,413 @@
+// ========================================
+// MIXINS
+// ========================================
+
+@use 'variables' as *;
+
+// Function to convert viewport units to fixed pixel equivalents (1536x695)
+@function to-fixed-pixels($viewport-value) {
+  // Font sizes
+  @if $viewport-value == $font-size-xs { @return $font-size-xs-fixed; }
+  @if $viewport-value == $font-size-sm { @return $font-size-sm-fixed; }
+  @if $viewport-value == $font-size-base { @return $font-size-base-fixed; }
+  @if $viewport-value == $font-size-md { @return $font-size-md-fixed; }
+  @if $viewport-value == $font-size-lg { @return $font-size-lg-fixed; }
+  @if $viewport-value == $font-size-xl { @return $font-size-xl-fixed; }
+  @if $viewport-value == $font-size-xxl { @return $font-size-xxl-fixed; }
+  @if $viewport-value == $font-size-xxxl { @return $font-size-xxxl-fixed; }
+  
+  // Spacing
+  @if $viewport-value == $space-xs { @return $space-xs-fixed; }
+  @if $viewport-value == $space-sm { @return $space-sm-fixed; }
+  @if $viewport-value == $space-base { @return $space-base-fixed; }
+  @if $viewport-value == $space-md { @return $space-md-fixed; }
+  @if $viewport-value == $space-lg { @return $space-lg-fixed; }
+  @if $viewport-value == $space-xl { @return $space-xl-fixed; }
+  @if $viewport-value == $space-xxl { @return $space-xxl-fixed; }
+  @if $viewport-value == $space-xxxl { @return $space-xxxl-fixed; }
+  
+  // Layout spacing
+  @if $viewport-value == $header-padding { @return $header-padding-fixed; }
+  @if $viewport-value == $sidebar-padding { @return $sidebar-padding-fixed; }
+  @if $viewport-value == $main-content-gap { @return $main-content-gap-fixed; }
+  @if $viewport-value == $card-padding { @return $card-padding-fixed; }
+  @if $viewport-value == $button-padding-v { @return $button-padding-v-fixed; }
+  @if $viewport-value == $button-padding-h { @return $button-padding-h-fixed; }
+  @if $viewport-value == $section-margin { @return $section-margin-fixed; }
+  
+  // Fallback: return original value if no match found
+  @return $viewport-value;
+}
+
+// Responsive Design Mixin
+// Rule: Responsive if screen >= 1366x720, else fixed with scroll
+@mixin responsive-container {
+  @media (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  @media not all and (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    width: $fixed-width;
+    height: $fixed-height;
+    overflow: auto;
+  }
+}
+
+// Viewport-based sizing (follows rule 5)
+@mixin viewport-size($width: auto, $height: auto, $min-width: null, $max-width: null) {
+  @media (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    @if $width != auto {
+      width: $width;
+    }
+    @if $height != auto {
+      height: $height;
+    }
+    @if $min-width {
+      min-width: $min-width;
+    }
+    @if $max-width {
+      max-width: $max-width;
+    }
+  }
+  
+  @media not all and (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    @if $width != auto {
+      width: calc(#{$width} * #{$fixed-width} / 100vw);
+    }
+    @if $height != auto {
+      height: calc(#{$height} * #{$fixed-height} / 100vh);
+    }
+    @if $min-width {
+      min-width: calc(#{$min-width} * #{$fixed-width} / 100vw);
+    }
+    @if $max-width {
+      max-width: calc(#{$max-width} * #{$fixed-width} / 100vw);
+    }
+  }
+}
+
+// Viewport-based font sizing with 1536x695 breakpoint logic
+@mixin viewport-font-size($size, $min-size: null, $max-size: null) {
+  @media (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    // Responsive mode: use viewport units with constraints (≥1536x695)
+    @if $min-size and $max-size {
+      font-size: clamp(#{$min-size}, #{$size}, #{$max-size});
+    } @else if $min-size {
+      font-size: max(#{$size}, #{$min-size});
+    } @else if $max-size {
+      font-size: min(#{$size}, #{$max-size});
+    } @else {
+      font-size: $size;
+    }
+  }
+  
+  @media not all and (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    // Fixed mode: use exact pixel values as if viewport is 1536x695 (<1536x695)
+    $fixed-size: to-fixed-pixels($size);
+    @if $min-size and $max-size {
+      font-size: clamp(#{$min-size}, #{$fixed-size}, #{$max-size});
+    } @else if $min-size {
+      font-size: max(#{$fixed-size}, #{$min-size});
+    } @else if $max-size {
+      font-size: min(#{$fixed-size}, #{$max-size});
+    } @else {
+      font-size: #{$fixed-size};
+    }
+  }
+}
+
+// Typography scale mixins
+@mixin text-xs($weight: $font-weight-normal) {
+  font-weight: $weight;
+  line-height: $line-height-base;
+  @include viewport-font-size($font-size-xs, 10px, 16px);
+}
+
+@mixin text-sm($weight: $font-weight-normal) {
+  font-weight: $weight;
+  line-height: $line-height-base;
+  @include viewport-font-size($font-size-sm, 12px, 18px);
+}
+
+@mixin text-base($weight: $font-weight-normal) {
+  font-weight: $weight;
+  line-height: $line-height-base;
+  @include viewport-font-size($font-size-base, 14px, 24px);
+}
+
+@mixin text-md($weight: $font-weight-normal) {
+  font-weight: $weight;
+  line-height: $line-height-base;
+  @include viewport-font-size($font-size-md, 16px, 28px);
+}
+
+@mixin text-lg($weight: $font-weight-normal) {
+  font-weight: $weight;
+  line-height: $line-height-tight;
+  @include viewport-font-size($font-size-lg, 18px, 36px);
+}
+
+@mixin text-xl($weight: $font-weight-medium) {
+  font-weight: $weight;
+  line-height: $line-height-tight;
+  @include viewport-font-size($font-size-xl, 24px, 48px);
+}
+
+@mixin text-xxl($weight: $font-weight-semibold) {
+  font-weight: $weight;
+  line-height: $line-height-tight;
+  @include viewport-font-size($font-size-xxl, 32px, 64px);
+}
+
+@mixin text-xxxl($weight: $font-weight-bold) {
+  font-weight: $weight;
+  line-height: $line-height-tight;
+  @include viewport-font-size($font-size-xxxl, 48px, 96px);
+}
+
+// Utility typography mixins
+@mixin heading-primary {
+  color: $primary-color;
+  @include text-xxl($font-weight-bold);
+}
+
+@mixin heading-secondary {
+  @include text-xl($font-weight-semibold);
+}
+
+@mixin body-text {
+  @include text-base($font-weight-normal);
+}
+
+@mixin small-text {
+  opacity: 0.8;
+  @include text-sm($font-weight-normal);
+}
+
+@mixin button-text {
+  @include text-base($font-weight-medium);
+}
+
+// Enhanced viewport-based spacing system with 1536x695 breakpoint logic
+@mixin viewport-spacing($property: padding, $size: $space-base, $sides: all) {
+  @media (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    // Responsive mode: use viewport units (≥1536x695)
+    @if $sides == all {
+      #{$property}: $size;
+    } @else if $sides == vertical {
+      #{$property}-top: $size;
+      #{$property}-bottom: $size;
+    } @else if $sides == horizontal {
+      #{$property}-left: $size;
+      #{$property}-right: $size;
+    } @else if $sides == top {
+      #{$property}-top: $size;
+    } @else if $sides == right {
+      #{$property}-right: $size;
+    } @else if $sides == bottom {
+      #{$property}-bottom: $size;
+    } @else if $sides == left {
+      #{$property}-left: $size;
+    }
+  }
+  
+  @media not all and (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    // Fixed mode: use exact pixel values as if viewport is 1536x695 (<1536x695)
+    $fixed-size: to-fixed-pixels($size);
+    @if $sides == all {
+      #{$property}: $fixed-size;
+    } @else if $sides == vertical {
+      #{$property}-top: $fixed-size;
+      #{$property}-bottom: $fixed-size;
+    } @else if $sides == horizontal {
+      #{$property}-left: $fixed-size;
+      #{$property}-right: $fixed-size;
+    } @else if $sides == top {
+      #{$property}-top: $fixed-size;
+    } @else if $sides == right {
+      #{$property}-right: $fixed-size;
+    } @else if $sides == bottom {
+      #{$property}-bottom: $fixed-size;
+    } @else if $sides == left {
+      #{$property}-left: $fixed-size;
+    }
+  }
+}
+
+// Custom spacing for specific values with 1536x695 breakpoint logic
+@mixin viewport-spacing-custom($property: padding, $top: 0, $right: 0, $bottom: 0, $left: 0) {
+  @media (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    #{$property}: $top $right $bottom $left;
+  }
+  
+  @media not all and (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    // Convert each value to its 1536x695 pixel equivalent
+    $top-fixed: to-fixed-pixels($top);
+    $right-fixed: to-fixed-pixels($right);
+    $bottom-fixed: to-fixed-pixels($bottom);
+    $left-fixed: to-fixed-pixels($left);
+    #{$property}: $top-fixed $right-fixed $bottom-fixed $left-fixed;
+  }
+}
+
+// Spacing utility mixins for common patterns
+@mixin space-xs($property: margin, $sides: all) {
+  @include viewport-spacing($property, $space-xs, $sides);
+}
+
+@mixin space-sm($property: margin, $sides: all) {
+  @include viewport-spacing($property, $space-sm, $sides);
+}
+
+@mixin space-base($property: margin, $sides: all) {
+  @include viewport-spacing($property, $space-base, $sides);
+}
+
+@mixin space-md($property: margin, $sides: all) {
+  @include viewport-spacing($property, $space-md, $sides);
+}
+
+@mixin space-lg($property: margin, $sides: all) {
+  @include viewport-spacing($property, $space-lg, $sides);
+}
+
+@mixin space-xl($property: margin, $sides: all) {
+  @include viewport-spacing($property, $space-xl, $sides);
+}
+
+@mixin space-xxl($property: margin, $sides: all) {
+  @include viewport-spacing($property, $space-xxl, $sides);
+}
+
+// Gap utilities for flexbox and grid with 1536x695 breakpoint logic
+@mixin gap-xs {
+  @media (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    gap: $space-xs;
+  }
+  @media not all and (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    gap: to-fixed-pixels($space-xs);
+  }
+}
+
+@mixin gap-sm {
+  @media (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    gap: $space-sm;
+  }
+  @media not all and (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    gap: to-fixed-pixels($space-sm);
+  }
+}
+
+@mixin gap-base {
+  @media (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    gap: $space-base;
+  }
+  @media not all and (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    gap: to-fixed-pixels($space-base);
+  }
+}
+
+@mixin gap-md {
+  @media (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    gap: $space-md;
+  }
+  @media not all and (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    gap: to-fixed-pixels($space-md);
+  }
+}
+
+@mixin gap-lg {
+  @media (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    gap: $space-lg;
+  }
+  @media not all and (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    gap: to-fixed-pixels($space-lg);
+  }
+}
+
+@mixin gap-xl {
+  @media (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    gap: $space-xl;
+  }
+  @media not all and (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    gap: to-fixed-pixels($space-xl);
+  }
+}
+
+// Flex layout utilities
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @include gap-base;
+}
+
+@mixin flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  @include gap-base;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+  @include gap-base;
+}
+
+// Layout grid for main structure
+@mixin layout-grid {
+  display: grid;
+  grid-template-areas: 
+    "header header"
+    "sidebar main"
+    "footer footer";
+  grid-template-rows: $header-height 1fr $footer-height;
+  grid-template-columns: $sidebar-width 1fr;
+  gap: 0; // No gap for main layout
+  width: 100%;                      // Use 100% instead of 100vw to avoid scrollbar width
+  height: 100vh;                    // Keep 100vh for height
+}
+
+// Button styling
+@mixin button-base {
+  border-radius: $border-radius;
+  border: 1px solid transparent;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color $transition-speed;
+  @include button-text;
+  @include viewport-spacing(padding, $button-padding-v);
+  padding-left: $button-padding-h;
+  padding-right: $button-padding-h;
+}
+
+// Card styling
+@mixin card {
+  border-radius: $border-radius;
+  box-shadow: $box-shadow-base;
+  @include viewport-spacing(padding, $card-padding);
+}
+
+// Scrollbar styling
+@mixin custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
+  }
+}

@@ -1,0 +1,166 @@
+// ========================================
+// TYPOGRAPHY BASE STYLES
+// ========================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// Heading styles
+h1, .text-xxxl {
+  @include text-xxxl;
+  @include space-lg(margin, bottom);
+}
+
+h2, .text-xxl {
+  @include text-xxl;
+  @include space-md(margin, bottom);
+}
+
+h3, .text-xl {
+  @include text-xl;
+  @include space-md(margin, bottom);
+}
+
+h4, .text-lg {
+  @include text-lg;
+  @include space-base(margin, bottom);
+}
+
+h5, .text-md {
+  @include text-md;
+  @include space-base(margin, bottom);
+}
+
+h6, .text-base {
+  @include text-base;
+  @include space-sm(margin, bottom);
+}
+
+// Paragraph and body text
+p, .body-text {
+  @include body-text;
+  @include space-base(margin, bottom);
+}
+
+// Small text and captions
+small, .text-sm {
+  @include text-sm;
+}
+
+.text-xs {
+  @include text-xs;
+}
+
+// Code and monospace text
+code, pre, .text-mono {
+  font-family: 'Fira Code', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
+  background-color: $surface-secondary;
+  color: $selected-color;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  @include text-sm;
+  
+  @media (prefers-color-scheme: light) {
+    background-color: $primary-10;
+    color: $primary-color;
+  }
+}
+
+// Utility classes for font weights
+.font-light {
+  font-weight: $font-weight-light;
+}
+
+.font-normal {
+  font-weight: $font-weight-normal;
+}
+
+.font-medium {
+  font-weight: $font-weight-medium;
+}
+
+.font-semibold {
+  font-weight: $font-weight-semibold;
+}
+
+.font-bold {
+  font-weight: $font-weight-bold;
+}
+
+// Line height utilities
+.leading-tight {
+  line-height: $line-height-tight;
+}
+
+.leading-normal {
+  line-height: $line-height-base;
+}
+
+.leading-relaxed {
+  line-height: $line-height-relaxed;
+}
+
+// Text alignment utilities (responsive)
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+// Color utilities
+.text-primary {
+  color: $primary-color;
+}
+
+.text-secondary {
+  color: $secondary-color;
+}
+
+.text-selected {
+  color: $selected-color;
+}
+
+.text-success {
+  color: $success-color;
+}
+
+.text-warning {
+  color: $warning-color;
+}
+
+.text-error {
+  color: $error-color;
+}
+
+.text-info {
+  color: $info-color;
+}
+
+.text-muted {
+  color: $text-muted;
+}
+
+.text-disabled {
+  color: $text-disabled;
+}
+
+// Responsive text scaling
+@media (max-width: #{$min-responsive-width - 1px}) or (max-height: #{$min-responsive-height - 1px}) {
+  // Ensure minimum readability on very small screens
+  html {
+    font-size: clamp(12px, 2vmin, 18px);
+  }
+}
+
+@media (min-width: #{$min-responsive-width * 2}) and (min-height: #{$min-responsive-height * 2}) {
+  // Prevent text from getting too large on huge screens
+  html {
+    font-size: clamp(#{$font-size-base}, 2vmin, 28px);
+  }
+}

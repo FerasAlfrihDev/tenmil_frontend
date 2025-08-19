@@ -1,0 +1,64 @@
+// ========================================
+// CARD COMPONENTS
+// ========================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.card {
+  background-color: $surface-primary;
+  border: 1px solid $border-primary;
+  color: $text-color;
+  @include card;
+  
+  &:hover {
+    background-color: $surface-secondary;
+    border-color: $border-focus;
+  }
+  
+  // Cards in main content area should have different styling
+  .app-main & {
+    background-color: rgba($primary-color, 0.05);
+    border-color: $primary-20;
+    color: $main-content-text-color;
+    
+    &:hover {
+      background-color: rgba($primary-color, 0.1);
+      border-color: $primary-50;
+    }
+  }
+  
+  @media (prefers-color-scheme: light) {
+    background-color: rgba($background-light, 0.9);
+    border-color: $border-secondary;
+    
+    .app-main & {
+      background-color: rgba($primary-color, 0.05);
+      border-color: $primary-20;
+      color: $main-content-text-color;
+    }
+  }
+}
+
+.card-header {
+  @include heading-secondary;
+  @include space-base(margin, bottom);
+}
+
+.card-body {
+  @include body-text;
+  @include space-base(margin, vertical);
+}
+
+.card-footer {
+  border-top: 1px solid $border-secondary;
+  @include small-text;
+  @include space-base(margin, top);
+  @include space-base(padding, top);
+  color: $text-secondary;
+  
+  @media (prefers-color-scheme: light) {
+    border-top-color: $border-secondary;
+    color: $text-muted;
+  }
+}

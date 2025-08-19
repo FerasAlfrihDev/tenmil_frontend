@@ -1,0 +1,441 @@
+// ========================================
+// MAIN LAYOUT - 4 PARTS STRUCTURE
+// ========================================
+
+@use 'sass:color';
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.app-container {
+  min-height: 100vh;
+  @include layout-grid;
+  
+  // Sidebar is always expanded at 7vw
+}
+
+// Header Section
+.app-header {
+  grid-area: header;
+  background-color: $header-background;        // #252D63
+  color: $header-text-color;                   // #E6E7E8
+  border-bottom: 1px solid $border-primary;
+  z-index: $z-index-header;
+  @include flex-between;
+  @include viewport-spacing(padding, $header-padding, horizontal);
+  
+  .header-title {
+    color: $header-text-color;                 // #E6E7E8
+    margin: 0;
+    @include text-md;                          // Use medium text size
+  }
+  
+  // Header right content container
+  .header-right-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  
+  // Header actions (icon buttons)
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .header-icon-btn {
+    background: transparent;
+    border: none;
+    color: $header-text-color;                 // #E6E7E8
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: all $transition-speed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &:hover {
+      background-color: rgba($header-text-color, 0.1);
+      color: $selected-color;                  // #FFCF64 on hover
+    }
+    
+    &:focus {
+      outline: 2px solid $selected-color;
+      outline-offset: 2px;
+    }
+  }
+  
+  // Header dropdown containers
+  .header-dropdown-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .header-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: $primary-color;                    // Dark navy background for both dropdowns
+    border: 1px solid $border-primary;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 220px;
+    z-index: 1000;
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+    
+    .dropdown-item {
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      color: $text-color !important;                      // Use text-color for notifications, overridden for languages
+      @include text-sm;                                    // Use small text size - consistent with sidebar
+      transition: background-color $transition-speed;
+      display: flex;
+      flex-direction: row;                                 // Inline layout like sidebar nav
+      align-items: center;                                 // Center align flag and text
+      gap: 0.75rem;                                        // Same gap as sidebar nav items
+      
+      &:hover:not(.view-all) {
+        background-color: $selected-color !important;     // Use selected-color (golden) for hover background
+        color: $primary-color !important;                 // Dark text on golden background for contrast
+      }
+      
+      // Language dropdown items should use selected-color
+      &:has(.dropdown-flag) {
+        color: $selected-color !important;                // Golden text for language items only
+      }
+      
+      &.view-all {
+        color: $primary-color;
+        font-weight: $font-weight-medium;
+        text-align: center;
+        border-top: 1px solid $border-primary;
+        margin-top: 0.5rem;
+        padding-top: 1rem;
+        
+        &:hover {
+          background-color: rgba($primary-color, 0.1);
+          color: $primary-hover;
+        }
+      }
+      
+      .dropdown-time {
+        color: rgba($text-color, 0.6);                      // Keep time as subtle text-color
+        @include text-xs;
+        margin-left: auto;                                   // Push time to the right for notifications
+      }
+      
+      .dropdown-flag {
+        font-size: 1.2rem !important;                       // Slightly larger flag emojis - force style
+        flex-shrink: 0 !important;                          // Prevent flag from shrinking - force style
+        width: 18px !important;                              // Same width as sidebar icons - force style
+        text-align: center !important;                      // Center the flag emoji - force style
+        color: inherit !important;                          // Force inherit from parent (selected-color)
+      }
+      
+      .dropdown-text {
+        color: inherit !important;                           // Inherit from parent dropdown-item (selected-color)
+        white-space: nowrap !important;                      // Prevent text wrapping like sidebar - force style
+        @include text-sm;                                    // Ensure small text size is applied
+        font-weight: $font-weight-medium !important;        // Match sidebar navigation weight
+      }
+      
+      strong {
+        color: $text-color;                                  // Use text-color for notification titles
+        font-weight: $font-weight-medium;
+      }
+    }
+    
+    .dropdown-divider {
+      height: 1px;
+      background-color: $border-primary;
+      margin: 0.5rem 0;
+    }
+  }
+
+  // Username display
+  .header-username {
+    color: $header-text-color;                 // #E6E7E8
+    @include text-base;
+    font-weight: $font-weight-medium;
+    white-space: nowrap;
+  }
+  
+  // Active state for dropdown buttons
+  .header-icon-btn.active {
+    background-color: rgba($selected-color, 0.2);
+    color: $selected-color;
+  }
+  
+  // Any other header content uses base text size
+  button:not(.header-icon-btn), span, div:not(.header-right-content):not(.header-actions) {
+    @include text-base;
+  }
+  
+  @media (prefers-color-scheme: light) {
+    background-color: $header-background;
+    color: $header-text-color;
+    border-bottom-color: $border-primary;
+    
+    .header-icon-btn {
+      color: $header-text-color;
+      
+      &:hover {
+        background-color: rgba($header-text-color, 0.1);
+        color: $selected-color;
+      }
+    }
+    
+    .header-username {
+      color: $header-text-color;
+    }
+    
+    .header-dropdown {
+      background-color: $primary-color;                     // Dark navy background in light mode too
+      border-color: $border-primary;
+      
+      .dropdown-item {
+        color: $selected-color;                              // Use selected-color in light mode too
+        
+        &:hover:not(.view-all) {
+          background-color: $selected-color !important;     // Golden hover background in light mode
+          color: $primary-color !important;                 // Dark text on golden background
+        }
+        
+        &.view-all {
+          color: $primary-color;
+          
+          &:hover {
+            color: $primary-hover;
+          }
+        }
+        
+        .dropdown-time {
+          color: rgba($text-color, 0.6);
+        }
+        
+        strong {
+          color: $main-content-text-color;
+        }
+      }
+      
+      .dropdown-divider {
+        background-color: $border-primary;
+      }
+    }
+  }
+}
+
+// Dark Mode Styles - Only affects main content area
+.main-content-dark {
+  .app-main {
+    background-color: $primary-color !important;        // #252D63
+    color: $text-color !important;                      // #E6E7E8
+    
+    .card {
+      background-color: rgba($primary-color, 0.8) !important;  // Slightly transparent primary
+      border-color: rgba($text-color, 0.2) !important;         // Subtle border
+      color: $text-color !important;                           // #E6E7E8
+      
+      .card-header {
+        background-color: rgba($primary-color, 0.9) !important;  // Darker primary
+        border-bottom-color: rgba($text-color, 0.2) !important;
+        color: $selected-color !important;                       // #FFCF64
+        
+        h1, h2, h3, h4, h5, h6 {
+          color: $selected-color !important;                     // #FFCF64 - All headings use selected-color
+        }
+      }
+      
+      .card-body {
+        color: $text-color !important;                           // #E6E7E8
+        
+        // All headings in card body use selected-color
+        h1, h2, h3, h4, h5, h6 {
+          color: $selected-color !important;                     // #FFCF64 - All headings
+        }
+        
+        p, span, div {
+          color: $text-color !important;                         // #E6E7E8
+        }
+        
+        strong {
+          color: $selected-color !important;                     // #FFCF64
+        }
+        
+        code {
+          background-color: rgba($primary-color, 0.6) !important;
+          color: $selected-color !important;                     // #FFCF64
+          border: 1px solid rgba($text-color, 0.3) !important;
+        }
+        
+        .text-primary {
+          color: $selected-color !important;                     // #FFCF64
+        }
+        
+        .text-muted {
+          color: rgba($text-color, 0.7) !important;              // Muted text-color
+        }
+      }
+      
+      // Dark mode nested cards
+      .card {
+        background-color: rgba($primary-color, 0.6) !important;  // Even more transparent
+        border-color: rgba($text-color, 0.15) !important;
+      }
+    }
+    
+    // Dark mode buttons in main content
+    .btn {
+      &.btn-primary {
+        background-color: $selected-color !important;            // #FFCF64
+        border-color: $selected-color !important;                // #FFCF64  
+        color: $primary-color !important;                        // #252D63 (contrast)
+        
+        &:hover {
+          background-color: $selected-hover !important;
+          border-color: $selected-hover !important;
+          color: $primary-color !important;
+        }
+      }
+      
+      &.btn-secondary {
+        background-color: transparent !important;
+        border-color: $text-color !important;                    // #E6E7E8
+        color: $text-color !important;                           // #E6E7E8
+        
+        &:hover {
+          background-color: rgba($text-color, 0.1) !important;
+          border-color: $selected-color !important;              // #FFCF64
+          color: $selected-color !important;                     // #FFCF64
+        }
+      }
+    }
+  }
+}
+
+// Sidebar Section
+.app-sidebar {
+  grid-area: sidebar;
+  background-color: $sidebar-background;       // #252D63
+  color: $sidebar-text-color !important;      // #FFCF64 - Force this color
+  border-right: 1px solid $border-primary;
+  overflow-y: auto;
+  z-index: $z-index-sidebar;
+  @include custom-scrollbar;
+  
+  // Sidebar navigation
+  .sidebar-nav {
+    @include viewport-spacing(padding, $sidebar-padding);
+    
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    li {
+      margin-bottom: 0.5rem;
+    }
+    
+    .nav-item {
+      color: $sidebar-text-color !important;          // #FFCF64 - Force this color
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      flex-direction: row;                             // Row layout for inline icon+text
+      gap: 0.75rem;                                    // Gap between icon and text
+      padding: 0.75rem 0.5rem 0.75rem 0.5rem;         // Extra left padding for nice alignment
+      border-radius: 4px;
+      transition: all $transition-speed;
+      position: relative;
+      margin: 0; // No margin - contained within li element
+      
+      &:hover,
+      &.active {                                       // Active state matches hover
+        background-color: $sidebar-background-hover !important;  // #FFCF64 - Force this color
+        color: $sidebar-text-hover !important;                   // #252D63 (primary) - Force this color
+        
+        // Background fills 100% of the li element naturally - no overflow
+      }
+      
+      .nav-icon {
+        color: inherit; // Inherit from parent nav-item
+        flex-shrink: 0;                                // Prevent icon from shrinking
+        width: 18px;                                   // Fixed width for Lucide icons
+        height: 18px;                                  // Fixed height for Lucide icons
+      }
+      
+        .nav-text {
+    @include text-sm;                              // Use small text size
+    font-weight: $font-weight-medium;
+    color: inherit; // Inherit from parent nav-item
+    white-space: nowrap;                           // Prevent text wrapping
+  }
+    }
+  }
+  
+  @media (prefers-color-scheme: light) {
+    background-color: $sidebar-background !important;
+    color: $sidebar-text-color !important;
+    border-right-color: $border-primary;
+  }
+}
+
+// Main Content Section
+.app-main {
+  grid-area: main;
+  overflow-y: auto;
+  background-color: $main-content-background;  // #E6E7E8
+  color: $main-content-text-color;             // #252D63
+  @include viewport-spacing(padding, $main-content-gap);
+  @include custom-scrollbar;
+  
+  // Ensure all content in main uses the main content text color
+  h1, h2, h3, h4, h5, h6, p, span, div {
+    color: $main-content-text-color;
+  }
+  
+  @media (prefers-color-scheme: light) {
+    background-color: $main-content-background;
+    color: $main-content-text-color;
+  }
+}
+
+// Footer Section
+.app-footer {
+  grid-area: footer;
+  background-color: $footer-background;        // #252D63
+  color: $footer-text-color;                   // #E6E7E8
+  border-top: 1px solid $border-primary;
+  @include flex-center;
+  @include text-base;                          // Use base text size instead of small
+  @include viewport-spacing(padding, $header-padding, horizontal);
+  
+  p {
+    color: $footer-text-color;
+    margin: 0;
+    @include text-base;                        // Ensure paragraphs use base text
+  }
+  
+  @media (prefers-color-scheme: light) {
+    background-color: $footer-background;
+    color: $footer-text-color;
+    border-top-color: $border-primary;
+  }
+}
+
+// Responsive adjustments for non-responsive screens
+@media not all and (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+  .app-container {
+    overflow: auto;
+    min-width: $fixed-width;
+    min-height: $fixed-height;
+  }
+  
+  .app-main,
+  .app-sidebar {
+    overflow-y: visible;
+  }
+}

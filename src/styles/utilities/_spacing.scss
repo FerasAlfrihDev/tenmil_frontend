@@ -1,0 +1,118 @@
+// ========================================
+// SPACING UTILITY CLASSES WITH 1536x695 BREAKPOINT
+// ========================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// Margin utilities - Smart scaling: responsive ≥1536x695, fixed <1536x695
+.m-xs { @include space-xs(margin); }
+.m-sm { @include space-sm(margin); }
+.m-base { @include space-base(margin); }
+.m-md { @include space-md(margin); }
+.m-lg { @include space-lg(margin); }
+.m-xl { @include space-xl(margin); }
+.m-xxl { @include space-xxl(margin); }
+
+// Margin directional utilities
+.mt-xs { @include space-xs(margin, top); }
+.mt-sm { @include space-sm(margin, top); }
+.mt-base { @include space-base(margin, top); }
+.mt-md { @include space-md(margin, top); }
+.mt-lg { @include space-lg(margin, top); }
+
+.mb-xs { @include space-xs(margin, bottom); }
+.mb-sm { @include space-sm(margin, bottom); }
+.mb-base { @include space-base(margin, bottom); }
+.mb-md { @include space-md(margin, bottom); }
+.mb-lg { @include space-lg(margin, bottom); }
+
+.ml-xs { @include space-xs(margin, left); }
+.ml-sm { @include space-sm(margin, left); }
+.ml-base { @include space-base(margin, left); }
+.ml-md { @include space-md(margin, left); }
+.ml-lg { @include space-lg(margin, left); }
+
+.mr-xs { @include space-xs(margin, right); }
+.mr-sm { @include space-sm(margin, right); }
+.mr-base { @include space-base(margin, right); }
+.mr-md { @include space-md(margin, right); }
+.mr-lg { @include space-lg(margin, right); }
+
+.mx-xs { @include space-xs(margin, horizontal); }
+.mx-sm { @include space-sm(margin, horizontal); }
+.mx-base { @include space-base(margin, horizontal); }
+.mx-md { @include space-md(margin, horizontal); }
+.mx-lg { @include space-lg(margin, horizontal); }
+
+.my-xs { @include space-xs(margin, vertical); }
+.my-sm { @include space-sm(margin, vertical); }
+.my-base { @include space-base(margin, vertical); }
+.my-md { @include space-md(margin, vertical); }
+.my-lg { @include space-lg(margin, vertical); }
+
+// Padding utilities
+.p-xs { @include space-xs(padding); }
+.p-sm { @include space-sm(padding); }
+.p-base { @include space-base(padding); }
+.p-md { @include space-md(padding); }
+.p-lg { @include space-lg(padding); }
+.p-xl { @include space-xl(padding); }
+.p-xxl { @include space-xxl(padding); }
+
+// Padding directional utilities
+.pt-xs { @include space-xs(padding, top); }
+.pt-sm { @include space-sm(padding, top); }
+.pt-base { @include space-base(padding, top); }
+.pt-md { @include space-md(padding, top); }
+.pt-lg { @include space-lg(padding, top); }
+
+.pb-xs { @include space-xs(padding, bottom); }
+.pb-sm { @include space-sm(padding, bottom); }
+.pb-base { @include space-base(padding, bottom); }
+.pb-md { @include space-md(padding, bottom); }
+.pb-lg { @include space-lg(padding, bottom); }
+
+.pl-xs { @include space-xs(padding, left); }
+.pl-sm { @include space-sm(padding, left); }
+.pl-base { @include space-base(padding, left); }
+.pl-md { @include space-md(padding, left); }
+.pl-lg { @include space-lg(padding, left); }
+
+.pr-xs { @include space-xs(padding, right); }
+.pr-sm { @include space-sm(padding, right); }
+.pr-base { @include space-base(padding, right); }
+.pr-md { @include space-md(padding, right); }
+.pr-lg { @include space-lg(padding, right); }
+
+.px-xs { @include space-xs(padding, horizontal); }
+.px-sm { @include space-sm(padding, horizontal); }
+.px-base { @include space-base(padding, horizontal); }
+.px-md { @include space-md(padding, horizontal); }
+.px-lg { @include space-lg(padding, horizontal); }
+
+.py-xs { @include space-xs(padding, vertical); }
+.py-sm { @include space-sm(padding, vertical); }
+.py-base { @include space-base(padding, vertical); }
+.py-md { @include space-md(padding, vertical); }
+.py-lg { @include space-lg(padding, vertical); }
+
+// Gap utilities for flex/grid containers
+.gap-xs { @include gap-xs; }
+.gap-sm { @include gap-sm; }
+.gap-base { @include gap-base; }
+.gap-md { @include gap-md; }
+.gap-lg { @include gap-lg; }
+.gap-xl { @include gap-xl; }
+
+// No spacing utilities
+.m-0 { margin: 0; }
+.p-0 { padding: 0; }
+.mt-0 { margin-top: 0; }
+.mb-0 { margin-bottom: 0; }
+.ml-0 { margin-left: 0; }
+.mr-0 { margin-right: 0; }
+.pt-0 { padding-top: 0; }
+.pb-0 { padding-bottom: 0; }
+.pl-0 { padding-left: 0; }
+.pr-0 { padding-right: 0; }

@@ -1,0 +1,209 @@
+// ========================================
+// VARIABLES
+// ========================================
+
+@use 'sass:color';
+
+// Responsive Breakpoints
+$min-responsive-width: 1536px;
+$min-responsive-height: 695px;
+
+// Viewport Units (used for responsive sizing)
+$vw-unit: 1vw;
+$vh-unit: 1vh;
+$vmin-unit: 1vmin;
+$vmax-unit: 1vmax;
+
+// Fixed Layout Dimensions (for non-responsive mode)
+$fixed-width: 1536px;
+$fixed-height: 695px;
+
+// Calculated pixel values for 1536x695 viewport
+$fixed-vw: 15.36px;   // 1vw at 1536px width
+$fixed-vh: 6.95px;    // 1vh at 695px height  
+$fixed-vmin: 6.95px;  // min(15.36px, 6.95px) = 6.95px
+$fixed-vmax: 15.36px; // max(15.36px, 6.95px) = 15.36px
+
+// Layout Structure
+$header-height: 5vh;                // Reduced for more compact design
+$footer-height: 4vh;                // Reduced for more compact design
+$sidebar-width: 10%;                // Sidebar width (10% of viewport)
+$main-content-padding: 2vw;
+
+// Colors
+// Base Color Palette
+$primary-color: #252D63;        // Dark blue - main brand color
+$secondary-color: #0F79BE;      // Bright blue - accent color
+$text-color: #E6E7E8;          // Light gray - main text
+$selected-color: #FFCF64;      // Yellow/gold - selection/highlight
+
+// Primary Color Variations
+$primary-hover: color.scale($primary-color, $lightness: 15%);    // Lighter for hover states
+$primary-active: color.scale($primary-color, $lightness: -10%);  // Darker for active states
+$primary-light: color.scale($primary-color, $lightness: 40%);    // Light variant
+$primary-dark: color.scale($primary-color, $lightness: -20%);    // Dark variant
+
+// Primary with opacity variations
+$primary-10: color.change($primary-color, $alpha: 0.1);
+$primary-20: color.change($primary-color, $alpha: 0.2);
+$primary-50: color.change($primary-color, $alpha: 0.5);
+$primary-80: color.change($primary-color, $alpha: 0.8);
+
+// Secondary Color Variations  
+$secondary-hover: color.scale($secondary-color, $lightness: 15%);
+$secondary-active: color.scale($secondary-color, $lightness: -10%);
+$secondary-light: color.scale($secondary-color, $lightness: 30%);
+$secondary-dark: color.scale($secondary-color, $lightness: -20%);
+
+// Secondary with opacity variations
+$secondary-10: color.change($secondary-color, $alpha: 0.1);
+$secondary-20: color.change($secondary-color, $alpha: 0.2);
+$secondary-50: color.change($secondary-color, $alpha: 0.5);
+$secondary-80: color.change($secondary-color, $alpha: 0.8);
+
+// Selected/Accent Color Variations
+$selected-hover: color.scale($selected-color, $lightness: -10%);
+$selected-active: color.scale($selected-color, $lightness: -20%);
+$selected-light: color.scale($selected-color, $lightness: 20%);
+$selected-dark: color.scale($selected-color, $lightness: -30%);
+
+// Text Color Variations
+$text-primary: $text-color;                                       // Main text
+$text-secondary: color.change($text-color, $alpha: 0.7);         // Secondary text
+$text-muted: color.change($text-color, $alpha: 0.5);             // Muted text
+$text-disabled: color.change($text-color, $alpha: 0.3);          // Disabled text
+
+// Layout-Specific Background Colors
+$header-background: $primary-color;                              // Header background: #252D63
+$sidebar-background: $primary-color;                             // Sidebar background: #252D63
+$footer-background: $primary-color;                              // Footer background: #252D63
+$main-content-background: $text-color;                           // Main content background: #E6E7E8
+
+// Layout-Specific Text Colors
+$header-text-color: $text-color;                                 // Header text: #E6E7E8
+$sidebar-text-color: $selected-color;                            // Sidebar text: #FFCF64
+$sidebar-text-hover: $primary-color;                             // Sidebar hover text: #252D63
+$sidebar-background-hover: $selected-color;                      // Sidebar hover background: #FFCF64
+$footer-text-color: $text-color;                                 // Footer text: #E6E7E8
+$main-content-text-color: $primary-color;                        // Main content text: #252D63
+
+// Background Colors (legacy/general use)
+$background-primary: $primary-color;                             // Dark primary background
+$background-secondary: color.scale($primary-color, $lightness: -30%); // Darker variant
+$background-light: color.change($text-color, $alpha: 0.05);      // Very light background
+$background-overlay: color.change($primary-color, $alpha: 0.9);  // Modal/overlay background
+
+// Surface Colors (for cards, panels, etc.)
+$surface-primary: color.scale($primary-color, $lightness: -25%);
+$surface-secondary: color.scale($primary-color, $lightness: -20%);
+$surface-elevated: color.scale($primary-color, $lightness: -15%);
+
+// Border Colors
+$border-primary: color.change($text-color, $alpha: 0.2);         // Main borders
+$border-secondary: color.change($text-color, $alpha: 0.1);       // Subtle borders
+$border-focus: $secondary-color;                                 // Focus state borders
+$border-selected: $selected-color;                              // Selected state borders
+
+// Semantic Colors
+$success-color: #10B981;                                         // Green for success
+$warning-color: $selected-color;                                 // Use selected color for warnings
+$error-color: #EF4444;                                           // Red for errors
+$info-color: $secondary-color;                                   // Use secondary for info
+
+// Semantic color variations
+$success-light: color.change($success-color, $alpha: 0.1);
+$warning-light: color.change($warning-color, $alpha: 0.1);
+$error-light: color.change($error-color, $alpha: 0.1);
+$info-light: color.change($info-color, $alpha: 0.1);
+
+// Legacy compatibility (keeping for existing components)
+$background-dark: $background-primary;
+$background-light: #ffffff;
+$text-dark: $text-color;
+$text-light: $primary-color;
+$border-color: $border-primary;
+$border-light: $border-secondary;
+
+// Typography - Viewport Based Font Sizes
+$font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+// Base font sizes using viewport units
+$font-size-xs: 1.2vmin;      // Extra small text
+$font-size-sm: 1.6vmin;      // Small text  
+$font-size-base: 2vmin;      // Body text
+$font-size-md: 2.4vmin;      // Medium text
+$font-size-lg: 3.2vmin;      // Large text
+$font-size-xl: 4.8vmin;      // Extra large text
+$font-size-xxl: 6.4vmin;     // Headers
+$font-size-xxxl: 8vmin;      // Hero text
+
+// Fixed pixel equivalents for font sizes (as if viewport is 1536x695)
+$font-size-xs-fixed: 8.34px;   // 1.2 * 6.95px
+$font-size-sm-fixed: 11.12px;  // 1.6 * 6.95px
+$font-size-base-fixed: 13.9px; // 2 * 6.95px
+$font-size-md-fixed: 16.68px;  // 2.4 * 6.95px
+$font-size-lg-fixed: 22.24px;  // 3.2 * 6.95px
+$font-size-xl-fixed: 33.36px;  // 4.8 * 6.95px
+$font-size-xxl-fixed: 44.48px; // 6.4 * 6.95px
+$font-size-xxxl-fixed: 55.6px; // 8 * 6.95px
+
+// Line heights - Viewport based for responsive scaling
+$line-height-tight: 1.2;        // Keep unitless for proportional scaling
+$line-height-base: 1.5;         // Keep unitless for proportional scaling  
+$line-height-relaxed: 1.8;      // Keep unitless for proportional scaling
+
+// Viewport-based spacing scale
+$space-xs: 0.5vmin;     // Extra small spacing
+$space-sm: 1vmin;       // Small spacing
+$space-base: 1.5vmin;   // Base spacing
+$space-md: 2vmin;       // Medium spacing
+$space-lg: 3vmin;       // Large spacing
+$space-xl: 4vmin;       // Extra large spacing
+$space-xxl: 6vmin;      // Double extra large spacing
+$space-xxxl: 8vmin;     // Triple extra large spacing
+
+// Fixed pixel equivalents (as if viewport is 1536x695)
+$space-xs-fixed: 3.475px;   // 0.5 * 6.95px
+$space-sm-fixed: 6.95px;    // 1 * 6.95px
+$space-base-fixed: 10.425px; // 1.5 * 6.95px
+$space-md-fixed: 13.9px;    // 2 * 6.95px
+$space-lg-fixed: 20.85px;   // 3 * 6.95px
+$space-xl-fixed: 27.8px;    // 4 * 6.95px
+$space-xxl-fixed: 41.7px;   // 6 * 6.95px
+$space-xxxl-fixed: 55.6px;  // 8 * 6.95px
+
+// Specific viewport spacing for layout elements
+$header-padding: 2vmin;
+$sidebar-padding: 1.5vmin;
+$main-content-gap: 2vmin;
+$card-padding: 2vmin;
+$button-padding-v: 1vmin;
+$button-padding-h: 2vmin;
+$section-margin: 3vmin;
+
+// Fixed pixel equivalents for layout elements
+$header-padding-fixed: 13.9px;   // 2 * 6.95px
+$sidebar-padding-fixed: 10.425px; // 1.5 * 6.95px
+$main-content-gap-fixed: 13.9px; // 2 * 6.95px
+$card-padding-fixed: 13.9px;     // 2 * 6.95px
+$button-padding-v-fixed: 6.95px; // 1 * 6.95px
+$button-padding-h-fixed: 13.9px; // 2 * 6.95px
+$section-margin-fixed: 20.85px;  // 3 * 6.95px
+
+// Font weights
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// Shadows and Effects
+$box-shadow-base: 0 2px 4px rgba(0, 0, 0, 0.1);
+$border-radius: 8px;
+$transition-speed: 0.25s;
+
+// Z-index layers
+$z-index-header: 1000;
+$z-index-sidebar: 900;
+$z-index-modal: 2000;
+$z-index-overlay: 1500;

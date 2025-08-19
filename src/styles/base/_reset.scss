@@ -1,0 +1,72 @@
+// ========================================
+// RESET AND BASE STYLES
+// ========================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: $font-family;
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  // Base font size using viewport units
+  @include body-text;
+}
+
+body {
+  margin: 0;
+  color: $text-dark;
+  background-color: $background-dark;
+  // Inherit font settings from html
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  @include responsive-container;
+  @include custom-scrollbar;
+}
+
+// Remove default styling
+ul, ol {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  background: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+// Focus styles
+*:focus {
+  outline: 2px solid $primary-color;
+  outline-offset: 2px;
+}
+
+// Light theme
+@media (prefers-color-scheme: light) {
+  body {
+    color: $text-light;
+    background-color: $background-light;
+  }
+}

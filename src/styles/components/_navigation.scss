@@ -1,0 +1,21 @@
+// ========================================
+// NAVIGATION COMPONENTS
+// ========================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// Header navigation
+.header-title {
+  margin: 0;
+  @include heading-primary;
+}
+
+.header-left,
+.header-right {
+  @include flex-center;
+}
+
+// Sidebar navigation - REMOVED TO AVOID CONFLICTS
+// The sidebar navigation styles are now handled in _main-layout.scss
+// This prevents conflicts with the new nav-item styling
