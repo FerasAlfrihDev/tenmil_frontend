@@ -57,7 +57,7 @@ const LandingPage = () => {
         
         <div className="header-actions">
           <a 
-            href="http://admin.localhost:5174" 
+            href="http://admin.localhost:5173" 
             className="btn admin-portal-btn"
           >
             Admin Portal
@@ -179,7 +179,7 @@ const LandingPage = () => {
                 onClick={() => {
                   const input = document.querySelector('input') as HTMLInputElement
                   const subdomain = input?.value || 'demo'
-                  window.location.href = `http://${subdomain}.localhost:5174`
+                  window.location.href = `http://${subdomain}.localhost:5173`
                 }}
               >
                 Access Portal
@@ -209,7 +209,7 @@ const LandingPage = () => {
                 </li>
               </ul>
               <a 
-                href="http://admin.localhost:5174"
+                href="http://admin.localhost:5173"
                 className="btn portal-button"
               >
                 Admin Login
