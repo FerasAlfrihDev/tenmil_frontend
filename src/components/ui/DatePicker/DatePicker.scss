@@ -1,0 +1,220 @@
+// ========================================
+// DATE PICKER COMPONENT
+// ========================================
+
+@use 'sass:color';
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.date-picker-wrapper {
+  display: flex;
+  flex-direction: column;
+  @include gap-xs;
+
+  &.full-width {
+    width: 100%;
+  }
+
+  .date-picker-label {
+    color: $text-primary;
+    @include text-sm($font-weight-medium);
+    cursor: pointer;
+
+    .date-picker-required {
+      color: $error-color;
+      @include viewport-spacing(margin, $space-xs, left);
+    }
+  }
+
+  .date-picker-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-radius: $border-radius;
+    transition: all $transition-speed;
+
+    &.small {
+      @include viewport-spacing(padding, $space-xs);
+      
+      .date-picker-field {
+        @include text-sm;
+      }
+    }
+
+    &.medium {
+      @include viewport-spacing(padding, $space-sm);
+      
+      .date-picker-field {
+        @include text-base;
+      }
+    }
+
+    &.large {
+      @include viewport-spacing(padding, $space-md);
+      
+      .date-picker-field {
+        @include text-md;
+      }
+    }
+
+    &.outlined {
+      background-color: transparent;
+      border: 1px solid $border-primary;
+
+      &:focus-within {
+        border-color: $border-focus;
+        box-shadow: 0 0 0 2px $secondary-10;
+      }
+
+      &.error {
+        border-color: $error-color;
+        
+        &:focus-within {
+          box-shadow: 0 0 0 2px $error-light;
+        }
+      }
+    }
+
+    &.filled {
+      background-color: $surface-secondary;
+      border: 1px solid transparent;
+
+      &:focus-within {
+        background-color: $surface-primary;
+        border-color: $border-focus;
+      }
+
+      &.error {
+        border-color: $error-color;
+        background-color: $error-light;
+      }
+    }
+
+    &.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background-color: $surface-secondary;
+    }
+
+    .date-picker-field {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: $text-primary;
+      font-family: inherit;
+
+      &::-webkit-calendar-picker-indicator {
+        opacity: 0;
+        position: absolute;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+      }
+
+      &::placeholder {
+        color: $text-muted;
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+      }
+
+      // Custom styling for date inputs
+      &::-webkit-datetime-edit {
+        color: $text-primary;
+      }
+
+      &::-webkit-datetime-edit-text {
+        color: $text-secondary;
+      }
+
+      &::-webkit-datetime-edit-month-field,
+      &::-webkit-datetime-edit-day-field,
+      &::-webkit-datetime-edit-year-field,
+      &::-webkit-datetime-edit-hour-field,
+      &::-webkit-datetime-edit-minute-field {
+        color: $text-primary;
+        
+        &:focus {
+          background-color: $secondary-10;
+          color: $secondary-color;
+          outline: none;
+        }
+      }
+    }
+
+    .date-picker-icon {
+      color: $text-secondary;
+      @include text-base;
+      pointer-events: none;
+      @include viewport-spacing(margin, $space-xs, left);
+    }
+  }
+
+  .date-picker-helper {
+    @include text-xs;
+    color: $text-muted;
+
+    &.error {
+      color: $error-color;
+    }
+  }
+}
+
+// Light theme adjustments
+@media (prefers-color-scheme: light) {
+  .date-picker-wrapper {
+    .date-picker-label {
+      color: $primary-color;
+    }
+
+    .date-picker-container {
+      &.outlined {
+        border-color: $border-secondary;
+        
+        &:focus-within {
+          border-color: $secondary-color;
+        }
+      }
+
+      &.filled {
+        background-color: color.scale($background-light, $lightness: -3%);
+        
+        &:focus-within {
+          background-color: $background-light;
+        }
+      }
+
+      .date-picker-field {
+        color: $primary-color;
+
+        &::-webkit-datetime-edit {
+          color: $primary-color;
+        }
+
+        &::-webkit-datetime-edit-text {
+          color: $text-light;
+        }
+
+        &::-webkit-datetime-edit-month-field,
+        &::-webkit-datetime-edit-day-field,
+        &::-webkit-datetime-edit-year-field,
+        &::-webkit-datetime-edit-hour-field,
+        &::-webkit-datetime-edit-minute-field {
+          color: $primary-color;
+          
+          &:focus {
+            background-color: $secondary-10;
+            color: $secondary-color;
+          }
+        }
+      }
+    }
+
+    .date-picker-helper {
+      color: $text-light;
+    }
+  }
+}

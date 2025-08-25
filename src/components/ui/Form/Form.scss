@@ -1,0 +1,145 @@
+// ========================================
+// FORM COMPONENT
+// ========================================
+
+@use 'sass:color';
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.form-container {
+  background-color: $surface-primary;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius;
+  @include viewport-spacing(padding, $space-lg);
+  box-shadow: $box-shadow-base;
+
+  .form-header {
+    @include viewport-spacing(margin, $space-lg, bottom);
+    border-bottom: 1px solid $border-secondary;
+    @include viewport-spacing(padding, $space-md, bottom);
+
+    .form-title {
+      color: $text-primary;
+      @include text-xl($font-weight-semibold);
+      @include viewport-spacing(margin, 0);
+      @include viewport-spacing(margin, $space-sm, bottom);
+    }
+
+    .form-description {
+      color: $text-secondary;
+      @include text-base;
+      @include viewport-spacing(margin, 0);
+      line-height: $line-height-relaxed;
+    }
+  }
+
+  .form {
+    .form-fields {
+      @include flex-column;
+      @include gap-md;
+    }
+
+    .form-actions {
+      @include flex-between;
+      @include viewport-spacing(margin, $space-lg, top);
+      @include viewport-spacing(padding, $space-md, top);
+      border-top: 1px solid $border-secondary;
+
+      // If only one button, center it
+      &:has(.form-btn:only-child) {
+        justify-content: center;
+      }
+
+      .form-btn {
+        @include button-base;
+        min-width: 120px;
+        
+        &.form-btn-primary {
+          background-color: $primary-color;
+          color: $selected-color;
+          border-color: $selected-color;
+          
+          &:hover:not(:disabled) {
+            background-color: $primary-hover;
+            border-color: $selected-hover;
+            color: $selected-hover;
+          }
+          
+          &:active:not(:disabled) {
+            background-color: $primary-active;
+            border-color: $selected-active;
+            color: $selected-active;
+          }
+        }
+
+        &.form-btn-secondary {
+          background-color: $secondary-color;
+          color: $text-color;
+          border-color: $secondary-color;
+          
+          &:hover:not(:disabled) {
+            background-color: $secondary-hover;
+            border-color: $secondary-hover;
+          }
+          
+          &:active:not(:disabled) {
+            background-color: $secondary-active;
+            border-color: $secondary-active;
+          }
+        }
+
+        &.form-btn-cancel {
+          background-color: transparent;
+          color: $text-secondary;
+          border-color: $border-primary;
+          
+          &:hover:not(:disabled) {
+            background-color: $surface-secondary;
+            border-color: $border-focus;
+            color: $text-primary;
+          }
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        &:focus,
+        &:focus-visible {
+          outline: 2px solid $border-focus;
+          outline-offset: 2px;
+        }
+      }
+    }
+  }
+}
+
+// Light theme adjustments
+@media (prefers-color-scheme: light) {
+  .form-container {
+    background-color: $background-light;
+    border-color: $border-secondary;
+
+    .form-header {
+      .form-title {
+        color: $primary-color;
+      }
+
+      .form-description {
+        color: $text-light;
+      }
+    }
+
+    .form .form-actions .form-btn {
+      &.form-btn-cancel {
+        color: $text-light;
+
+        &:hover:not(:disabled) {
+          color: $primary-color;
+          background-color: color.scale($background-light, $lightness: -5%);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,219 @@
+// ========================================
+// SWITCH COMPONENT
+// ========================================
+
+@use 'sass:color';
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.switch-wrapper {
+  display: flex;
+  flex-direction: column;
+  @include gap-xs;
+
+  .switch-control {
+    display: flex;
+    align-items: center;
+    @include gap-sm;
+
+    .switch-label {
+      color: $text-primary;
+      @include text-base;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .switch-container {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+
+      &.small {
+        width: 36px;
+        height: 20px;
+        
+        .switch-toggle::after {
+          width: 16px;
+          height: 16px;
+          top: 2px;
+          left: 2px;
+        }
+
+        .switch-input:checked + .switch-toggle::after {
+          transform: translateX(16px);
+        }
+      }
+
+      &.medium {
+        width: 48px;
+        height: 24px;
+        
+        .switch-toggle::after {
+          width: 20px;
+          height: 20px;
+          top: 2px;
+          left: 2px;
+        }
+
+        .switch-input:checked + .switch-toggle::after {
+          transform: translateX(24px);
+        }
+      }
+
+      &.large {
+        width: 56px;
+        height: 28px;
+        
+        .switch-toggle::after {
+          width: 24px;
+          height: 24px;
+          top: 2px;
+          left: 2px;
+        }
+
+        .switch-input:checked + .switch-toggle::after {
+          transform: translateX(28px);
+        }
+      }
+
+      &.disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+
+        .switch-toggle {
+          cursor: not-allowed;
+        }
+      }
+
+      .switch-input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+
+        &:focus + .switch-toggle {
+          box-shadow: 0 0 0 2px $secondary-10;
+        }
+
+        &:checked + .switch-toggle {
+          &.primary {
+            background-color: $primary-color;
+          }
+
+          &.secondary {
+            background-color: $secondary-color;
+          }
+
+          &.success {
+            background-color: $success-color;
+          }
+        }
+      }
+
+      .switch-toggle {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: $surface-secondary;
+        border: 1px solid $border-primary;
+        border-radius: 50px;
+        transition: all $transition-speed;
+        cursor: pointer;
+
+        &::after {
+          content: '';
+          position: absolute;
+          background-color: $text-color;
+          border-radius: 50%;
+          transition: transform $transition-speed;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        &:hover {
+          border-color: $border-focus;
+        }
+      }
+
+      // Color variants
+      &.primary .switch-input:checked + .switch-toggle {
+        background-color: $primary-color;
+        border-color: $primary-color;
+
+        &::after {
+          background-color: $selected-color;
+        }
+      }
+
+      &.secondary .switch-input:checked + .switch-toggle {
+        background-color: $secondary-color;
+        border-color: $secondary-color;
+
+        &::after {
+          background-color: $text-color;
+        }
+      }
+
+      &.success .switch-input:checked + .switch-toggle {
+        background-color: $success-color;
+        border-color: $success-color;
+
+        &::after {
+          background-color: $text-color;
+        }
+      }
+    }
+  }
+
+  .switch-helper {
+    @include text-xs;
+    color: $text-muted;
+    @include viewport-spacing(margin, $space-xs, left);
+
+    &.error {
+      color: $error-color;
+    }
+  }
+}
+
+// Light theme adjustments
+@media (prefers-color-scheme: light) {
+  .switch-wrapper {
+    .switch-control {
+      .switch-label {
+        color: $primary-color;
+      }
+
+      .switch-container {
+        .switch-toggle {
+          background-color: color.scale($background-light, $lightness: -10%);
+          border-color: $border-secondary;
+
+          &::after {
+            background-color: $background-light;
+          }
+
+          &:hover {
+            border-color: $secondary-color;
+          }
+        }
+
+        &.primary .switch-input:checked + .switch-toggle::after {
+          background-color: $selected-color;
+        }
+
+        &.secondary .switch-input:checked + .switch-toggle::after {
+          background-color: $background-light;
+        }
+
+        &.success .switch-input:checked + .switch-toggle::after {
+          background-color: $background-light;
+        }
+      }
+    }
+
+    .switch-helper {
+      color: $text-light;
+    }
+  }
+}

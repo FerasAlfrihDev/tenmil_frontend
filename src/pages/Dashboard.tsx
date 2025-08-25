@@ -1,19 +1,200 @@
-import { useState } from 'react'
-import apiService from '../services/api'
-import { TrendingUp, DollarSign, Package, AlertTriangle } from 'lucide-react'
+import React, { useState } from 'react';
+import {
+  Table,
+  Form,
+  Input,
+  TextArea,
+  Dropdown,
+  DatePicker,
+  Switch,
+  Radio,
+  Checkbox,
+  type TableColumn,
+  type DropdownOption,
+  type RadioOption,
+  type CheckboxOption,
+} from '../components';
+import apiService from '../services/api';
+import { TrendingUp, DollarSign, Package, AlertTriangle } from 'lucide-react';
 
 interface DashboardProps {
-  isDarkMode?: boolean
-  count?: number
-  setCount?: (count: number | ((prev: number) => number)) => void
+  isDarkMode?: boolean;
+  count?: number;
+  setCount?: (count: number | ((prev: number) => number)) => void;
+}
+
+interface UserData {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  status: 'active' | 'inactive';
+  lastLogin: string;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ count = 0, setCount }) => {
-  const [localCount, setLocalCount] = useState(0)
+  const [localCount, setLocalCount] = useState(0);
   
   // Use provided setCount or local state
-  const currentCount = setCount ? count : localCount
-  const handleCountChange = setCount ? setCount : setLocalCount
+  const currentCount = setCount ? count : localCount;
+  const handleCountChange = setCount ? setCount : setLocalCount;
+
+  // Sample data for the table
+  const [userData] = useState<UserData[]>([
+    {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@tenmil.com',
+      role: 'Admin',
+      status: 'active',
+      lastLogin: '2024-01-15T10:30:00',
+    },
+    {
+      id: 2,
+      name: 'Jane Smith',
+      email: 'jane@tenmil.com',
+      role: 'Editor',
+      status: 'active',
+      lastLogin: '2024-01-14T15:45:00',
+    },
+    {
+      id: 3,
+      name: 'Bob Johnson',
+      email: 'bob@tenmil.com',
+      role: 'Viewer',
+      status: 'inactive',
+      lastLogin: '2024-01-10T08:20:00',
+    },
+    {
+      id: 4,
+      name: 'Alice Brown',
+      email: 'alice@tenmil.com',
+      role: 'Editor',
+      status: 'active',
+      lastLogin: '2024-01-16T12:10:00',
+    },
+  ]);
+
+  // Form state
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    bio: '',
+    country: '',
+    birthDate: '',
+    notifications: false,
+    theme: 'light',
+    preferences: [] as string[],
+    terms: false,
+  });
+
+  // Table columns configuration
+  const columns: TableColumn<UserData>[] = [
+    {
+      key: 'name',
+      title: 'Name',
+      dataIndex: 'name',
+      sortable: true,
+      filterable: true,
+      resizable: true,
+    },
+    {
+      key: 'email',
+      title: 'Email',
+      dataIndex: 'email',
+      sortable: true,
+      filterable: true,
+      resizable: true,
+    },
+    {
+      key: 'role',
+      title: 'Role',
+      dataIndex: 'role',
+      sortable: true,
+      filterable: true,
+      resizable: true,
+    },
+    {
+      key: 'status',
+      title: 'Status',
+      dataIndex: 'status',
+      sortable: true,
+      filterable: true,
+      render: (value: string) => (
+        <span style={{
+          padding: '4px 8px',
+          borderRadius: '4px',
+          fontSize: '12px',
+          fontWeight: 'bold',
+          backgroundColor: value === 'active' ? '#10B981' : '#EF4444',
+          color: 'white',
+        }}>
+          {value.toUpperCase()}
+        </span>
+      ),
+    },
+    {
+      key: 'lastLogin',
+      title: 'Last Login',
+      dataIndex: 'lastLogin',
+      sortable: true,
+      render: (value: string) => new Date(value).toLocaleDateString(),
+    },
+  ];
+
+  // Dropdown options
+  const countryOptions: DropdownOption[] = [
+    { value: 'us', label: 'United States' },
+    { value: 'ca', label: 'Canada' },
+    { value: 'uk', label: 'United Kingdom' },
+    { value: 'fr', label: 'France' },
+    { value: 'de', label: 'Germany' },
+    { value: 'jp', label: 'Japan' },
+  ];
+
+  // Radio options
+  const themeOptions: RadioOption[] = [
+    { value: 'light', label: 'Light Theme' },
+    { value: 'dark', label: 'Dark Theme' },
+    { value: 'auto', label: 'Auto (System)' },
+  ];
+
+  // Checkbox options
+  const preferenceOptions: CheckboxOption[] = [
+    { value: 'email', label: 'Email Notifications' },
+    { value: 'sms', label: 'SMS Notifications' },
+    { value: 'push', label: 'Push Notifications' },
+    { value: 'newsletter', label: 'Newsletter' },
+  ];
+
+  // Handle form submission
+  const handleSubmit = () => {
+    console.log('Form submitted:', formData);
+  };
+
+  const handleUpdate = () => {
+    console.log('Form updated:', formData);
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      bio: '',
+      country: '',
+      birthDate: '',
+      notifications: false,
+      theme: 'light',
+      preferences: [],
+      terms: false,
+    });
+  };
+
+  const handleRowClick = (record: UserData) => {
+    console.log('Row clicked:', record);
+  };
 
   return (
     <div className="dashboard-container">
@@ -92,163 +273,174 @@ const Dashboard: React.FC<DashboardProps> = ({ count = 0, setCount }) => {
         </div>
       </div>
 
-      {/* Main Dashboard Content */}
-      <div className="dashboard-grid" style={{ 
-        display: 'grid', 
-        gridTemplateColumns: '2fr 1fr', 
-        gap: '1.5vmin',
-        alignItems: 'start'
-      }}>
-        {/* Left Column - Main Content */}
-        <div className="dashboard-main">
-          <div className="card mb-lg">
-            <div className="card-header">
-              <h2>Welcome to Tenmil Dashboard</h2>
-            </div>
-            <div className="card-body">
-              <p>Your comprehensive maintenance management system with <strong>smart viewport scaling</strong>. Track assets, manage work orders, and monitor your operations from one central location.</p>
-              
-              <div className="mt-lg mb-lg">
-                <h4>Quick Actions</h4>
-                <div className="mt-base gap-base" style={{ display: 'flex', flexWrap: 'wrap' }}>
-                  <button 
-                    className="btn btn-primary" 
-                    onClick={() => handleCountChange((prev) => prev + 1)}
-                  >
-                    Interactive Counter: {currentCount}
-                  </button>
-                  <button className="btn btn-secondary">
-                    Create Work Order
-                  </button>
-                  <button className="btn" style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)', color: '#22c55e' }}>
-                    Add Asset
-                  </button>
-                </div>
-              </div>
-
-              <div className="mt-lg">
-                <h4>System Information</h4>
-                <p>Current subdomain: <span className="text-primary font-semibold">{apiService.getSubdomainType()}</span></p>
-                <p>API Base URL: <code className="text-sm font-medium">{apiService.getBaseURL()}</code></p>
-                <p className="text-muted text-sm">Smart responsive scaling ≥1536x695px, fixed sizes with overflow below</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="card">
-            <div className="card-header">
-              <h3>Recent Activity</h3>
-            </div>
-            <div className="card-body">
-              <div className="activity-list">
-                <div className="activity-item mb-base">
-                  <strong>Work Order #WO-2024-001 completed</strong>
-                  <div className="text-sm text-muted">HVAC maintenance completed by John Smith</div>
-                  <div className="text-xs text-muted">2 hours ago</div>
-                </div>
-                <div className="activity-item mb-base">
-                  <strong>New asset registered</strong>
-                  <div className="text-sm text-muted">Generator Unit GU-205 added to inventory</div>
-                  <div className="text-xs text-muted">4 hours ago</div>
-                </div>
-                <div className="activity-item mb-base">
-                  <strong>Purchase order approved</strong>
-                  <div className="text-sm text-muted">PO-2024-034 for $2,450 approved</div>
-                  <div className="text-xs text-muted">6 hours ago</div>
-                </div>
-              </div>
-            </div>
-          </div>
+      {/* System Info Section */}
+      <div className="card mb-lg">
+        <div className="card-header">
+          <h2>Tenmil Dashboard - UI Components Demo</h2>
         </div>
-
-        {/* Right Column - Sidebar Content */}
-        <div className="dashboard-sidebar">
-          <div className="card mb-lg">
-            <div className="card-header">
-              <h4>Urgent Tasks</h4>
-            </div>
-            <div className="card-body">
-              <div className="task-list">
-                <div className="task-item mb-sm" style={{ 
-                  padding: '0.5vmin',
-                  backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                  borderRadius: '0.5vmin',
-                  borderLeft: '3px solid #ef4444'
-                }}>
-                  <div className="text-sm font-semibold">Critical: Boiler Inspection</div>
-                  <div className="text-xs text-muted">Due today</div>
-                </div>
-                <div className="task-item mb-sm" style={{ 
-                  padding: '0.5vmin',
-                  backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                  borderRadius: '0.5vmin',
-                  borderLeft: '3px solid #f59e0b'
-                }}>
-                  <div className="text-sm font-semibold">Parts order arrival</div>
-                  <div className="text-xs text-muted">Tomorrow</div>
-                </div>
-                <div className="task-item" style={{ 
-                  padding: '0.5vmin',
-                  backgroundColor: 'rgba(34, 197, 94, 0.1)',
-                  borderRadius: '0.5vmin',
-                  borderLeft: '3px solid #22c55e'
-                }}>
-                  <div className="text-sm font-semibold">Quarterly review</div>
-                  <div className="text-xs text-muted">Next week</div>
-                </div>
-              </div>
+        <div className="card-body">
+          <p>Your comprehensive maintenance management system with <strong>smart viewport scaling</strong>. 
+          This dashboard now showcases our complete set of reusable UI components.</p>
+          
+          <div className="mt-lg mb-lg">
+            <h4>Quick Actions</h4>
+            <div className="mt-base gap-base" style={{ display: 'flex', flexWrap: 'wrap' }}>
+              <button 
+                className="btn btn-primary" 
+                onClick={() => handleCountChange((prev) => prev + 1)}
+              >
+                Interactive Counter: {currentCount}
+              </button>
+              <button className="btn btn-secondary">
+                Create Work Order
+              </button>
             </div>
           </div>
 
-          <div className="card">
-            <div className="card-header">
-              <h4>System Status</h4>
-            </div>
-            <div className="card-body">
-              <div className="status-list">
-                <div className="status-item mb-sm" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span className="text-sm">Database</span>
-                  <span className="status-indicator" style={{ 
-                    backgroundColor: '#22c55e', 
-                    color: 'white', 
-                    padding: '0.2vmin 0.5vmin',
-                    borderRadius: '0.3vmin',
-                    fontSize: '0.7rem'
-                  }}>
-                    Online
-                  </span>
-                </div>
-                <div className="status-item mb-sm" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span className="text-sm">API Services</span>
-                  <span className="status-indicator" style={{ 
-                    backgroundColor: '#22c55e', 
-                    color: 'white', 
-                    padding: '0.2vmin 0.5vmin',
-                    borderRadius: '0.3vmin',
-                    fontSize: '0.7rem'
-                  }}>
-                    Online
-                  </span>
-                </div>
-                <div className="status-item" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span className="text-sm">Backup System</span>
-                  <span className="status-indicator" style={{ 
-                    backgroundColor: '#f59e0b', 
-                    color: 'white', 
-                    padding: '0.2vmin 0.5vmin',
-                    borderRadius: '0.3vmin',
-                    fontSize: '0.7rem'
-                  }}>
-                    Syncing
-                  </span>
-                </div>
-              </div>
-            </div>
+          <div className="mt-lg">
+            <h4>System Information</h4>
+            <p>Current subdomain: <span className="text-primary font-semibold">{apiService.getSubdomainType()}</span></p>
+            <p>API Base URL: <code className="text-sm font-medium">{apiService.getBaseURL()}</code></p>
           </div>
         </div>
       </div>
-    </div>
-  )
-}
 
-export default Dashboard
+      {/* Table Example */}
+      <div className="mb-xl">
+        <Table<UserData>
+          title="User Management Table - Complete Example"
+          columns={columns}
+          dataSource={userData}
+          rowKey="id"
+          allowColumnResize={true}
+          allowColumnReorder={true}
+          allowFiltering={true}
+          onRowClick={handleRowClick}
+          pagination={{
+            current: 1,
+            pageSize: 10,
+            total: userData.length,
+            onChange: (page, pageSize) => console.log('Pagination:', page, pageSize),
+          }}
+        />
+      </div>
+
+      {/* Form Example */}
+      <div className="mb-xl">
+        <Form
+          title="Complete Form Example - All Field Types"
+          description="This form demonstrates all available field components with consistent styling and behavior. All fields marked with * are required."
+          onSubmit={handleSubmit}
+          onUpdate={handleUpdate}
+          onCancel={handleCancel}
+          showSubmit={true}
+          showUpdate={true}
+          showCancel={true}
+          submitText="Create Profile"
+          updateText="Update Profile"
+          cancelText="Reset Form"
+        >
+          {/* Text Inputs */}
+          <div style={{ display: 'flex', gap: '20px' }}>
+            <Input
+              label="First Name"
+              placeholder="Enter your first name"
+              value={formData.firstName}
+              onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+              required
+              fullWidth
+            />
+            <Input
+              label="Last Name"
+              placeholder="Enter your last name"
+              value={formData.lastName}
+              onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+              required
+              fullWidth
+            />
+          </div>
+
+          <Input
+            label="Email Address"
+            type="email"
+            placeholder="Enter your email"
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            required
+            fullWidth
+            helperText="We'll never share your email with anyone else."
+          />
+
+          {/* TextArea */}
+          <TextArea
+            label="Bio"
+            placeholder="Tell us about yourself..."
+            value={formData.bio}
+            onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+            fullWidth
+            minRows={4}
+            helperText="Maximum 500 characters"
+          />
+
+          {/* Dropdown */}
+          <Dropdown
+            label="Country"
+            placeholder="Select your country"
+            options={countryOptions}
+            value={formData.country}
+            onChange={(value) => setFormData({ ...formData, country: value.toString() })}
+            searchable
+            fullWidth
+            required
+          />
+
+          {/* Date Picker */}
+          <DatePicker
+            label="Birth Date"
+            value={formData.birthDate}
+            onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
+            fullWidth
+            helperText="Used for age verification"
+          />
+
+          {/* Switch */}
+          <Switch
+            label="Enable Notifications"
+            checked={formData.notifications}
+            onChange={(e) => setFormData({ ...formData, notifications: e.target.checked })}
+            helperText="Receive email notifications about account activity"
+          />
+
+          {/* Radio Buttons */}
+          <Radio
+            label="Theme Preference"
+            options={themeOptions}
+            value={formData.theme}
+            onChange={(e) => setFormData({ ...formData, theme: e.target.value })}
+            orientation="horizontal"
+            required
+          />
+
+          {/* Checkboxes */}
+          <Checkbox
+            label="Communication Preferences"
+            options={preferenceOptions}
+            orientation="vertical"
+            helperText="Select all that apply"
+          />
+
+          {/* Terms Checkbox */}
+          <Checkbox
+            label="I agree to the Terms and Conditions"
+            checked={formData.terms}
+            onChange={(e) => setFormData({ ...formData, terms: e.target.checked })}
+            required
+            color="success"
+          />
+        </Form>
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;

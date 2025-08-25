@@ -1,0 +1,375 @@
+// ========================================
+// CHECKBOX COMPONENT
+// ========================================
+
+@use 'sass:color';
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.checkbox-wrapper {
+  display: flex;
+  flex-direction: column;
+  @include gap-xs;
+
+  &.single {
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      transition: all $transition-speed;
+
+      &:hover:not(.disabled) {
+        .checkbox-indicator {
+          border-color: $border-focus;
+        }
+      }
+
+      &.disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .checkbox-input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+
+        &:focus + .checkbox-indicator {
+          box-shadow: 0 0 0 2px $secondary-10;
+        }
+
+        &:checked + .checkbox-indicator {
+          .checkbox-check {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+
+          & ~ .checkbox-label {
+            cursor: not-allowed;
+          }
+        }
+      }
+
+      .checkbox-indicator {
+        position: relative;
+        border: 1px solid $border-primary;
+        border-radius: calc(#{$border-radius} / 2);
+        transition: all $transition-speed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &.indeterminate .checkbox-check {
+          transform: scale(1);
+          opacity: 1;
+        }
+
+        .checkbox-check {
+          transform: scale(0);
+          opacity: 0;
+          transition: all $transition-speed;
+          font-weight: $font-weight-bold;
+          line-height: 1;
+        }
+      }
+
+      .checkbox-label {
+        color: $text-primary;
+        @include viewport-spacing(margin, $space-sm, left);
+
+        .checkbox-required {
+          color: $error-color;
+          @include viewport-spacing(margin, $space-xs, left);
+        }
+      }
+
+      // Size variants
+      &.small {
+        @include text-sm;
+
+        .checkbox-indicator {
+          width: 16px;
+          height: 16px;
+
+          .checkbox-check {
+            @include text-xs;
+          }
+        }
+      }
+
+      &.medium {
+        @include text-base;
+
+        .checkbox-indicator {
+          width: 20px;
+          height: 20px;
+
+          .checkbox-check {
+            @include text-sm;
+          }
+        }
+      }
+
+      &.large {
+        @include text-md;
+
+        .checkbox-indicator {
+          width: 24px;
+          height: 24px;
+
+          .checkbox-check {
+            @include text-base;
+          }
+        }
+      }
+
+      // Color variants
+      &.primary .checkbox-input:checked + .checkbox-indicator {
+        background-color: $primary-color;
+        border-color: $primary-color;
+        
+        .checkbox-check {
+          color: $selected-color;
+        }
+      }
+
+      &.secondary .checkbox-input:checked + .checkbox-indicator {
+        background-color: $secondary-color;
+        border-color: $secondary-color;
+        
+        .checkbox-check {
+          color: $text-color;
+        }
+      }
+
+      &.success .checkbox-input:checked + .checkbox-indicator {
+        background-color: $success-color;
+        border-color: $success-color;
+        
+        .checkbox-check {
+          color: $text-color;
+        }
+      }
+    }
+  }
+
+  &.group {
+    .checkbox-group-label {
+      color: $text-primary;
+      @include text-sm($font-weight-medium);
+
+      .checkbox-required {
+        color: $error-color;
+        @include viewport-spacing(margin, $space-xs, left);
+      }
+    }
+
+    .checkbox-group {
+      display: flex;
+      @include gap-sm;
+
+      &.horizontal {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      &.vertical {
+        flex-direction: column;
+      }
+
+      &.disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .checkbox-item {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+        transition: all $transition-speed;
+
+        &:hover:not(:has(.checkbox-input:disabled)) {
+          .checkbox-indicator {
+            border-color: $border-focus;
+          }
+        }
+
+        .checkbox-input {
+          position: absolute;
+          opacity: 0;
+          width: 0;
+          height: 0;
+
+          &:focus + .checkbox-indicator {
+            box-shadow: 0 0 0 2px $secondary-10;
+          }
+
+          &:checked + .checkbox-indicator {
+            .checkbox-check {
+              transform: scale(1);
+              opacity: 1;
+            }
+          }
+
+          &:disabled {
+            cursor: not-allowed;
+
+            & ~ .checkbox-label {
+              cursor: not-allowed;
+              opacity: 0.6;
+            }
+          }
+        }
+
+        .checkbox-indicator {
+          position: relative;
+          border: 1px solid $border-primary;
+          border-radius: calc(#{$border-radius} / 2);
+          transition: all $transition-speed;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          .checkbox-check {
+            transform: scale(0);
+            opacity: 0;
+            transition: all $transition-speed;
+            font-weight: $font-weight-bold;
+            line-height: 1;
+          }
+        }
+
+        .checkbox-label {
+          color: $text-primary;
+          @include viewport-spacing(margin, $space-sm, left);
+        }
+      }
+
+      // Size variants
+      &.small {
+        .checkbox-item {
+          @include text-sm;
+
+          .checkbox-indicator {
+            width: 16px;
+            height: 16px;
+
+            .checkbox-check {
+              @include text-xs;
+            }
+          }
+        }
+      }
+
+      &.medium {
+        .checkbox-item {
+          @include text-base;
+
+          .checkbox-indicator {
+            width: 20px;
+            height: 20px;
+
+            .checkbox-check {
+              @include text-sm;
+            }
+          }
+        }
+      }
+
+      &.large {
+        .checkbox-item {
+          @include text-md;
+
+          .checkbox-indicator {
+            width: 24px;
+            height: 24px;
+
+            .checkbox-check {
+              @include text-base;
+            }
+          }
+        }
+      }
+
+      // Color variants
+      &.primary {
+        .checkbox-item .checkbox-input:checked + .checkbox-indicator {
+          background-color: $primary-color;
+          border-color: $primary-color;
+          
+          .checkbox-check {
+            color: $selected-color;
+          }
+        }
+      }
+
+      &.secondary {
+        .checkbox-item .checkbox-input:checked + .checkbox-indicator {
+          background-color: $secondary-color;
+          border-color: $secondary-color;
+          
+          .checkbox-check {
+            color: $text-color;
+          }
+        }
+      }
+
+      &.success {
+        .checkbox-item .checkbox-input:checked + .checkbox-indicator {
+          background-color: $success-color;
+          border-color: $success-color;
+          
+          .checkbox-check {
+            color: $text-color;
+          }
+        }
+      }
+    }
+  }
+
+  .checkbox-helper {
+    @include text-xs;
+    color: $text-muted;
+
+    &.error {
+      color: $error-color;
+    }
+  }
+}
+
+// Light theme adjustments
+@media (prefers-color-scheme: light) {
+  .checkbox-wrapper {
+    &.single .checkbox-item,
+    &.group .checkbox-group .checkbox-item {
+      .checkbox-indicator {
+        border-color: $border-secondary;
+      }
+
+      .checkbox-label {
+        color: $primary-color;
+      }
+
+      &:hover:not(.disabled):not(:has(.checkbox-input:disabled)) {
+        .checkbox-indicator {
+          border-color: $secondary-color;
+        }
+      }
+    }
+
+    &.group .checkbox-group-label {
+      color: $primary-color;
+    }
+
+    .checkbox-helper {
+      color: $text-light;
+    }
+  }
+}

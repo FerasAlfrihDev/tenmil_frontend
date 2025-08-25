@@ -1,0 +1,139 @@
+// ========================================
+// TEXTAREA COMPONENT
+// ========================================
+
+@use 'sass:color';
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.textarea-wrapper {
+  display: flex;
+  flex-direction: column;
+  @include gap-xs;
+
+  &.full-width {
+    width: 100%;
+  }
+
+  .textarea-label {
+    color: $text-primary;
+    @include text-sm($font-weight-medium);
+    cursor: pointer;
+
+    .textarea-required {
+      color: $error-color;
+      @include viewport-spacing(margin, $space-xs, left);
+    }
+  }
+
+  .textarea-container {
+    position: relative;
+    border-radius: $border-radius;
+    transition: all $transition-speed;
+
+    &.outlined {
+      background-color: transparent;
+      border: 1px solid $border-primary;
+
+      &:focus-within {
+        border-color: $border-focus;
+        box-shadow: 0 0 0 2px $secondary-10;
+      }
+
+      &.error {
+        border-color: $error-color;
+        
+        &:focus-within {
+          box-shadow: 0 0 0 2px $error-light;
+        }
+      }
+    }
+
+    &.filled {
+      background-color: $surface-secondary;
+      border: 1px solid transparent;
+
+      &:focus-within {
+        background-color: $surface-primary;
+        border-color: $border-focus;
+      }
+
+      &.error {
+        border-color: $error-color;
+        background-color: $error-light;
+      }
+    }
+
+    &.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background-color: $surface-secondary;
+    }
+
+    .textarea-field {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: $text-primary;
+      font-family: inherit;
+      @include text-base;
+      @include viewport-spacing(padding, $space-sm);
+      border-radius: $border-radius;
+      line-height: $line-height-relaxed;
+      min-height: 80px;
+
+      &::placeholder {
+        color: $text-muted;
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .textarea-helper {
+    @include text-xs;
+    color: $text-muted;
+
+    &.error {
+      color: $error-color;
+    }
+  }
+}
+
+// Light theme adjustments
+@media (prefers-color-scheme: light) {
+  .textarea-wrapper {
+    .textarea-label {
+      color: $primary-color;
+    }
+
+    .textarea-container {
+      &.outlined {
+        border-color: $border-secondary;
+        
+        &:focus-within {
+          border-color: $secondary-color;
+        }
+      }
+
+      &.filled {
+        background-color: color.scale($background-light, $lightness: -3%);
+        
+        &:focus-within {
+          background-color: $background-light;
+        }
+      }
+
+      .textarea-field {
+        color: $primary-color;
+      }
+    }
+
+    .textarea-helper {
+      color: $text-light;
+    }
+  }
+}

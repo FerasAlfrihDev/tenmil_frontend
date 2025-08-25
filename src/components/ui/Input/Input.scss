@@ -1,0 +1,174 @@
+// ========================================
+// INPUT COMPONENT
+// ========================================
+
+@use 'sass:color';
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  @include gap-xs;
+
+  &.full-width {
+    width: 100%;
+  }
+
+  .input-label {
+    color: $text-primary;
+    @include text-sm($font-weight-medium);
+    cursor: pointer;
+
+    .input-required {
+      color: $error-color;
+      @include viewport-spacing(margin, $space-xs, left);
+    }
+  }
+
+  .input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-radius: $border-radius;
+    transition: all $transition-speed;
+
+    &.small {
+      @include viewport-spacing(padding, $space-xs);
+      
+      .input-field {
+        @include text-sm;
+      }
+    }
+
+    &.medium {
+      @include viewport-spacing(padding, $space-sm);
+      
+      .input-field {
+        @include text-base;
+      }
+    }
+
+    &.large {
+      @include viewport-spacing(padding, $space-md);
+      
+      .input-field {
+        @include text-md;
+      }
+    }
+
+    &.outlined {
+      background-color: transparent;
+      border: 1px solid $border-primary;
+
+      &:focus-within {
+        border-color: $border-focus;
+        box-shadow: 0 0 0 2px $secondary-10;
+      }
+
+      &.error {
+        border-color: $error-color;
+        
+        &:focus-within {
+          box-shadow: 0 0 0 2px $error-light;
+        }
+      }
+    }
+
+    &.filled {
+      background-color: $surface-secondary;
+      border: 1px solid transparent;
+
+      &:focus-within {
+        background-color: $surface-primary;
+        border-color: $border-focus;
+      }
+
+      &.error {
+        border-color: $error-color;
+        background-color: $error-light;
+      }
+    }
+
+    &.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background-color: $surface-secondary;
+    }
+
+    .input-field {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: $text-primary;
+      font-family: inherit;
+
+      &::placeholder {
+        color: $text-muted;
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+      }
+    }
+
+    .input-icon {
+      display: flex;
+      align-items: center;
+      color: $text-secondary;
+      
+      &.start-icon {
+        @include viewport-spacing(margin, $space-xs, right);
+      }
+      
+      &.end-icon {
+        @include viewport-spacing(margin, $space-xs, left);
+      }
+    }
+  }
+
+  .input-helper {
+    @include text-xs;
+    color: $text-muted;
+
+    &.error {
+      color: $error-color;
+    }
+  }
+}
+
+// Light theme adjustments
+@media (prefers-color-scheme: light) {
+  .input-wrapper {
+    .input-label {
+      color: $primary-color;
+    }
+
+    .input-container {
+      &.outlined {
+        border-color: $border-secondary;
+        
+        &:focus-within {
+          border-color: $secondary-color;
+        }
+      }
+
+      &.filled {
+        background-color: color.scale($background-light, $lightness: -3%);
+        
+        &:focus-within {
+          background-color: $background-light;
+        }
+      }
+
+      .input-field {
+        color: $primary-color;
+      }
+    }
+
+    .input-helper {
+      color: $text-light;
+    }
+  }
+}

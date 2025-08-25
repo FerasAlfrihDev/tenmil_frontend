@@ -1,0 +1,305 @@
+// ========================================
+// DROPDOWN COMPONENT
+// ========================================
+
+@use 'sass:color';
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.dropdown-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  @include gap-xs;
+
+  &.full-width {
+    width: 100%;
+  }
+
+  .dropdown-label {
+    color: $text-primary;
+    @include text-sm($font-weight-medium);
+    cursor: pointer;
+
+    .dropdown-required {
+      color: $error-color;
+      @include viewport-spacing(margin, $space-xs, left);
+    }
+  }
+
+  .dropdown-container {
+    position: relative;
+    border-radius: $border-radius;
+    transition: all $transition-speed;
+
+    &.small {
+      .dropdown-trigger {
+        @include viewport-spacing(padding, $space-xs);
+        @include text-sm;
+      }
+    }
+
+    &.medium {
+      .dropdown-trigger {
+        @include viewport-spacing(padding, $space-sm);
+        @include text-base;
+      }
+    }
+
+    &.large {
+      .dropdown-trigger {
+        @include viewport-spacing(padding, $space-md);
+        @include text-md;
+      }
+    }
+
+    &.outlined {
+      .dropdown-trigger {
+        background-color: transparent;
+        border: 1px solid $border-primary;
+      }
+
+      &:focus-within,
+      &.open {
+        .dropdown-trigger {
+          border-color: $border-focus;
+          box-shadow: 0 0 0 2px $secondary-10;
+        }
+      }
+
+      &.error {
+        .dropdown-trigger {
+          border-color: $error-color;
+        }
+        
+        &:focus-within {
+          .dropdown-trigger {
+            box-shadow: 0 0 0 2px $error-light;
+          }
+        }
+      }
+    }
+
+    &.filled {
+      .dropdown-trigger {
+        background-color: $surface-secondary;
+        border: 1px solid transparent;
+      }
+
+      &:focus-within,
+      &.open {
+        .dropdown-trigger {
+          background-color: $surface-primary;
+          border-color: $border-focus;
+        }
+      }
+
+      &.error {
+        .dropdown-trigger {
+          border-color: $error-color;
+          background-color: $error-light;
+        }
+      }
+    }
+
+    &.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      
+      .dropdown-trigger {
+        background-color: $surface-secondary;
+        cursor: not-allowed;
+      }
+    }
+
+    .dropdown-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      border-radius: $border-radius;
+      transition: all $transition-speed;
+      user-select: none;
+
+      &:focus {
+        outline: none;
+      }
+
+      .dropdown-text {
+        color: $text-primary;
+        flex: 1;
+        text-align: left;
+
+        &.placeholder {
+          color: $text-muted;
+        }
+      }
+
+      .dropdown-arrow {
+        color: $text-secondary;
+        transition: transform $transition-speed;
+        @include text-sm;
+
+        &.open {
+          transform: rotate(180deg);
+        }
+      }
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      z-index: $z-index-modal;
+      background-color: $surface-primary;
+      border: 1px solid $border-primary;
+      border-radius: $border-radius;
+      box-shadow: $box-shadow-base;
+      @include viewport-spacing(margin, $space-xs, top);
+      max-height: 200px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+
+      .dropdown-search {
+        @include viewport-spacing(padding, $space-sm);
+        border-bottom: 1px solid $border-secondary;
+
+        .dropdown-search-input {
+          width: 100%;
+          @include viewport-spacing(padding, $space-xs);
+          border: 1px solid $border-secondary;
+          border-radius: calc(#{$border-radius} / 2);
+          background-color: $surface-secondary;
+          color: $text-primary;
+          @include text-sm;
+
+          &:focus {
+            outline: none;
+            border-color: $border-focus;
+          }
+
+          &::placeholder {
+            color: $text-muted;
+          }
+        }
+      }
+
+      .dropdown-options {
+        overflow-y: auto;
+        @include custom-scrollbar;
+
+        .dropdown-option {
+          @include viewport-spacing(padding, $space-sm);
+          cursor: pointer;
+          transition: background-color $transition-speed;
+          color: $text-primary;
+          @include text-base;
+          border-bottom: 1px solid $border-secondary;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          &:hover:not(.disabled):not(.no-options) {
+            background-color: $primary-10;
+          }
+
+          &.selected {
+            background-color: $secondary-10;
+            color: $secondary-color;
+            font-weight: $font-weight-medium;
+          }
+
+          &.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+
+          &.no-options {
+            color: $text-muted;
+            text-align: center;
+            cursor: default;
+          }
+        }
+      }
+    }
+  }
+
+  .dropdown-helper {
+    @include text-xs;
+    color: $text-muted;
+
+    &.error {
+      color: $error-color;
+    }
+  }
+}
+
+// Light theme adjustments
+@media (prefers-color-scheme: light) {
+  .dropdown-wrapper {
+    .dropdown-label {
+      color: $primary-color;
+    }
+
+    .dropdown-container {
+      &.outlined {
+        .dropdown-trigger {
+          border-color: $border-secondary;
+        }
+        
+        &:focus-within,
+        &.open {
+          .dropdown-trigger {
+            border-color: $secondary-color;
+          }
+        }
+      }
+
+      &.filled {
+        .dropdown-trigger {
+          background-color: color.scale($background-light, $lightness: -3%);
+        }
+        
+        &:focus-within,
+        &.open {
+          .dropdown-trigger {
+            background-color: $background-light;
+          }
+        }
+      }
+
+      .dropdown-trigger .dropdown-text {
+        color: $primary-color;
+      }
+
+      .dropdown-menu {
+        background-color: $background-light;
+        border-color: $border-secondary;
+
+        .dropdown-search .dropdown-search-input {
+          background-color: color.scale($background-light, $lightness: -5%);
+          color: $primary-color;
+        }
+
+        .dropdown-options .dropdown-option {
+          color: $primary-color;
+
+          &:hover:not(.disabled):not(.no-options) {
+            background-color: color.scale($background-light, $lightness: -3%);
+          }
+
+          &.selected {
+            background-color: $secondary-10;
+          }
+        }
+      }
+    }
+
+    .dropdown-helper {
+      color: $text-light;
+    }
+  }
+}

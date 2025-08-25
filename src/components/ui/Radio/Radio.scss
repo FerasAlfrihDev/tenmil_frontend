@@ -1,0 +1,215 @@
+// ========================================
+// RADIO COMPONENT
+// ========================================
+
+@use 'sass:color';
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.radio-wrapper {
+  display: flex;
+  flex-direction: column;
+  @include gap-xs;
+
+  .radio-group-label {
+    color: $text-primary;
+    @include text-sm($font-weight-medium);
+
+    .radio-required {
+      color: $error-color;
+      @include viewport-spacing(margin, $space-xs, left);
+    }
+  }
+
+  .radio-group {
+    display: flex;
+    @include gap-sm;
+
+    &.horizontal {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    &.vertical {
+      flex-direction: column;
+    }
+
+    &.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .radio-item {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      transition: all $transition-speed;
+
+      &:hover:not(:has(.radio-input:disabled)) {
+        .radio-indicator {
+          border-color: $border-focus;
+        }
+      }
+
+      .radio-input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+
+        &:focus + .radio-indicator {
+          box-shadow: 0 0 0 2px $secondary-10;
+        }
+
+        &:checked + .radio-indicator {
+          .radio-dot {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+
+          & ~ .radio-label {
+            cursor: not-allowed;
+            opacity: 0.6;
+          }
+        }
+      }
+
+      .radio-indicator {
+        position: relative;
+        border: 1px solid $border-primary;
+        border-radius: 50%;
+        transition: all $transition-speed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .radio-dot {
+          border-radius: 50%;
+          transform: scale(0);
+          opacity: 0;
+          transition: all $transition-speed;
+        }
+      }
+
+      .radio-label {
+        color: $text-primary;
+        @include viewport-spacing(margin, $space-sm, left);
+      }
+    }
+
+    // Size variants
+    &.small {
+      .radio-item {
+        @include text-sm;
+
+        .radio-indicator {
+          width: 16px;
+          height: 16px;
+
+          .radio-dot {
+            width: 8px;
+            height: 8px;
+          }
+        }
+      }
+    }
+
+    &.medium {
+      .radio-item {
+        @include text-base;
+
+        .radio-indicator {
+          width: 20px;
+          height: 20px;
+
+          .radio-dot {
+            width: 10px;
+            height: 10px;
+          }
+        }
+      }
+    }
+
+    &.large {
+      .radio-item {
+        @include text-md;
+
+        .radio-indicator {
+          width: 24px;
+          height: 24px;
+
+          .radio-dot {
+            width: 12px;
+            height: 12px;
+          }
+        }
+      }
+    }
+
+    // Color variants
+    &.primary {
+      .radio-item .radio-input:checked + .radio-indicator {
+        border-color: $primary-color;
+        
+        .radio-dot {
+          background-color: $primary-color;
+        }
+      }
+    }
+
+    &.secondary {
+      .radio-item .radio-input:checked + .radio-indicator {
+        border-color: $secondary-color;
+        
+        .radio-dot {
+          background-color: $secondary-color;
+        }
+      }
+    }
+  }
+
+  .radio-helper {
+    @include text-xs;
+    color: $text-muted;
+
+    &.error {
+      color: $error-color;
+    }
+  }
+}
+
+// Light theme adjustments
+@media (prefers-color-scheme: light) {
+  .radio-wrapper {
+    .radio-group-label {
+      color: $primary-color;
+    }
+
+    .radio-group {
+      .radio-item {
+        .radio-indicator {
+          border-color: $border-secondary;
+        }
+
+        .radio-label {
+          color: $primary-color;
+        }
+
+        &:hover:not(:has(.radio-input:disabled)) {
+          .radio-indicator {
+            border-color: $secondary-color;
+          }
+        }
+      }
+    }
+
+    .radio-helper {
+      color: $text-light;
+    }
+  }
+}

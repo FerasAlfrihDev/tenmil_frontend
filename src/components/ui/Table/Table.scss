@@ -1,0 +1,231 @@
+// ========================================
+// TABLE COMPONENT
+// ========================================
+
+@use 'sass:color';
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.table-container {
+  background-color: $surface-primary;
+  border: 1px solid $border-primary;
+  border-radius: $border-radius;
+  overflow: hidden;
+  @include viewport-spacing(padding, $space-base);
+
+  .table-title {
+    color: $text-primary;
+    @include text-lg($font-weight-semibold);
+    @include viewport-spacing(margin, $space-base, bottom);
+    border-bottom: 1px solid $border-secondary;
+    @include viewport-spacing(padding, $space-sm, bottom);
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    @include custom-scrollbar;
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    @include text-sm;
+
+    .table-header-cell {
+      background-color: $surface-secondary;
+      border-bottom: 2px solid $border-primary;
+      border-right: 1px solid $border-secondary;
+      @include viewport-spacing(padding, $space-sm);
+      text-align: left;
+      position: relative;
+      user-select: none;
+
+      &:last-child {
+        border-right: none;
+      }
+
+      &.sortable {
+        cursor: pointer;
+        transition: background-color $transition-speed;
+
+        &:hover {
+          background-color: $surface-elevated;
+        }
+      }
+
+      &.sorted-asc,
+      &.sorted-desc {
+        background-color: $primary-10;
+      }
+
+      .table-header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        @include gap-xs;
+
+        .table-header-title {
+          color: $text-primary;
+          @include text-sm($font-weight-medium);
+        }
+
+        .table-sort-indicator {
+          color: $text-secondary;
+          @include text-xs;
+          opacity: 0.7;
+          transition: opacity $transition-speed;
+        }
+      }
+
+      &.sortable:hover .table-sort-indicator {
+        opacity: 1;
+      }
+
+      .table-filter {
+        @include viewport-spacing(margin, $space-xs, top);
+
+        .table-filter-input {
+          width: 100%;
+          @include viewport-spacing(padding, $space-xs);
+          border: 1px solid $border-secondary;
+          border-radius: calc(#{$border-radius} / 2);
+          background-color: $surface-primary;
+          color: $text-primary;
+          @include text-xs;
+
+          &:focus {
+            outline: none;
+            border-color: $border-focus;
+          }
+
+          &::placeholder {
+            color: $text-muted;
+          }
+        }
+      }
+
+      .table-resize-handle {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        cursor: col-resize;
+        background-color: transparent;
+        transition: background-color $transition-speed;
+
+        &:hover {
+          background-color: $border-focus;
+        }
+      }
+    }
+
+    .table-row {
+      border-bottom: 1px solid $border-secondary;
+      transition: background-color $transition-speed;
+
+      &:hover {
+        background-color: $primary-10;
+      }
+
+      &.clickable {
+        cursor: pointer;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .table-cell {
+        @include viewport-spacing(padding, $space-sm);
+        border-right: 1px solid $border-secondary;
+        color: $text-primary;
+        vertical-align: top;
+
+        &:last-child {
+          border-right: none;
+        }
+      }
+    }
+  }
+
+  .table-empty {
+    text-align: center;
+    @include viewport-spacing(padding, $space-xl);
+    color: $text-muted;
+    @include text-base;
+  }
+
+  .table-loading {
+    text-align: center;
+    @include viewport-spacing(padding, $space-xl);
+    color: $text-secondary;
+    @include text-base;
+  }
+
+  .table-pagination {
+    @include flex-between;
+    @include viewport-spacing(margin, $space-md, top);
+    @include viewport-spacing(padding, $space-sm, top);
+    border-top: 1px solid $border-secondary;
+
+    .pagination-btn {
+      @include button-base;
+      background-color: $surface-secondary;
+      color: $text-primary;
+      border: 1px solid $border-primary;
+
+      &:hover:not(:disabled) {
+        background-color: $surface-elevated;
+        border-color: $border-focus;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+
+    .pagination-info {
+      color: $text-secondary;
+      @include text-sm;
+    }
+  }
+}
+
+// Dark theme adjustments
+@media (prefers-color-scheme: light) {
+  .table-container {
+    background-color: $background-light;
+    border-color: $border-secondary;
+
+    .table-title {
+      color: $primary-color;
+    }
+
+    .table {
+      .table-header-cell {
+        background-color: color.scale($background-light, $lightness: -5%);
+
+        .table-header-content .table-header-title {
+          color: $primary-color;
+        }
+      }
+
+      .table-row {
+        &:hover {
+          background-color: color.scale($background-light, $lightness: -2%);
+        }
+
+        .table-cell {
+          color: $primary-color;
+        }
+      }
+    }
+
+    .table-pagination .pagination-btn {
+      background-color: $background-light;
+      color: $primary-color;
+    }
+  }
+}

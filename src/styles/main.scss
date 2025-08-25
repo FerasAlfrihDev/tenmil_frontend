@@ -16,6 +16,8 @@
 // 4. Pages
 @use 'pages/landing';
 
+// Note: UI component styles are imported via their individual component files
+
 // 5. Components
 @use 'components/buttons';
 @use 'components/cards';
