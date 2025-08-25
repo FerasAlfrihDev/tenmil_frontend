@@ -432,10 +432,11 @@
     overflow: auto;
     min-width: $fixed-width;
     min-height: $fixed-height;
+    @include custom-scrollbar; // Apply custom scrollbar styling to container for smaller screens
   }
   
   .app-main,
   .app-sidebar {
-    overflow-y: visible;
+    overflow-y: visible; // Remove individual scrollbars since container handles scrolling
   }
 }

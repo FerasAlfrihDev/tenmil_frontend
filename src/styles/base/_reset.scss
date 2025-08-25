@@ -20,9 +20,19 @@ html {
   -moz-osx-font-smoothing: grayscale;
   // Base font size using viewport units
   @include body-text;
-  // Ensure scrolling is allowed
-  overflow-x: hidden;
-  overflow-y: auto;
+  
+  // Responsive overflow handling
+  @media (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    // Large screens: hide horizontal scroll, allow vertical
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  
+  @media not all and (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    // Small screens: allow both horizontal and vertical scroll
+    overflow-x: auto;
+    overflow-y: auto;
+  }
 }
 
 body {
@@ -33,10 +43,20 @@ body {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
-  // Allow proper scrolling for landing page
-  overflow-x: hidden;
-  overflow-y: auto;
-  @include custom-scrollbar;
+  
+  // Responsive overflow handling
+  @media (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    // Large screens: hide horizontal scroll, allow vertical, apply custom scrollbar
+    overflow-x: hidden;
+    overflow-y: auto;
+    @include custom-scrollbar;
+  }
+  
+  @media not all and (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    // Small screens: allow both horizontal and vertical scroll, no body scrollbar (container handles it)
+    overflow-x: auto;
+    overflow-y: auto;
+  }
 }
 
 // Remove default styling

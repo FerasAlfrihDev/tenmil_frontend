@@ -367,8 +367,16 @@
   grid-template-rows: $header-height 1fr $footer-height;
   grid-template-columns: $sidebar-width 1fr;
   gap: 0; // No gap for main layout
-  width: 100%;                      // Use 100% instead of 100vw to avoid scrollbar width
   height: 100vh;                    // Keep 100vh for height
+  
+  // Responsive width handling for proper horizontal scrolling
+  @media (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    width: 100%;                    // Use 100% for responsive screens to fill viewport
+  }
+  
+  @media not all and (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    width: $fixed-width;            // Use fixed width (1536px) for smaller screens to enable horizontal scroll
+  }
 }
 
 // Button styling
