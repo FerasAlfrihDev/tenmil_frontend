@@ -291,7 +291,7 @@
       &.btn-primary {
         background-color: $selected-color !important;            // #FFCF64
         border-color: $selected-color !important;                // #FFCF64  
-        color: $primary-color !important;                        // #252D63 (contrast)
+        color: $primary-color !important;                        // #1b2446(contrast)
         
         &:hover {
           background-color: $selected-hover !important;
@@ -415,7 +415,7 @@
       &:hover,
       &.active {                                       // Active state matches hover
         background-color: $sidebar-background-hover !important;  // #FFCF64 - Force this color
-        color: $sidebar-text-hover !important;                   // #252D63 (primary) - Force this color
+        color: $sidebar-text-hover !important;                   // #1b2446(primary) - Force this color
         
         // Background fills 100% of the li element naturally - no overflow
       }
@@ -508,7 +508,7 @@
       &:hover,
       &.active {                                       // Active state matches hover
         background-color: $sidebar-background-hover !important;  // #FFCF64 - Force this color
-        color: $sidebar-text-hover !important;                   // #252D63 (primary) - Force this color
+        color: $sidebar-text-hover !important;                   // #1b2446(primary) - Force this color
       }
       
       .nav-icon {

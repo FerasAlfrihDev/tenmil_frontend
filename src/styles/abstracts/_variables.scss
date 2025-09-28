@@ -32,19 +32,19 @@ $main-content-padding: 2vw;
 
 // Colors
 // Base Color Palette (Brand colors - consistent across themes)
-$primary-color: #252D63;        // Dark blue - main brand color
+$primary-color: #1b2446;        // Dark blue - main brand color
 $secondary-color: #FFCF64;      // Yellow/gold - selection/highlight
 $selected-color: #FFCF64;      // Yellow/gold - selection/highlight
 
 // Theme-specific colors
 // Dark Mode Colors (default)
 $dark-text: #E6E7E8;           // Light gray text for dark backgrounds
-$dark-background: #252D63;     // Dark blue background
+$dark-background: #1b2446;     // Dark blue background
 $dark-surface: #2a3558;        // Lighter dark surface
 $dark-border: rgba(230, 231, 232, 0.2); // Light borders on dark
 
 // Light Mode Colors
-$light-text: #252D63;          // Dark blue text for light backgrounds  
+$light-text: #1b2446;          // Dark blue text for light backgrounds  
 $light-background: #F5F5F5; // Light gray background
 $light-surface: #f8f9fa;       // Light gray surface
 $light-border: rgba(27, 36, 70, 0.2); // Dark borders on light
@@ -92,9 +92,9 @@ $text-muted: color.change($text-color, $alpha: 0.5);             // Muted text
 $text-disabled: color.change($text-color, $alpha: 0.3);          // Disabled text
 
 // Layout-Specific Background Colors (Dark Mode defaults)
-$header-background: $primary-color;                              // Header background: #252D63
-$sidebar-background: $primary-color;                             // Sidebar background: #252D63  
-$footer-background: $primary-color;                              // Footer background: #252D63
+$header-background: $primary-color;                              // Header background: #1b2446
+$sidebar-background: $primary-color;                             // Sidebar background: #1b2446  
+$footer-background: $primary-color;                              // Footer background: #1b2446
 $main-content-background: $light-background;                     // Main content background: light in both modes
 
 // Layout-Specific Text Colors (Dark Mode defaults)
