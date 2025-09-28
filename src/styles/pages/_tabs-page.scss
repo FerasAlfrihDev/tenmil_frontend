@@ -12,9 +12,9 @@
   overflow: hidden; // Prevent page-level scrolling
 
   .page-header {
-    @include viewport-spacing(margin, $space-xxl, bottom);
     flex-shrink: 0; // Prevent header from shrinking
-
+    @include viewport-spacing(margin, $space-xxl, bottom);
+    
     .page-title {
       color: $primary-color;
       @include viewport-spacing(margin, $space-sm, bottom);
@@ -23,9 +23,9 @@
 
     .page-description {
       color: $text-secondary;
-      @include text-md;
       max-width: 800px;
       line-height: $line-height-relaxed;
+      @include text-md;
     }
   }
 
