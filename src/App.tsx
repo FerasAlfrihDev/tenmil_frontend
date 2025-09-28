@@ -5,7 +5,7 @@ import { ProtectedRoute } from './components/auth'
 import { Layout } from './components/layout'
 import { AdminLayout } from './components/layout/admin'
 import { ToastContainer } from './components/ui/Toast'
-import { useToast } from './hooks/useToast'
+import { useToast, useTheme } from './hooks'
 import { errorHandler } from './services/errorHandler'
 import { 
   Dashboard, 
@@ -21,15 +21,14 @@ import {
 } from './pages'
 import { AdminDashboard, AdminComingSoon } from './pages/admin'
 import apiService from './services/api'
-import { Moon, Sun, Globe, Bell } from 'lucide-react'
+import { Moon, Sun, Bell } from 'lucide-react'
 
 // Main App Content Component (inside UserProvider)
 function AppContent() {
   const [count, setCount] = useState(0)
-  const [isDarkMode, setIsDarkMode] = useState(true)
   const [showNotifications, setShowNotifications] = useState(false)
-  const [showLanguages, setShowLanguages] = useState(false)
   const { toasts, showError, showWarning, dismissToast } = useToast()
+  const { isDarkMode, toggleTheme } = useTheme()
   const { state: userState } = useUser()
 
   // Initialize error handler with toast functionality
@@ -43,30 +42,9 @@ function AppContent() {
     });
   }, [showError, showWarning]);
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode)
-  }
-
-  // Update HTML class when theme changes
-  useEffect(() => {
-    const htmlElement = document.documentElement
-    if (isDarkMode) {
-      htmlElement.classList.remove('theme-light')
-      htmlElement.classList.add('theme-dark')
-    } else {
-      htmlElement.classList.remove('theme-dark')
-      htmlElement.classList.add('theme-light')
-    }
-  }, [isDarkMode])
 
   const toggleNotifications = () => {
     setShowNotifications(!showNotifications)
-    setShowLanguages(false) // Close other dropdowns
-  }
-
-  const toggleLanguages = () => {
-    setShowLanguages(!showLanguages)
-    setShowNotifications(false) // Close other dropdowns
   }
 
   const headerContent = (
@@ -75,12 +53,12 @@ function AppContent() {
         <button 
           className="header-icon-btn" 
           title={`Switch to ${isDarkMode ? 'Light' : 'Dark'} Mode`}
-          onClick={toggleDarkMode}
+          onClick={toggleTheme}
         >
           {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
         </button>
         
-        <div className="header-dropdown-container">
+        {/* <div className="header-dropdown-container">
           <button 
             className={`header-icon-btn ${showLanguages ? 'active' : ''}`}
             title="Change Language"
@@ -112,7 +90,7 @@ function AppContent() {
               </div>
             </div>
           )}
-        </div>
+        </div> */}
         
         <div className="header-dropdown-container">
           <button 
@@ -170,7 +148,6 @@ function AppContent() {
     if (subdomainType === 'admin') {
       return (
         <AdminLayout 
-          headerTitle="Tenmil Admin Portal"
           headerContent={headerContent}
           sidebarContent={sidebarContent}
         >
@@ -239,7 +216,6 @@ function AppContent() {
     // Default layout for wildcard subdomains (company/tenant portals)
     return (
       <Layout 
-        headerTitle="Tenmil Dashboard"
         headerContent={headerContent}
         sidebarContent={sidebarContent}
       >

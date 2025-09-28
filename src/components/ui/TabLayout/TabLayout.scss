@@ -57,11 +57,11 @@
 
   .tab-content {
     flex: 1;
-    @include viewport-spacing(padding, $space-xs, top);
     height: 100%; // Full height instead of fixed viewport height
     overflow-y: auto;
     background-color: var(--main-content-bg);
     color: var(--main-content-text);
+    @include viewport-spacing(padding, $space-sm);
     @include custom-scrollbar;
   }
 
@@ -69,7 +69,7 @@
   &.small {
     .tab-headers .tab-header {
       @include text-sm;
-      @include viewport-spacing(padding, $space-xs, vertical);
+      @include viewport-spacing(padding, $space-sm, vertical);
       @include viewport-spacing(padding, $space-sm, horizontal);
     }
 

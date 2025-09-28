@@ -23,6 +23,7 @@
   height: 100%;
   background: var(--card-bg, $light-background);
   border: 1px solid var(--border-color, $border-primary);
+  @include viewport-spacing(padding, $space-sm, horizontal);
   border-radius: $border-radius;
   overflow: hidden;
 

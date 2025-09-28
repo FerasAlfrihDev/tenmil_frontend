@@ -540,7 +540,6 @@
   overflow-y: auto;
   background-color: var(--main-content-bg);
   color: var(--main-content-text);
-  @include viewport-spacing(padding, $main-content-gap);
   @include custom-scrollbar;
   
   // Ensure all content in main uses the main content text color

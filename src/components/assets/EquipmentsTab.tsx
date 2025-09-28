@@ -1,5 +1,4 @@
 import React from 'react';
-import { Plus, Edit, X } from 'lucide-react';
 import { APITable } from '../ui';
 import type { BaseAsset } from './shared';
 import { createAssetColumns } from './shared';
@@ -12,22 +11,6 @@ interface Equipment extends BaseAsset {
 }
 
 const EquipmentsTab: React.FC = () => {
-  // Action handlers
-  const handleCreate = () => {
-    console.log('Create new equipment');
-    // TODO: Open create equipment modal/form
-  };
-
-  const handleUpdate = () => {
-    console.log('Update equipment');
-    // TODO: Open update equipment modal/form
-  };
-
-  const handleCancel = () => {
-    console.log('Cancel operation');
-    // TODO: Cancel current operation or close modal
-  };
-
   return (
     <APITable<Equipment>
         endpoint="/assets/equipments"

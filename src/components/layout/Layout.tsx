@@ -7,6 +7,7 @@ import Header from './Header';
 import Footer from './Footer';
 import Sidebar from './Sidebar';
 import MainContent from './MainContent';
+import { usePageTitle } from '../../utils/pageTitle';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -23,9 +24,14 @@ const Layout: React.FC<LayoutProps> = ({
   sidebarContent,
   footerContent,
 }) => {
+  // Get dynamic page title based on current route
+  const dynamicTitle = usePageTitle(false);
+  // Use provided headerTitle or fall back to dynamic title
+  const title = headerTitle || dynamicTitle;
+
   return (
     <div className="app-container">
-      <Header title={headerTitle}>
+      <Header title={title}>
         {headerContent}
       </Header>
       
