@@ -33,21 +33,11 @@ export default defineConfig({
             const match = referer.match(/\/\/([^.]+)\.localhost/);
             const tenant = match?.[1] || 'company';
             
-            // Dynamically set the target based on tenant
-            const tenantTarget = `https://${tenant}.api.alfrih.com`;
             // Tenant routing configured
             
             // Override the target for this specific request
             proxyReq.setHeader('Host', `${tenant}.api.alfrih.com`);
           });
-        },
-        router: (req) => {
-          // Dynamic routing based on referer
-          const referer = req.headers.referer || '';
-          const match = referer.match(/\/\/([^.]+)\.localhost/);
-          const tenant = match?.[1] || 'company';
-          const target = `https://${tenant}.api.alfrih.com`;
-          return target;
         }
       }
     }

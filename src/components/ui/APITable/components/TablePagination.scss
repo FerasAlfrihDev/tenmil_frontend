@@ -1,0 +1,247 @@
+// ========================================
+// TABLE PAGINATION STYLES
+// ========================================
+
+@use 'sass:color';
+@use '../../../../styles/abstracts/variables' as *;
+@use '../../../../styles/abstracts/mixins' as *;
+
+.table-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  @include viewport-spacing(padding, $space-base);
+  background: var(--table-body-bg, $light-background);
+  border-top: 1px solid var(--border-color, $border-primary);
+  @include viewport-font-size($font-size-sm);
+
+  // Theme support - match table body background
+  .theme-light &,
+  :root:not(.theme-dark) & {
+    --table-body-bg: #EFEFEF; // Same as table body in light mode
+    --card-text: #{$light-text};
+    --border-color: #{$light-border};
+  }
+
+  .theme-dark & {
+    --table-body-bg: #{$dark-surface}; // Same as table body in dark mode
+    --card-text: #{$dark-text};
+    --border-color: #{$dark-border};
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not(.theme-light) & {
+      --table-body-bg: #{$dark-surface}; // Same as table body in dark mode
+      --card-text: #{$dark-text};
+      --border-color: #{$dark-border};
+    }
+  }
+
+  &__info {
+    display: flex;
+    align-items: center;
+  }
+
+  &__total {
+    color: var(--text-muted, $text-muted);
+    white-space: nowrap;
+  }
+
+  &__size-changer {
+    display: flex;
+    align-items: center;
+    @include viewport-spacing(gap, $space-xs);
+
+    &-dropdown {
+      min-width: 100px;
+    }
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    @include viewport-spacing(gap, $space-xs);
+  }
+
+  // Navigation controls (borderless icons)
+  &__nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @include viewport-spacing(padding, $space-xs);
+    min-width: to-fixed-pixels(2.5vmin);
+    height: to-fixed-pixels(2.5vmin);
+    background: transparent;
+    border: none;
+    color: var(--card-text, $text-primary);
+    cursor: pointer;
+    transition: all $transition-speed ease;
+    border-radius: $border-radius-sm;
+    
+    &:hover:not(.table-pagination__nav--disabled) {
+      background: rgba(var(--primary-color-rgb, 27, 36, 70), 0.1);
+      color: var(--primary-color, $primary-color);
+    }
+
+    &--disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      color: var(--text-disabled, $text-disabled);
+      
+      &:hover {
+        background: transparent;
+        color: var(--text-disabled, $text-disabled);
+      }
+    }
+  }
+
+  // Page number buttons (keep existing button styles)
+  &__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @include viewport-spacing(padding, $space-xs);
+    min-width: to-fixed-pixels(2.5vmin);
+    height: to-fixed-pixels(2.5vmin);
+    background: var(--surface-color, $surface-primary);
+    border: 1px solid var(--border-color, $border-primary);
+    border-radius: $border-radius-sm;
+    color: var(--card-text, $text-primary);
+    cursor: pointer;
+    transition: all $transition-speed ease;
+    @include viewport-font-size($font-size-sm);
+
+    &:hover:not(:disabled) {
+      background: var(--primary-color, $primary-color);
+      color: white;
+      border-color: var(--primary-color, $primary-color);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: var(--surface-color, $surface-primary);
+      color: var(--text-disabled, $text-disabled);
+    }
+
+    &--page {
+      font-weight: $font-weight-medium;
+      @include viewport-spacing(padding, $space-xs $space-sm);
+    }
+
+    &--active {
+      background: var(--primary-color, $primary-color);
+      color: white;
+      border-color: var(--primary-color, $primary-color);
+      font-weight: $font-weight-semibold;
+
+      &:hover {
+        background: var(--primary-color, $primary-color);
+        color: white;
+      }
+    }
+  }
+
+  &__pages {
+    display: flex;
+    align-items: center;
+    @include viewport-spacing(gap, $space-xs);
+  }
+
+  &__ellipsis {
+    @include viewport-spacing(padding, $space-xs);
+    color: var(--text-muted, $text-muted);
+  }
+
+  &__jumper {
+    display: flex;
+    align-items: center;
+    @include viewport-spacing(gap, $space-xs);
+
+    &-label {
+      color: var(--text-muted, $text-muted);
+      white-space: nowrap;
+    }
+
+    &-input {
+      width: 60px;
+      @include viewport-spacing(padding, $space-xs);
+      border: 1px solid var(--border-color, $border-primary);
+      border-radius: $border-radius-sm;
+      background: var(--input-bg, $light-background);
+      color: var(--input-text, $text-primary);
+      @include viewport-font-size($font-size-sm);
+      text-align: center;
+
+      &:focus {
+        outline: none;
+        border-color: var(--primary-color, $primary-color);
+        box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb, 27, 36, 70), 0.2);
+      }
+
+      // Remove spinner arrows
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      &[type=number] {
+        -moz-appearance: textfield;
+      }
+    }
+  }
+
+  // Responsive design
+  @media (max-width: 768px) {
+    flex-direction: column;
+    @include viewport-spacing(gap, $space-base);
+    align-items: stretch;
+
+    &__info {
+      justify-content: center;
+    }
+
+    &__size-changer {
+      justify-content: center;
+    }
+
+    &__controls {
+      justify-content: center;
+    }
+
+    &__jumper {
+      justify-content: center;
+    }
+
+    &__btn {
+      min-width: to-fixed-pixels(3vmin);
+      height: to-fixed-pixels(3vmin);
+    }
+  }
+
+  @media (max-width: 480px) {
+    &__pages {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    &__btn--page {
+      display: none;
+
+      &--active {
+        display: flex;
+      }
+    }
+
+    // Show only first, prev, current, next, last on very small screens
+    &__btn--first,
+    &__btn--prev,
+    &__btn--next,
+    &__btn--last {
+      display: flex;
+    }
+  }
+
+  @include viewport-spacing;
+}

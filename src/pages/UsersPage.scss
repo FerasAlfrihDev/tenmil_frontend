@@ -1,0 +1,81 @@
+// ========================================
+// USERS PAGE STYLES
+// ========================================
+
+@use '../styles/abstracts/variables' as *;
+@use '../styles/abstracts/mixins' as *;
+
+.users-page {
+  
+  .page-header {
+    margin-bottom: $space-xl;
+    
+    h1 {
+      @include text-xl;
+      color: var(--main-content-text);
+      margin-bottom: $space-xs;
+      font-weight: 600;
+    }
+    
+    p {
+      @include text-base;
+      color: var(--main-content-text);
+      opacity: 0.7;
+    }
+  }
+  
+  .page-content {
+    background: var(--card-bg);
+    border-radius: $border-radius-lg;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+  }
+  
+  .users-content {
+    padding: $space-lg;
+    
+    h3 {
+      @include text-lg;
+      color: var(--card-text);
+      margin-bottom: $space-md;
+      font-weight: 600;
+    }
+    
+    p {
+      @include text-base;
+      color: var(--card-text);
+      opacity: 0.7;
+    }
+  }
+  
+  // Responsive breakpoint using media query directly
+  @media not all and (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    padding: to-fixed-pixels($space-lg);
+    
+    .page-header {
+      margin-bottom: to-fixed-pixels($space-xl);
+      
+      h1 {
+        font-size: to-fixed-pixels($font-size-xl);
+        margin-bottom: to-fixed-pixels($space-xs);
+      }
+      
+      p {
+        font-size: to-fixed-pixels($font-size-base);
+      }
+    }
+    
+    .users-content {
+      padding: to-fixed-pixels($space-lg);
+      
+      h3 {
+        font-size: to-fixed-pixels($font-size-lg);
+        margin-bottom: to-fixed-pixels($space-md);
+      }
+      
+      p {
+        font-size: to-fixed-pixels($font-size-base);
+      }
+    }
+  }
+}

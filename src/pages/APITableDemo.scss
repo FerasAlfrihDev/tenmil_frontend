@@ -1,0 +1,162 @@
+// ========================================
+// API TABLE DEMO PAGE STYLES
+// ========================================
+
+@use '../styles/abstracts/variables' as *;
+@use '../styles/abstracts/mixins' as *;
+
+.api-table-demo {
+  @include viewport-spacing(padding, $space-lg);
+  @include gap-lg;
+
+  .demo-header {
+    text-align: center;
+    @include viewport-spacing(margin, $space-xl, bottom);
+
+    h1 {
+      @include text-xxl($font-weight-bold);
+      color: var(--primary-color, #{$primary-color});
+      @include viewport-spacing(margin, $space-base, bottom);
+    }
+
+    p {
+      @include text-base;
+      color: var(--main-content-text, #{$main-content-text-color});
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: $line-height-relaxed;
+    }
+  }
+
+  .demo-content {
+    @include viewport-spacing(margin, $space-xl, vertical);
+  }
+
+  .demo-table {
+    box-shadow: $box-shadow-base;
+    border-radius: $border-radius;
+    overflow: hidden;
+  }
+
+  .demo-info {
+    background: var(--card-bg, #{$light-surface});
+    color: var(--card-text, #{$light-text});
+    border: 1px solid var(--border-color, #{$light-border});
+    border-radius: $border-radius;
+    @include viewport-spacing(padding, $space-lg);
+    @include viewport-spacing(margin, $space-xl, top);
+
+    h2 {
+      @include text-lg($font-weight-semibold);
+      color: var(--primary-color, #{$primary-color});
+      @include viewport-spacing(margin, $space-base, bottom);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      @include gap-sm;
+
+      li {
+        @include text-base;
+        @include viewport-spacing(padding, $space-xs, vertical);
+        
+        &::before {
+          content: '';
+          display: inline-block;
+          width: 4px;
+          height: 4px;
+          background: var(--success-color, #{$success-color});
+          border-radius: 50%;
+          @include viewport-spacing(margin, $space-xs, right);
+        }
+      }
+    }
+  }
+
+  // Status badge styles
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: $border-radius-sm;
+    font-weight: $font-weight-medium;
+    @include text-sm;
+    @include viewport-spacing(padding, $space-xs, vertical);
+    @include viewport-spacing(padding, $space-sm, horizontal);
+
+    &.active {
+      background: var(--success-color, #{$success-light});
+      color: var(--success-color, #{$success-color});
+    }
+
+    &.inactive {
+      background: var(--error-color, #{$error-light});
+      color: var(--error-color, #{$error-color});
+    }
+  }
+
+  // Price styles
+  .price {
+    font-weight: $font-weight-medium;
+    color: var(--primary-color, #{$primary-color});
+  }
+}
+
+// Dark theme adjustments
+.theme-dark,
+[data-theme="dark"] {
+  .api-table-demo {
+    .demo-info {
+      background: var(--card-bg, #{$dark-surface});
+      color: var(--card-text, #{$dark-text});
+      border-color: var(--border-color, #{$dark-border});
+    }
+  }
+}
+
+// System preference support
+@media (prefers-color-scheme: dark) {
+  :root:not(.theme-light):not([data-theme="light"]) {
+    .api-table-demo {
+      .demo-info {
+        background: var(--card-bg, #{$dark-surface});
+        color: var(--card-text, #{$dark-text});
+        border-color: var(--border-color, #{$dark-border});
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .api-table-demo {
+    @include viewport-spacing(padding, $space-base);
+
+    .demo-header {
+      h1 {
+        @include text-xl($font-weight-bold);
+      }
+
+      p {
+        @include text-sm;
+      }
+    }
+
+    .demo-info {
+      @include viewport-spacing(padding, $space-base);
+
+      h2 {
+        @include text-base($font-weight-semibold);
+      }
+
+      ul li {
+        @include text-sm;
+      }
+    }
+  }
+}
+
+// Always place @include as the last property
+.api-table-demo {
+  @include viewport-spacing;
+}

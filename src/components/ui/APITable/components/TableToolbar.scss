@@ -1,0 +1,435 @@
+// ========================================
+// TABLE TOOLBAR STYLES
+// ========================================
+
+@use 'sass:color';
+@use '../../../../styles/abstracts/variables' as *;
+@use '../../../../styles/abstracts/mixins' as *;
+
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  @include viewport-spacing(padding, $space-base);
+  background: var(--table-body-bg, $light-background);
+  border-bottom: 1px solid var(--border-color, $border-primary);
+  @include viewport-font-size($font-size-sm);
+
+  // Theme support - match table body background
+  .theme-light &,
+  :root:not(.theme-dark) & {
+    --table-body-bg: #EFEFEF; // Same as table body in light mode
+    --card-text: #{$light-text};
+    --border-color: #{$light-border};
+  }
+
+  .theme-dark & {
+    --table-body-bg: #{$dark-surface}; // Same as table body in dark mode
+    --card-text: #{$dark-text};
+    --border-color: #{$dark-border};
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not(.theme-light) & {
+      --table-body-bg: #{$dark-surface}; // Same as table body in dark mode
+      --card-text: #{$dark-text};
+      --border-color: #{$dark-border};
+    }
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    @include viewport-spacing(gap, $space-base);
+    flex: 1;
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    @include viewport-spacing(gap, $space-sm);
+  }
+
+  &__selection {
+    display: flex;
+    align-items: center;
+    @include viewport-spacing(gap, $space-base);
+
+    &-count {
+      font-weight: $font-weight-medium;
+      color: var(--card-text, $text-primary);
+    }
+  }
+
+  &__bulk-actions {
+    display: flex;
+    align-items: center;
+    @include viewport-spacing(gap, $space-sm);
+  }
+
+  &__bulk-action {
+    display: flex;
+    align-items: center;
+    @include viewport-spacing(gap, $space-xs);
+    @include viewport-spacing(padding, $space-xs $space-sm);
+    background: var(--secondary-color, $secondary-color);
+    color: white;
+    border: none;
+    border-radius: $border-radius-sm;
+    @include viewport-font-size($font-size-sm);
+    font-weight: $font-weight-medium;
+    cursor: pointer;
+    transition: all $transition-speed ease;
+
+    &:hover:not(:disabled) {
+      background: rgba(var(--secondary-color-rgb, 15, 121, 190), 0.9);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &--danger {
+      background: var(--error-color, $error-color);
+
+      &:hover:not(:disabled) {
+        background: rgba(var(--error-color-rgb, 239, 68, 68), 0.9);
+      }
+    }
+  }
+
+  &__action-icon {
+    display: flex;
+    align-items: center;
+  }
+
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    @include viewport-spacing(gap, $space-xs);
+    @include viewport-spacing(padding, $space-xs $space-sm);
+    background: var(--card-bg, $light-background);
+    border: 1px solid var(--border-color, $border-primary);
+    border-radius: $border-radius-sm;
+    color: var(--card-text, $text-primary);
+    @include viewport-font-size($font-size-sm);
+    cursor: pointer;
+    transition: all $transition-speed ease;
+
+    &:hover:not(:disabled) {
+      background: var(--primary-color, $primary-color);
+      color: white;
+      border-color: var(--primary-color, $primary-color);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &--icon-only {
+      @include viewport-spacing(padding, $space-xs);
+      
+      span {
+        display: none;
+      }
+    }
+
+    &--loading {
+      pointer-events: none;
+    }
+  }
+
+  &__loading-icon {
+    animation: spin 1s linear infinite;
+  }
+
+  &__export {
+    position: relative;
+
+    &-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      @include viewport-spacing(margin-top, $space-xs);
+      background: var(--card-bg, $light-background);
+      border: 1px solid var(--border-color, $border-primary);
+      border-radius: $border-radius-sm;
+      box-shadow: $box-shadow-base;
+      z-index: $z-index-overlay;
+      min-width: 150px;
+    }
+
+    &-option {
+      display: block;
+      width: 100%;
+      @include viewport-spacing(padding, $space-sm $space-base);
+      background: none;
+      border: none;
+      text-align: left;
+      color: var(--card-text, $text-primary);
+      @include viewport-font-size($font-size-sm);
+      cursor: pointer;
+      transition: background-color $transition-speed ease;
+
+      &:hover {
+        background: rgba(var(--primary-color-rgb, 27, 36, 70), 0.1);
+      }
+
+      &:first-child {
+        border-radius: $border-radius-sm $border-radius-sm 0 0;
+      }
+
+      &:last-child {
+        border-radius: 0 0 $border-radius-sm $border-radius-sm;
+      }
+    }
+  }
+
+  &__more {
+    position: relative;
+
+    &-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      @include viewport-spacing(margin-top, $space-xs);
+      background: var(--card-bg, $light-background);
+      border: 1px solid var(--border-color, $border-primary);
+      border-radius: $border-radius-sm;
+      box-shadow: $box-shadow-base;
+      z-index: $z-index-overlay;
+      min-width: 160px;
+    }
+  }
+
+  &__menu-item {
+    display: flex;
+    align-items: center;
+    @include viewport-spacing(gap, $space-xs);
+    width: 100%;
+    @include viewport-spacing(padding, $space-sm $space-base);
+    background: none;
+    border: none;
+    text-align: left;
+    color: var(--card-text, $text-primary);
+    @include viewport-font-size($font-size-sm);
+    cursor: pointer;
+    transition: background-color $transition-speed ease;
+
+    &:hover:not(:disabled) {
+      background: rgba(var(--primary-color-rgb, 27, 36, 70), 0.1);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &--loading {
+      pointer-events: none;
+    }
+
+    &:first-child {
+      border-radius: $border-radius-sm $border-radius-sm 0 0;
+    }
+
+    &:last-child {
+      border-radius: 0 0 $border-radius-sm $border-radius-sm;
+    }
+  }
+
+  &__menu-divider {
+    height: 1px;
+    background: var(--border-color, $border-primary);
+    @include viewport-spacing(margin, $space-xs 0);
+  }
+
+  &__density {
+    &-dropdown {
+      min-width: 100px;
+    }
+  }
+
+  &__columns {
+    position: relative;
+  }
+
+  &__column-panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    @include viewport-spacing(margin-top, $space-xs);
+    width: to-fixed-pixels(20vmin);
+    background: var(--card-bg, $light-background);
+    border: 1px solid var(--border-color, $border-primary);
+    border-radius: $border-radius-sm;
+    box-shadow: $box-shadow-base;
+    z-index: $z-index-overlay;
+
+    &-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      @include viewport-spacing(padding, $space-base);
+      border-bottom: 1px solid var(--border-color, $border-primary);
+
+      h4 {
+        margin: 0;
+        @include viewport-font-size($font-size-base);
+        font-weight: $font-weight-semibold;
+        color: var(--card-text, $text-primary);
+      }
+    }
+  }
+
+  &__panel-close {
+    background: none;
+    border: none;
+    @include viewport-font-size($font-size-lg);
+    color: var(--text-muted, $text-muted);
+    cursor: pointer;
+    @include viewport-spacing(padding, $space-xs);
+    border-radius: $border-radius-sm;
+    transition: background-color $transition-speed ease;
+
+    &:hover {
+      background: rgba(var(--error-color-rgb, 239, 68, 68), 0.1);
+      color: var(--error-color, $error-color);
+    }
+  }
+
+  &__column-list {
+    max-height: 300px;
+    overflow-y: auto;
+    @include viewport-spacing(padding, $space-xs);
+  }
+
+  &__column-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    @include viewport-spacing(padding, $space-xs);
+    border-radius: $border-radius-sm;
+    transition: background-color $transition-speed ease;
+
+    &:hover {
+      background: rgba(var(--primary-color-rgb, 27, 36, 70), 0.05);
+    }
+  }
+
+  &__column-info {
+    display: flex;
+    align-items: center;
+    @include viewport-spacing(gap, $space-xs);
+    flex: 1;
+  }
+
+  &__column-visibility {
+    background: none;
+    border: none;
+    @include viewport-spacing(padding, $space-xs);
+    border-radius: $border-radius-sm;
+    color: var(--card-text, $text-primary);
+    cursor: pointer;
+    transition: background-color $transition-speed ease;
+
+    &:hover {
+      background: rgba(var(--primary-color-rgb, 27, 36, 70), 0.1);
+    }
+  }
+
+  &__column-title {
+    @include viewport-font-size($font-size-sm);
+    color: var(--card-text, $text-primary);
+
+    &--hidden {
+      opacity: 0.5;
+      text-decoration: line-through;
+    }
+  }
+
+  &__column-actions {
+    display: flex;
+    align-items: center;
+    @include viewport-spacing(gap, $space-xs);
+  }
+
+  &__column-move {
+    background: none;
+    border: none;
+    @include viewport-spacing(padding, $space-xs);
+    border-radius: $border-radius-sm;
+    color: var(--text-muted, $text-muted);
+    cursor: pointer;
+    @include viewport-font-size($font-size-xs);
+    transition: all $transition-speed ease;
+
+    &:hover:not(:disabled) {
+      background: rgba(var(--primary-color-rgb, 27, 36, 70), 0.1);
+      color: var(--primary-color, $primary-color);
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+  }
+
+  // Animations
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  // Responsive design
+  @media (max-width: 768px) {
+    flex-direction: column;
+    @include viewport-spacing(gap, $space-base);
+    align-items: stretch;
+
+    &__left {
+      justify-content: center;
+    }
+
+    &__right {
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    &__selection {
+      flex-direction: column;
+      @include viewport-spacing(gap, $space-sm);
+      text-align: center;
+    }
+
+    &__bulk-actions {
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    &__column-panel {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: to-fixed-pixels(25vmin);
+      max-width: 90vw;
+    }
+
+    &__export-menu {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  @include viewport-spacing;
+}

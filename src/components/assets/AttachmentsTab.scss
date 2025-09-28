@@ -2,7 +2,6 @@
 @use '../../styles/abstracts/mixins' as *;
 
 .attachments-tab {
-  @include viewport-spacing(padding, $space-base);
   
   .api-table {
     @include viewport-spacing(margin-top, $space-sm);

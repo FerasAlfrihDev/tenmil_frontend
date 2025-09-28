@@ -6,7 +6,6 @@
 @use '../abstracts/mixins' as *;
 
 .tabs-page {
-  @include viewport-spacing(padding, $space-md);
   height: 100%;
   display: flex;
   flex-direction: column;

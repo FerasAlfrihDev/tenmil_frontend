@@ -1,0 +1,214 @@
+// ========================================
+// TABLE FILTERS STYLES
+// ========================================
+
+@use 'sass:color';
+@use '../../../../styles/abstracts/variables' as *;
+@use '../../../../styles/abstracts/mixins' as *;
+
+.table-filters {
+  background: var(--card-bg, $light-background);
+  border-bottom: 1px solid var(--border-color, $border-primary);
+  @include viewport-spacing(padding, $space-base);
+
+  // Theme support
+  .theme-light &,
+  :root:not(.theme-dark) & {
+    --card-bg: #{$light-background};
+    --card-text: #{$light-text};
+    --border-color: #{$light-border};
+  }
+
+  .theme-dark & {
+    --card-bg: #{$dark-background};
+    --card-text: #{$dark-text};
+    --border-color: #{$dark-border};
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not(.theme-light) & {
+      --card-bg: #{$dark-background};
+      --card-text: #{$dark-text};
+      --border-color: #{$dark-border};
+    }
+  }
+
+  &__main {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    @include viewport-spacing(gap, $space-base);
+  }
+
+  &__search {
+    flex: 1;
+    min-width: 200px;
+
+    &-input {
+      width: 100%;
+    }
+  }
+
+  &__basic {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    @include viewport-spacing(gap, $space-base);
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    @include viewport-spacing(gap, $space-xs);
+    min-width: 150px;
+  }
+
+  &__label {
+    @include viewport-font-size($font-size-sm);
+    font-weight: $font-weight-medium;
+    color: var(--card-text, $text-primary);
+  }
+
+  &__input,
+  &__dropdown {
+    width: 100%;
+  }
+
+  &__boolean {
+    display: flex;
+    align-items: center;
+    @include viewport-spacing(gap, $space-xs);
+
+    &-label {
+      @include viewport-font-size($font-size-sm);
+      color: var(--card-text, $text-primary);
+    }
+  }
+
+  &__date-range {
+    display: flex;
+    align-items: center;
+    @include viewport-spacing(gap, $space-xs);
+
+    &-separator {
+      @include viewport-font-size($font-size-sm);
+      color: var(--text-muted, $text-muted);
+    }
+  }
+
+  &__date {
+    flex: 1;
+
+    &--start,
+    &--end {
+      min-width: 120px;
+    }
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    @include viewport-spacing(gap, $space-sm);
+    margin-left: auto;
+  }
+
+  &__toggle {
+    display: flex;
+    align-items: center;
+    @include viewport-spacing(gap, $space-xs);
+    @include viewport-spacing(padding, $space-xs $space-sm);
+    background: var(--surface-color, $surface-primary);
+    border: 1px solid var(--border-color, $border-primary);
+    border-radius: $border-radius-sm;
+    @include viewport-font-size($font-size-sm);
+    color: var(--card-text, $text-primary);
+    cursor: pointer;
+    transition: all $transition-speed ease;
+
+    &:hover {
+      background: rgba(var(--primary-color-rgb, 27, 36, 70), 0.05);
+      border-color: var(--primary-color, $primary-color);
+    }
+
+    &--active {
+      background: var(--primary-color, $primary-color);
+      color: white;
+      border-color: var(--primary-color, $primary-color);
+    }
+
+    &-icon {
+      transition: transform $transition-speed ease;
+
+      &--rotated {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  &__count {
+    @include viewport-font-size($font-size-xs);
+    color: var(--text-muted, $text-muted);
+    background: var(--surface-color, $surface-primary);
+    @include viewport-spacing(padding, $space-xs $space-sm);
+    border-radius: $border-radius-full;
+    white-space: nowrap;
+  }
+
+  &__reset {
+    display: flex;
+    align-items: center;
+    @include viewport-spacing(gap, $space-xs);
+    @include viewport-spacing(padding, $space-xs $space-sm);
+    background: var(--error-color, $error-color);
+    color: white;
+    border: none;
+    border-radius: $border-radius-sm;
+    @include viewport-font-size($font-size-sm);
+    cursor: pointer;
+    transition: opacity $transition-speed ease;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  &__advanced {
+    border-top: 1px solid var(--border-color, $border-primary);
+    @include viewport-spacing(margin-top, $space-base);
+    @include viewport-spacing(padding-top, $space-base);
+
+    &-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      @include viewport-spacing(gap, $space-base);
+    }
+  }
+
+  // Responsive design
+  @media (max-width: 768px) {
+    &__main {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    &__basic {
+      flex-direction: column;
+    }
+
+    &__controls {
+      margin-left: 0;
+      justify-content: space-between;
+    }
+
+    &__advanced-content {
+      grid-template-columns: 1fr;
+    }
+
+    &__date-range {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  @include viewport-spacing;
+}

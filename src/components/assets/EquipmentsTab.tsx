@@ -1,65 +1,47 @@
 import React from 'react';
+import { Plus, Edit, X } from 'lucide-react';
 import { APITable } from '../ui';
 import type { BaseAsset } from './shared';
-import { createAssetColumns, createAssetResponseTransformer } from './shared';
+import { createAssetColumns } from './shared';
 import './EquipmentsTab.scss';
 
 // Equipment interface extends BaseAsset for type safety
 interface Equipment extends BaseAsset {
   // Add any equipment-specific fields here if needed
+  equipment_type?: string;
 }
 
 const EquipmentsTab: React.FC = () => {
-  // Use shared columns with optional customizations
-  const columns = createAssetColumns<Equipment>({
-    // Example customizations (uncomment to use):
-    // additionalColumns: [
-    //   { key: "serial_number", header: "Serial Number" },
-    // ],
-    // excludeColumns: ["make"],
-    // overrideColumns: {
-    //   name: { header: "Equipment Name", sortable: true }
-    // }
-  });
+  // Action handlers
+  const handleCreate = () => {
+    console.log('Create new equipment');
+    // TODO: Open create equipment modal/form
+  };
+
+  const handleUpdate = () => {
+    console.log('Update equipment');
+    // TODO: Open update equipment modal/form
+  };
+
+  const handleCancel = () => {
+    console.log('Cancel operation');
+    // TODO: Cancel current operation or close modal
+  };
 
   return (
-    <div className="equipments-tab">
-      <APITable<Equipment>
+    <APITable<Equipment>
         endpoint="/assets/equipments"
-        columns={columns}
-        title="Equipment Management"
-        searchable={true}
-        rowSelection={{ type: 'checkbox' }}
-        exportConfig={{ enabled: true }}
+        columns={createAssetColumns<Equipment>({})}
+        exportable={true}
         size="middle"
-        bordered={true}
         defaultPageSize={25}
-        requestConfig={{
-          transform: createAssetResponseTransformer('equipments')
-        }}
-        bulkActions={[
-          {
-            key: 'delete',
-            label: 'Delete Selected',
-            icon: '🗑️',
-            onClick: async (_selectedRows: Equipment[], selectedKeys: (string | number)[]) => {
-              console.log('Delete equipment:', selectedKeys);
-              // Implement delete logic here
-            },
-            confirm: {
-              title: 'Delete Equipment',
-              content: 'Are you sure you want to delete the selected equipment?'
-            }
-          }
-        ]}
         onRowClick={(record: Equipment) => {
           console.log('Equipment clicked:', record);
         }}
-        onError={(error: Error) => {
-          console.error('Equipment table error:', error);
+        onSelectionChange={(selectedRows: Equipment[], selectedKeys: (string | number)[]) => {
+          console.log('Equipment selection changed:', selectedRows, selectedKeys);
         }}
       />
-    </div>
   );
 };
 

@@ -1,7 +1,8 @@
 import type { ColumnConfig } from '../ui/APITable/types';
+import type { ReactNode } from 'react';
 
 // Base asset interface that all asset types extend
-export interface BaseAsset {
+export interface BaseAsset extends Record<string, unknown> {
   id: string;
   name: string;
   code: string;
@@ -28,17 +29,66 @@ export interface AssetColumnsConfig<T extends BaseAsset> {
 
 // Default base columns for all asset types
 const baseAssetColumns: ColumnConfig<BaseAsset>[] = [
-  { key: "name", title: "Name" },
-  { key: "code", title: "Code" },
-  { key: "description", title: "Description" },
-  { key: "category", title: "Category", type: "custom" },
-  { key: "make", title: "Make" },
-  { key: "model", title: "Model" },
-  { key: "location", title: "Location", type: "custom" },
+  { 
+    key: "name", 
+    title: "Name",
+    dataIndex: "name",
+    sortable: true,
+    searchable: true
+  },
+  { 
+    key: "code", 
+    title: "Code",
+    dataIndex: "code",
+    sortable: true,
+    searchable: true
+  },
+  { 
+    key: "description", 
+    title: "Description",
+    dataIndex: "description",
+    searchable: true,
+    ellipsis: true
+  },
+  { 
+    key: "category", 
+    title: "Category", 
+    dataIndex: ["category", "name"],
+    type: "text",
+    sortable: true,
+    render: (_value: any, record: BaseAsset) => record.category?.name || '-'
+  },
+  { 
+    key: "make", 
+    title: "Make",
+    dataIndex: "make",
+    sortable: true,
+    searchable: true
+  },
+  { 
+    key: "model", 
+    title: "Model",
+    dataIndex: "model",
+    sortable: true,
+    searchable: true
+  },
+  { 
+    key: "location", 
+    title: "Location", 
+    dataIndex: ["location", "name"],
+    type: "text",
+    sortable: true,
+    render: (_value: any, record: BaseAsset) => record.location?.name || '-'
+  },
   {
     key: "is_online",
     title: "Online Status",
+    dataIndex: "is_online",
     type: "boolean",
+    sortable: true,
+    render: (value: boolean): ReactNode => {
+      return `${value ? 'Online' : 'Offline'}`;
+    }
   },
 ];
 

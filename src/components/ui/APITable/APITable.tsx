@@ -2,22 +2,23 @@
 // API TABLE COMPONENT
 // ========================================
 
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
-import { TableHeader, TableBody, TableFilters, TablePagination, TableToolbar } from './components';
+import { useCallback, useMemo, useState, useEffect } from 'react';
+import { TableHeader, TableBody, TableFilters as TableFiltersComponent, TablePagination, TableToolbar } from './components/index';
 import { useAPITable, useTableSettings, useTableExport, useUrlSync } from './hooks';
-import type { APITableProps, BulkAction, ExportOptions } from './types';
+import type { APITableProps, BulkAction, ExportOptions, TableFilters, TableSettings } from './types';
+import './APITable.scss';
 
-const APITable: React.FC<APITableProps> = ({
+const APITable = <T extends Record<string, unknown> = Record<string, unknown>>({
   endpoint,
   columns,
   defaultPageSize = 25,
   defaultSort,
   filters = [],
-  searchable = false,
-  searchPlaceholder = 'Search...',
+  primaryAction,
+  secondaryActions = [],
   exportable = false,
   selectable = false,
-  selectType = 'checkbox',
+  // selectType = 'checkbox', // Only checkbox selection supported
   rowKey = 'id',
   onRowClick,
   onSelectionChange,
@@ -27,21 +28,18 @@ const APITable: React.FC<APITableProps> = ({
   showColumnSettings = false,
   showDensitySettings = false,
   size = 'middle',
-  bordered = true,
+  bordered = false,
   striped = false,
   hover = true,
   sticky = false,
-  virtualScroll = false,
   maxHeight,
   emptyText = 'No data available',
-  loadingText = 'Loading...',
   className = '',
   style,
   rowClassName,
   expandable,
   summary,
-  locale,
-}) => {
+}: APITableProps<T>) => {
   // Generate unique table ID for settings persistence
   const tableId = useMemo(() => {
     return `api-table-${endpoint.replace(/[^a-zA-Z0-9]/g, '-')}`;
@@ -56,8 +54,7 @@ const APITable: React.FC<APITableProps> = ({
 
   const { settings, updateColumnSettings, updateTableSettings } = useTableSettings(
     tableId,
-    columns,
-    { pageSize: defaultPageSize }
+    columns
   );
 
   const { exportData, isExporting, exportError } = useTableExport();
@@ -65,7 +62,12 @@ const APITable: React.FC<APITableProps> = ({
   // URL sync (optional)
   useUrlSync(state, (newState) => {
     if (newState.pagination) actions.setPagination(newState.pagination);
-    if (newState.sorting) actions.setSorting(newState.sorting);
+    if (newState.sorting && newState.sorting.field) {
+      actions.setSorting({
+        field: newState.sorting.field,
+        direction: newState.sorting.direction || 'asc'
+      });
+    }
     if (newState.filters) actions.setFilters(newState.filters);
     if (newState.searchQuery !== undefined) actions.setSearch(newState.searchQuery);
   });
@@ -74,11 +76,11 @@ const APITable: React.FC<APITableProps> = ({
   const [expandedRowKeys, setExpandedRowKeys] = useState<(string | number)[]>([]);
 
   // Get row key function
-  const getRowKey = useCallback((record: any, index: number): string => {
+  const getRowKey = useCallback((record: T, index: number): string => {
     if (typeof rowKey === 'function') {
       return rowKey(record);
     }
-    return record[rowKey] || index.toString();
+    return record[rowKey as keyof T]?.toString() || index.toString();
   }, [rowKey]);
 
   // Get all row keys for selection
@@ -108,14 +110,10 @@ const APITable: React.FC<APITableProps> = ({
   }, [actions]);
 
   // Handle filter change
-  const handleFilterChange = useCallback((newFilters: Record<string, any>) => {
+  const handleFilterChange = useCallback((newFilters: TableFilters) => {
     actions.setFilters(newFilters);
   }, [actions]);
 
-  // Handle search change
-  const handleSearchChange = useCallback((query: string) => {
-    actions.setSearch(query);
-  }, [actions]);
 
   // Handle row selection
   const handleRowSelect = useCallback((rowKey: string | number, selected: boolean) => {
@@ -183,7 +181,7 @@ const APITable: React.FC<APITableProps> = ({
   }, [updateColumnSettings]);
 
   // Handle settings change
-  const handleSettingsChange = useCallback((newSettings: any) => {
+  const handleSettingsChange = useCallback((newSettings: Partial<TableSettings>) => {
     updateTableSettings(newSettings);
   }, [updateTableSettings]);
 
@@ -219,7 +217,7 @@ const APITable: React.FC<APITableProps> = ({
         label: 'Delete Selected',
         icon: '🗑️',
         danger: true,
-        onClick: (selectedRows, selectedKeys) => {
+        onClick: (selectedRows: T[], selectedKeys: (string | number)[]) => {
           console.log('Delete selected:', selectedRows, selectedKeys);
           // Implement delete logic here
         },
@@ -228,7 +226,8 @@ const APITable: React.FC<APITableProps> = ({
         key: 'export',
         label: 'Export Selected',
         icon: '⬇️',
-        onClick: (selectedRows, selectedKeys) => {
+        onClick: (selectedRows: T[], selectedKeys: (string | number)[]) => {
+          console.log('Export selected:', selectedRows, selectedKeys);
           handleExport({
             format: 'csv',
             selectedOnly: true,
@@ -262,16 +261,12 @@ const APITable: React.FC<APITableProps> = ({
       )}
 
       {/* Filters */}
-      {(searchable || filters.length > 0) && (
-        <TableFilters
+      {filters.length > 0 && (
+        <TableFiltersComponent
           filters={filters}
           values={state.filters}
           onChange={handleFilterChange}
           onReset={actions.resetFilters}
-          searchable={searchable}
-          searchValue={state.searchQuery}
-          searchPlaceholder={searchPlaceholder}
-          onSearchChange={handleSearchChange}
           className="api-table__filters"
         />
       )}
@@ -291,6 +286,8 @@ const APITable: React.FC<APITableProps> = ({
         onSettingsChange={handleSettingsChange}
         columns={columns}
         loading={loading || isExporting}
+        primaryAction={primaryAction}
+        secondaryActions={secondaryActions}
         className="api-table__toolbar"
       />
 
@@ -305,13 +302,14 @@ const APITable: React.FC<APITableProps> = ({
             sorting={state.sorting}
             onSort={handleSortChange}
             selectable={selectable}
-            selectType={selectType}
             selectedRowKeys={state.selectedRowKeys}
             allRowKeys={allRowKeys}
             onSelectAll={handleSelectAll}
             resizable={showColumnSettings}
             onColumnResize={handleColumnResize}
             sticky={sticky}
+            columnFilters={state.columnFilters}
+            onColumnFilter={actions.setColumnFilters}
             className="api-table__header"
           />
           
@@ -320,7 +318,6 @@ const APITable: React.FC<APITableProps> = ({
             columns={visibleColumns}
             loading={loading}
             selectable={selectable}
-            selectType={selectType}
             selectedRowKeys={state.selectedRowKeys}
             onRowSelect={handleRowSelect}
             onRowClick={onRowClick}
@@ -330,7 +327,6 @@ const APITable: React.FC<APITableProps> = ({
             expandedRowKeys={expandedRowKeys}
             onRowExpand={handleRowExpand}
             emptyText={emptyText}
-            virtualScroll={virtualScroll}
             className="api-table__body"
           />
         </table>
@@ -350,6 +346,7 @@ const APITable: React.FC<APITableProps> = ({
         showSizeChanger={state.pagination.showSizeChanger}
         showQuickJumper={state.pagination.showQuickJumper}
         showTotal={true}
+        showPageNumbers={false}
         className="api-table__pagination"
       />
     </div>

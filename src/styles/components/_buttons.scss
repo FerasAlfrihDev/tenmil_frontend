@@ -1,79 +1,406 @@
 // ========================================
-// BUTTON COMPONENTS
+// GLOBAL BUTTON STYLES
 // ========================================
 
+@use 'sass:color';
 @use '../abstracts/variables' as *;
 @use '../abstracts/mixins' as *;
 
-.btn {
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  border: 1px solid var(--input-border);
-  @include button-base;
+// ========================================
+// Base Button Styles
+// ========================================
+
+%btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  @include viewport-spacing(gap, $space-xs);
+  @include viewport-spacing(padding, $space-sm $space-base);
+  border: 1px solid transparent;
+  border-radius: $border-radius-sm;
+  @include viewport-font-size($font-size-sm);
+  font-weight: $font-weight-medium;
+  line-height: 1.4;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all $transition-speed ease;
+  outline: none;
+  white-space: nowrap;
+  user-select: none;
   
-  &:hover {
-    background-color: var(--surface-color);
-    border-color: $secondary-color;
+  // Focus states for accessibility
+  &:focus {
+    box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb, 27, 36, 70), 0.2);
   }
-  
-  &:focus,
-  &:focus-visible {
-    outline: 2px solid $secondary-color;
-    outline-offset: 2px;
+
+  // Disabled state
+  &:disabled,
+  &.btn--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  // Loading state
+  &.btn--loading {
+    pointer-events: none;
+    position: relative;
+    
+    .btn__text {
+      opacity: 0.7;
+    }
+  }
+
+  // Size variants
+  &.btn--small {
+    @include viewport-spacing(padding, $space-xs $space-sm);
+    @include viewport-font-size($font-size-xs);
+  }
+
+  &.btn--large {
+    @include viewport-spacing(padding, $space-base $space-lg);
+    @include viewport-font-size($font-size-base);
+  }
+
+  // Icon spacing
+  .btn__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &--left {
+      margin-right: to-fixed-pixels($space-xs);
+    }
+    
+    &--right {
+      margin-left: to-fixed-pixels($space-xs);
+    }
+  }
+
+  // Loading spinner
+  .btn__spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 14px;
+    height: 14px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: btn-spin 1s linear infinite;
   }
 }
 
-.btn-primary {
-  @extend .btn;
-  background-color: $primary-color;           // #252D63
-  color: $selected-color;                     // #FFCF64
-  border-color: $selected-color;              // #FFCF64
+// ========================================
+// Primary Button
+// ========================================
+
+.btn--primary {
+  @extend %btn-base;
   
-  &:hover {
-    background-color: $primary-hover;
-    border-color: $selected-hover;
-    color: $selected-hover;
+  // Primary button: background selected-color, text/border primary-color
+  background: $selected-color !important;
+  color: $primary-color !important;
+  border-color: $primary-color;
+
+  // Ensure text color overrides global variables
+  .btn__text,
+  .btn__icon {
+    color: $primary-color !important;
   }
-  
-  &:active {
-    background-color: $primary-active;
-    border-color: $selected-active;
-    color: $selected-active;
+
+  &:hover:not(:disabled):not(.btn--loading) {
+    // On hover: opposite colors
+    background: $primary-color !important;
+    color: $selected-color !important;
+    border-color: $selected-color;
+    transform: translateY(-1px);
+    box-shadow: $box-shadow-base;
+
+    .btn__text,
+    .btn__icon {
+      color: $selected-color !important;
+    }
+  }
+
+  &:active:not(:disabled):not(.btn--loading) {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+
+  // Focus state for primary
+  &:focus {
+    box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb, 27, 36, 70), 0.3);
   }
 }
 
-.btn-secondary {
-  @extend .btn;
-  background-color: transparent;
+// ========================================
+// Secondary Button (Outline)
+// ========================================
+
+.btn--secondary {
+  @extend %btn-base;
+  
+  // Secondary button: border and text secondary-color (outline) - Dark mode default
+  background: transparent;
+  color: $secondary-color !important;
   border-color: $secondary-color;
-  color: $secondary-color;
-  
-  &:hover {
-    background-color: $secondary-color;
-    color: $text-color;
-    border-color: $secondary-color;
+
+  // Ensure text color overrides global variables
+  .btn__text,
+  .btn__icon {
+    color: $secondary-color !important;
   }
-  
-  &:active {
-    background-color: $secondary-active;
-    border-color: $secondary-active;
+
+  &:hover:not(:disabled):not(.btn--loading) {
+    background: rgba($secondary-color, 0.1);
+    color: $secondary-color !important;
+    border-color: $secondary-color;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba($secondary-color, 0.2);
+
+    .btn__text,
+    .btn__icon {
+      color: $secondary-color !important;
+    }
+  }
+
+  &:active:not(:disabled):not(.btn--loading) {
+    transform: translateY(0);
+    box-shadow: none;
+    background: rgba($secondary-color, 0.2);
+  }
+
+  // Focus state for secondary
+  &:focus {
+    box-shadow: 0 0 0 2px rgba($secondary-color, 0.3);
   }
 }
 
-// New button variants using the color system
-.btn-selected {
-  @extend .btn;
-  background-color: $selected-color;
-  color: $primary-color;
-  border-color: $selected-color;
+// ========================================
+// Danger Button
+// ========================================
+
+.btn--danger {
+  @extend %btn-base;
   
-  &:hover {
-    background-color: $selected-hover;
-    border-color: $selected-hover;
+  background: var(--error-color, $error-color);
+  color: white !important;
+  border-color: var(--error-color, $error-color);
+
+  // Ensure text color overrides global variables
+  .btn__text,
+  .btn__icon {
+    color: white !important;
   }
+
+  &:hover:not(:disabled):not(.btn--loading) {
+    background: rgba(var(--error-color-rgb, 239, 68, 68), 0.9);
+    color: white !important;
+    transform: translateY(-1px);
+    box-shadow: $box-shadow-base;
+
+    .btn__text,
+    .btn__icon {
+      color: white !important;
+    }
+  }
+
+  &:active:not(:disabled):not(.btn--loading) {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+
+  // Focus state for danger
+  &:focus {
+    box-shadow: 0 0 0 2px rgba(var(--error-color-rgb, 239, 68, 68), 0.3);
+  }
+}
+
+// ========================================
+// Ghost Button (Minimal)
+// ========================================
+
+.btn--ghost {
+  @extend %btn-base;
   
-  &:active {
-    background-color: $selected-active;
-    border-color: $selected-active;
+  background: transparent;
+  color: var(--card-text, $text-primary) !important;
+  border-color: transparent;
+
+  // Ensure text color overrides global variables
+  .btn__text,
+  .btn__icon {
+    color: var(--card-text, $text-primary) !important;
+  }
+
+  &:hover:not(:disabled):not(.btn--loading) {
+    background: rgba(var(--primary-color-rgb, 27, 36, 70), 0.1);
+    color: var(--primary-color, $primary-color) !important;
+
+    .btn__text,
+    .btn__icon {
+      color: var(--primary-color, $primary-color) !important;
+    }
+  }
+
+  &:active:not(:disabled):not(.btn--loading) {
+    background: rgba(var(--primary-color-rgb, 27, 36, 70), 0.2);
+  }
+}
+
+// ========================================
+// Button Group
+// ========================================
+
+.btn-group {
+  display: inline-flex;
+  align-items: center;
+  
+  .btn--primary,
+  .btn--secondary,
+  .btn--danger,
+  .btn--ghost {
+    border-radius: 0;
+    
+    &:first-child {
+      border-top-left-radius: $border-radius-sm;
+      border-bottom-left-radius: $border-radius-sm;
+    }
+    
+    &:last-child {
+      border-top-right-radius: $border-radius-sm;
+      border-bottom-right-radius: $border-radius-sm;
+    }
+    
+    &:not(:first-child) {
+      margin-left: -1px;
+    }
+  }
+}
+
+// ========================================
+// Animations
+// ========================================
+
+@keyframes btn-spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+// ========================================
+// Responsive Adjustments
+// ========================================
+
+@media (max-width: 768px) {
+  .btn--primary,
+  .btn--secondary,
+  .btn--danger,
+  .btn--ghost {
+    @include viewport-spacing(padding, $space-sm $space-base);
+    @include viewport-font-size($font-size-sm);
+    
+    &.btn--small {
+      @include viewport-spacing(padding, $space-xs $space-sm);
+      @include viewport-font-size($font-size-xs);
+    }
+    
+    &.btn--large {
+      @include viewport-spacing(padding, $space-base $space-lg);
+      @include viewport-font-size($font-size-base);
+    }
+  }
+}
+
+// ========================================
+// Utility Classes
+// ========================================
+
+.btn--full-width {
+  width: 100%;
+}
+
+.btn--icon-only {
+  @include viewport-spacing(padding, $space-sm);
+  
+  .btn__icon {
+    margin: 0;
+  }
+}
+
+// ========================================
+// Theme-Specific Button Overrides
+// ========================================
+
+// Light theme adjustments - System preference
+@media (prefers-color-scheme: light) {
+  .btn--secondary {
+    // Secondary button: border and text primary-color (outline) - Light mode
+    color: $primary-color !important;
+    border-color: $primary-color;
+
+    // Ensure text color overrides global variables
+    .btn__text,
+    .btn__icon {
+      color: $primary-color !important;
+    }
+
+    &:hover:not(:disabled):not(.btn--loading) {
+      background: rgba($primary-color, 0.1);
+      color: $primary-color !important;
+      border-color: $primary-color;
+      box-shadow: 0 2px 4px rgba($primary-color, 0.2);
+
+      .btn__text,
+      .btn__icon {
+        color: $primary-color !important;
+      }
+    }
+
+    &:active:not(:disabled):not(.btn--loading) {
+      background: rgba($primary-color, 0.2);
+    }
+
+    // Focus state for secondary in light mode
+    &:focus {
+      box-shadow: 0 0 0 2px rgba($primary-color, 0.3);
+    }
+  }
+}
+
+// Manual light theme class
+html.theme-light .btn--secondary {
+  // Secondary button: border and text primary-color (outline) - Light mode
+  color: $primary-color !important;
+  border-color: $primary-color;
+
+  // Ensure text color overrides global variables
+  .btn__text,
+  .btn__icon {
+    color: $primary-color !important;
+  }
+
+  &:hover:not(:disabled):not(.btn--loading) {
+    background: rgba($primary-color, 0.1);
+    color: $primary-color !important;
+    border-color: $primary-color;
+    box-shadow: 0 2px 4px rgba($primary-color, 0.2);
+
+    .btn__text,
+    .btn__icon {
+      color: $primary-color !important;
+    }
+  }
+
+  &:active:not(:disabled):not(.btn--loading) {
+    background: rgba($primary-color, 0.2);
+  }
+
+  // Focus state for secondary in light mode
+  &:focus {
+    box-shadow: 0 0 0 2px rgba($primary-color, 0.3);
   }
 }

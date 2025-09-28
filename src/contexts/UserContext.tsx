@@ -202,6 +202,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         'Login'
       );
       
+      if (!loginData) {
+        throw new Error('Invalid login response data');
+      }
+      
       const { access, refresh, email, name, tenant_id, is_new, groups, permissions } = loginData;
       
       // Create user data in the format our app expects

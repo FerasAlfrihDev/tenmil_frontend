@@ -37,12 +37,12 @@
       }
 
       &:focus-visible {
-        outline: 2px solid $secondary-color;
+        outline: 2px solid $secondary-color; // Dark mode: secondary color
         outline-offset: 2px;
       }
 
       &.active {
-        color: $secondary-color;
+        color: $secondary-color !important; // Dark mode: secondary color
         opacity: 1;
         font-weight: $font-weight-medium;
       }
@@ -57,11 +57,11 @@
 
   .tab-content {
     flex: 1;
-    height: 60vh; // Fixed height for consistent layout
+    @include viewport-spacing(padding, $space-xs, top);
+    height: 100%; // Full height instead of fixed viewport height
     overflow-y: auto;
     background-color: var(--main-content-bg);
     color: var(--main-content-text);
-    @include viewport-spacing(padding, $space-md, top);
     @include custom-scrollbar;
   }
 
@@ -74,8 +74,8 @@
     }
 
     .tab-content {
-      height: 50vh; // Smaller height for small variant
-      @include viewport-spacing(padding, $space-sm, top);
+      height: 100%; // Full height for small variant
+      @include viewport-spacing(padding, $space-xs, top);
     }
   }
 
@@ -87,8 +87,8 @@
     }
 
     .tab-content {
-      height: 60vh; // Default height for medium variant
-      @include viewport-spacing(padding, $space-md, top);
+      height: 100%; // Full height for medium variant
+      @include viewport-spacing(padding, $space-xs, top);
     }
   }
 
@@ -100,8 +100,8 @@
     }
 
     .tab-content {
-      height: 70vh; // Larger height for large variant
-      @include viewport-spacing(padding, $space-lg, top);
+      height: 100%; // Full height for large variant
+      @include viewport-spacing(padding, $space-xs, top);
     }
   }
 
@@ -136,7 +136,7 @@
         }
 
         &.active {
-          background-color: $secondary-color;
+          background-color: $secondary-color; // Dark mode: secondary color
           color: $text-color;
           border-color: $secondary-color;
         }
@@ -144,7 +144,7 @@
     }
 
     .tab-content {
-      @include viewport-spacing(padding, $space-md, top);
+      @include viewport-spacing(padding, $space-xs, top);
     }
   }
 
@@ -157,8 +157,98 @@
         @include viewport-spacing(margin, -2px, bottom);
 
         &.active {
-          border-bottom-color: $secondary-color;
+          border-bottom-color: $secondary-color; // Dark mode: secondary color
         }
+      }
+    }
+  }
+}
+
+// Light theme adjustments - System preference
+@media (prefers-color-scheme: light) {
+  .tab-layout {
+    .tab-headers {
+      .tab-header {
+        &:focus-visible {
+          outline-color: $primary-color; // Light mode: primary color
+        }
+
+        &.active {
+          color: $primary-color !important; // Light mode: primary color
+        }
+      }
+    }
+
+    // Default variant - underline indicator
+    &.default {
+      .tab-headers .tab-header {
+        &.active::after {
+          background-color: $primary-color !important; // Light mode: primary color
+        }
+      }
+    }
+
+    // Pills variant
+    &.pills {
+      .tab-headers .tab-header {
+        &.active {
+          background-color: $primary-color !important; // Light mode: primary color
+          color: $text-color !important;
+          border-color: $primary-color !important;
+        }
+      }
+    }
+
+    // Underline variant
+    &.underline {
+      .tab-headers .tab-header {
+        &.active {
+          border-bottom-color: $primary-color !important; // Light mode: primary color
+        }
+      }
+    }
+  }
+}
+
+// Manual light theme class
+html.theme-light .tab-layout {
+  .tab-headers {
+    .tab-header {
+      &:focus-visible {
+        outline-color: $primary-color; // Light mode: primary color
+      }
+
+      &.active {
+        color: $primary-color !important; // Light mode: primary color
+      }
+    }
+  }
+
+  // Default variant - underline indicator
+  &.default {
+    .tab-headers .tab-header {
+      &.active::after {
+        background-color: $primary-color !important; // Light mode: primary color
+      }
+    }
+  }
+
+  // Pills variant
+  &.pills {
+    .tab-headers .tab-header {
+      &.active {
+        background-color: $primary-color !important; // Light mode: primary color
+        color: $text-color !important;
+        border-color: $primary-color !important;
+      }
+    }
+  }
+
+  // Underline variant
+  &.underline {
+    .tab-headers .tab-header {
+      &.active {
+        border-bottom-color: $primary-color !important; // Light mode: primary color
       }
     }
   }

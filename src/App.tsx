@@ -16,7 +16,8 @@ import {
   AssetsPage, 
   WorkOrdersPage, 
   PartsPage, 
-  PurchaseOrdersPage 
+  PurchaseOrdersPage,
+  UsersPage 
 } from './pages'
 import { AdminDashboard, AdminComingSoon } from './pages/admin'
 import apiService from './services/api'
@@ -213,12 +214,8 @@ function AppContent() {
             <Route 
               path="/users" 
               element={
-                <ProtectedRoute requiredPermissions={['manage_users']}>
-                  <AdminComingSoon 
-                    pageName="User Administration" 
-                    description="Comprehensive user management across all companies. Manage roles, permissions, and user lifecycle."
-                    expectedDate="Q1 2024"
-                  />
+                <ProtectedRoute>
+                  <UsersPage />
                 </ProtectedRoute>
               } 
             />
@@ -330,12 +327,8 @@ function AppContent() {
           <Route 
             path="/users" 
             element={
-              <ProtectedRoute requiredPermissions={['manage_users']}>
-                <ComingSoon 
-                  pageName="User Management" 
-                  description="Manage user accounts, roles, and permissions. Control access level and track user activity."
-                  expectedDate="Q1 2024"
-                />
+              <ProtectedRoute>
+                <UsersPage />
               </ProtectedRoute>
             } 
           />

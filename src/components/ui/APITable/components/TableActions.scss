@@ -1,0 +1,54 @@
+// ========================================
+// TABLE ACTIONS LAYOUT STYLES
+// ========================================
+
+@use '../../../../styles/abstracts/variables' as *;
+@use '../../../../styles/abstracts/mixins' as *;
+
+.table-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  @include viewport-spacing(padding, $space-base);
+  @include viewport-spacing(gap, $space-base);
+  background: var(--card-bg, $light-background);
+  border-bottom: 1px solid var(--border-color, $border-primary);
+
+  &__primary {
+    display: flex;
+    align-items: center;
+  }
+
+  &__secondary {
+    display: flex;
+    align-items: center;
+    @include viewport-spacing(gap, $space-sm);
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    @include viewport-spacing(gap, $space-sm);
+
+    &__primary,
+    &__secondary {
+      justify-content: center;
+    }
+
+    &__secondary {
+      flex-wrap: wrap;
+    }
+
+    // Make buttons full width on mobile
+    .btn--primary,
+    .btn--secondary,
+    .btn--danger {
+      flex: 1;
+      justify-content: center;
+      min-width: 0;
+    }
+  }
+
+  @include viewport-spacing;
+}

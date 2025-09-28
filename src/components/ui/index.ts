@@ -28,3 +28,13 @@ export type { CheckboxProps, CheckboxOption } from './Checkbox/Checkbox';
 
 export { default as TabLayout } from './TabLayout/TabLayout';
 export type { TabLayoutProps, TabItem } from './TabLayout/TabLayout';
+
+export { default as APITable } from './APITable/APITable';
+export type { 
+  APITableProps, 
+  ColumnConfig, 
+  FilterConfig, 
+  TableState,
+  ExportOptions,
+  BulkAction 
+} from './APITable/types';
