@@ -25,3 +25,6 @@ export type { RadioProps, RadioOption } from './Radio/Radio';
 
 export { default as Checkbox } from './Checkbox/Checkbox';
 export type { CheckboxProps, CheckboxOption } from './Checkbox/Checkbox';
+
+export { default as TabLayout } from './TabLayout/TabLayout';
+export type { TabLayoutProps, TabItem } from './TabLayout/TabLayout';

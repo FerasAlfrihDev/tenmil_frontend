@@ -31,11 +31,29 @@ $sidebar-width: 10%;                // Sidebar width (10% of viewport)
 $main-content-padding: 2vw;
 
 // Colors
-// Base Color Palette
-$primary-color: #252D63;        // Dark blue - main brand color
+// Base Color Palette (Brand colors - consistent across themes)
+$primary-color: #1b2446;        // Dark blue - main brand color
 $secondary-color: #0F79BE;      // Bright blue - accent color
-$text-color: #E6E7E8;          // Light gray - main text
 $selected-color: #FFCF64;      // Yellow/gold - selection/highlight
+
+// Theme-specific colors
+// Dark Mode Colors (default)
+$dark-text: #E6E7E8;           // Light gray text for dark backgrounds
+$dark-background: #1b2446;     // Dark blue background
+$dark-surface: #2a3558;        // Lighter dark surface
+$dark-border: rgba(230, 231, 232, 0.2); // Light borders on dark
+
+// Light Mode Colors
+$light-text: #1b2446;          // Dark blue text for light backgrounds  
+$light-background: #F5F5F5; // Light gray background
+$light-surface: #f8f9fa;       // Light gray surface
+$light-border: rgba(27, 36, 70, 0.2); // Dark borders on light
+
+// Dynamic color assignments (will be overridden by CSS custom properties)
+$text-color: $dark-text;       // Default to dark mode
+$background-color: $dark-background;
+$surface-color: $dark-surface;
+$border-color: $dark-border;
 
 // Primary Color Variations
 $primary-hover: color.scale($primary-color, $lightness: 15%);    // Lighter for hover states
@@ -73,19 +91,20 @@ $text-secondary: color.change($text-color, $alpha: 0.7);         // Secondary te
 $text-muted: color.change($text-color, $alpha: 0.5);             // Muted text
 $text-disabled: color.change($text-color, $alpha: 0.3);          // Disabled text
 
-// Layout-Specific Background Colors
-$header-background: $primary-color;                              // Header background: #252D63
-$sidebar-background: $primary-color;                             // Sidebar background: #252D63
-$footer-background: $primary-color;                              // Footer background: #252D63
-$main-content-background: $text-color;                           // Main content background: #E6E7E8
+// Layout-Specific Background Colors (Dark Mode defaults)
+$header-background: $primary-color;                              // Header background: #1b2446
+$sidebar-background: $primary-color;                             // Sidebar background: #1b2446  
+$footer-background: $primary-color;                              // Footer background: #1b2446
+$main-content-background: $light-background;                     // Main content background: light in both modes
 
-// Layout-Specific Text Colors
-$header-text-color: $text-color;                                 // Header text: #E6E7E8
+// Layout-Specific Text Colors (Dark Mode defaults)
+$header-text-color: $dark-text;                                  // Header text: light on dark
 $sidebar-text-color: $selected-color;                            // Sidebar text: #FFCF64
-$sidebar-text-hover: $primary-color;                             // Sidebar hover text: #252D63
+$sidebar-header-text-color: $dark-text;                          // Sidebar header text: light
+$sidebar-text-hover: $primary-color;                             // Sidebar hover text: dark
 $sidebar-background-hover: $selected-color;                      // Sidebar hover background: #FFCF64
-$footer-text-color: $text-color;                                 // Footer text: #E6E7E8
-$main-content-text-color: $primary-color;                        // Main content text: #252D63
+$footer-text-color: $dark-text;                                  // Footer text: light on dark
+$main-content-text-color: $light-text;                           // Main content text: dark on light
 
 // Background Colors (legacy/general use)
 $background-primary: $primary-color;                             // Dark primary background
@@ -117,12 +136,12 @@ $error-light: color.change($error-color, $alpha: 0.1);
 $info-light: color.change($info-color, $alpha: 0.1);
 
 // Legacy compatibility (keeping for existing components)
-$background-dark: $background-primary;
-$background-light: #ffffff;
-$text-dark: $text-color;
-$text-light: $primary-color;
-$border-color: $border-primary;
-$border-light: $border-secondary;
+$background-dark: $dark-background;
+$background-light: $light-background;
+$text-dark: $dark-text;
+$text-light: $light-text;
+$border-primary: $border-color;
+$border-secondary: color.change($border-color, $alpha: 0.1);
 
 // Typography - Viewport Based Font Sizes
 $font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -199,7 +218,16 @@ $font-weight-bold: 700;
 
 // Shadows and Effects
 $box-shadow-base: 0 2px 4px rgba(0, 0, 0, 0.1);
-$border-radius: 8px;
+
+// Border radius scale
+$border-radius-xs: 2px;
+$border-radius-sm: 4px;
+$border-radius: 8px;        // Base border radius
+$border-radius-md: 8px;     // Medium (same as base)
+$border-radius-lg: 12px;    // Large
+$border-radius-xl: 16px;    // Extra large
+$border-radius-full: 9999px; // Full/pill shape
+
 $transition-speed: 0.25s;
 
 // Z-index layers

@@ -27,7 +27,6 @@
 }
 
 .landing-header {
-  @include viewport-spacing(padding, 3vmin, 6vmin);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -35,6 +34,7 @@
   backdrop-filter: blur(10px);
   border-bottom: 1px solid $border-secondary;
   margin-bottom: 5vh;
+  @include viewport-spacing(padding, 3vmin, 6vmin);
   
   .logo-section {
     display: flex;
@@ -42,101 +42,101 @@
     @include viewport-spacing(gap, 1vmin);
     
     .logo-icon {
-      @include viewport-size(3vmin, 3vmin);
       background-color: $secondary-color;
       border-radius: 0.5vmin;
       display: flex;
       align-items: center;
       justify-content: center;
+      @include viewport-size(3vmin, 3vmin);
     }
     
     .logo-text {
-      @include viewport-font-size(2.5vmin);
       font-weight: $font-weight-bold;
       background: linear-gradient(135deg, $secondary-color 0%, $selected-color 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      @include viewport-font-size(2.5vmin);
     }
   }
   
   .header-actions {
     display: flex;
-    @include viewport-spacing(gap, 1vmin);
     align-items: center;
+    @include viewport-spacing(gap, 1vmin);
     
     .admin-portal-btn {
-      @include viewport-font-size(1.4vmin);
       text-decoration: none;
       background-color: $selected-light;
       color: $selected-dark;
       border: 2px solid $selected-color;
+      @include viewport-font-size(1.4vmin);
     }
     
     .get-started-btn {
-      @include viewport-font-size(1.4vmin);
       text-decoration: none;
+      @include viewport-font-size(1.4vmin);
     }
   }
 }
 
 .hero-section {
-  @include viewport-spacing(padding, 12vmin, 6vmin);
   text-align: center;
   max-width: 1200px;
   margin: 0 auto;
   margin-bottom: 5vh;
+  @include viewport-spacing(padding, 12vmin, 6vmin);
   
   .hero-title {
-    @include viewport-font-size(6vmin);
     font-weight: $font-weight-bold;
-    @include viewport-spacing(margin-bottom, 4vmin);
     background: linear-gradient(135deg, $selected-color 0%, $text-color 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     line-height: $line-height-tight;
+    @include viewport-font-size(6vmin);
+    @include viewport-spacing(margin-bottom, 4vmin);
   }
   
   .hero-subtitle {
-    @include viewport-font-size(2.2vmin);
     color: $text-secondary;
-    @include viewport-spacing(margin-bottom, 6vmin);
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
     line-height: $line-height-relaxed;
+    @include viewport-font-size(2.2vmin);
+    @include viewport-spacing(margin-bottom, 6vmin);
   }
   
   .hero-actions {
     display: flex;
-    @include viewport-spacing(gap, 2vmin);
     justify-content: center;
     flex-wrap: wrap;
+    @include viewport-spacing(gap, 2vmin);
     
     .cta-primary {
-      @include viewport-font-size(2vmin);
-      @include viewport-spacing(padding, 1.5vmin, 3vmin);
       display: flex;
       align-items: center;
-      @include viewport-spacing(gap, 1vmin);
       text-decoration: none;
+      @include viewport-font-size(2vmin);
+      @include viewport-spacing(padding, 1.5vmin, 3vmin);
+      @include viewport-spacing(gap, 1vmin);
     }
     
     .cta-secondary {
-      @include viewport-font-size(2vmin);
-      @include viewport-spacing(padding, 2vmin, 4vmin);
       background-color: $secondary-10;
       color: $secondary-color;
       border: 2px solid $secondary-color;
+      @include viewport-font-size(2vmin);
+      @include viewport-spacing(padding, 2vmin, 4vmin);
     }
   }
 }
 
 .stats-section {
-  @include viewport-spacing(padding, 8vmin, 6vmin);
   background-color: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
   border-top: 1px solid $border-secondary;
   border-bottom: 1px solid $border-secondary;
+  @include viewport-spacing(padding, 8vmin, 6vmin);
   
   .stats-grid {
     max-width: 1200px;
@@ -148,41 +148,41 @@
     
     .stat-item {
       .stat-number {
-        @include viewport-font-size(4vmin);
         font-weight: $font-weight-bold;
         color: $selected-color;
+        @include viewport-font-size(4vmin);
         @include viewport-spacing(margin-bottom, 1.5vmin);
       }
       
       .stat-label {
-        @include viewport-font-size(1.6vmin);
         color: $text-secondary;
+        @include viewport-font-size(1.6vmin);
       }
     }
   }
 }
 
 .features-section {
-  @include viewport-spacing(padding, 12vmin, 6vmin);
   max-width: 1200px;
   margin: 0 auto;
   margin-top: 5vh;
+  @include viewport-spacing(padding, 12vmin, 6vmin);
   
   .features-header {
     text-align: center;
     @include viewport-spacing(margin-bottom, 8vmin);
     
     .features-title {
-      @include viewport-font-size(4vmin);
       font-weight: $font-weight-bold;
+      @include viewport-font-size(4vmin);
       @include viewport-spacing(margin-bottom, 3vmin);
     }
     
     .features-subtitle {
-      @include viewport-font-size(2vmin);
       color: $text-secondary;
       max-width: 600px;
       margin: 0 auto;
+      @include viewport-font-size(2vmin);
     }
   }
   
@@ -192,11 +192,11 @@
     gap: 4vmin;
     
     .feature-card {
-      @include viewport-spacing(padding, 4vmin);
       text-align: center;
       border: 1px solid $border-secondary;
       transition: all 0.3s ease;
       cursor: pointer;
+      @include viewport-spacing(padding, 4vmin);
       
       &:hover {
         border-color: $secondary-color;
@@ -204,65 +204,65 @@
       }
       
       .feature-icon {
-        @include viewport-size(7vmin, 7vmin);
         background-color: $secondary-10;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 0 auto 3vmin auto;
+        @include viewport-size(7vmin, 7vmin);
       }
       
       .feature-title {
-        @include viewport-font-size(2.2vmin);
         font-weight: $font-weight-bold;
+        @include viewport-font-size(2.2vmin);
         @include viewport-spacing(margin-bottom, 2vmin);
       }
       
       .feature-description {
-        @include viewport-font-size(1.6vmin);
         color: $text-secondary;
         line-height: $line-height-base;
+        @include viewport-font-size(1.6vmin);
       }
     }
   }
 }
 
 .cta-section {
-  @include viewport-spacing(padding, 12vmin, 6vmin);
   background: linear-gradient(135deg, $secondary-color 0%, $selected-color 100%);
   color: white;
   text-align: center;
+  @include viewport-spacing(padding, 12vmin, 6vmin);
   
   .cta-container {
     max-width: 800px;
     margin: 0 auto;
     
     .cta-title {
-      @include viewport-font-size(4vmin);
       font-weight: $font-weight-bold;
-      @include viewport-spacing(margin-bottom, 3vmin);
       color: white;
+      @include viewport-font-size(4vmin);
+      @include viewport-spacing(margin-bottom, 3vmin);
     }
     
     .cta-subtitle {
-      @include viewport-font-size(2vmin);
-      @include viewport-spacing(margin-bottom, 6vmin);
       opacity: 0.9;
       color: white;
+      @include viewport-font-size(2vmin);
+      @include viewport-spacing(margin-bottom, 6vmin);
     }
     
     .portal-cards {
       display: flex;
-      @include viewport-spacing(gap, 2vmin);
       justify-content: center;
       flex-wrap: wrap;
+      @include viewport-spacing(gap, 2vmin);
       
       .portal-card {
         background-color: rgba(255, 255, 255, 0.95);
-        @include viewport-spacing(padding, 4vmin);
         min-width: 320px;
         text-align: left;
+        @include viewport-spacing(padding, 4vmin);
         
         &.company-portal {
           border: 2px solid $secondary-20;
@@ -302,10 +302,10 @@
         }
         
         .portal-title {
-          @include viewport-font-size(2.2vmin);
-          @include viewport-spacing(margin-bottom, 2vmin);
           display: flex;
           align-items: center;
+          @include viewport-font-size(2.2vmin);
+          @include viewport-spacing(margin-bottom, 2vmin);
           @include viewport-spacing(gap, 1vmin);
         }
         
@@ -317,8 +317,8 @@
         
         .portal-input {
           width: 100%;
-          @include viewport-spacing(padding, 1.5vmin);
           border-radius: 0.5vmin;
+          @include viewport-spacing(padding, 1.5vmin);
           @include viewport-font-size(1.4vmin);
           @include viewport-spacing(margin-bottom, 3vmin);
         }
@@ -326,9 +326,9 @@
         .portal-features {
           list-style: none;
           padding: 0;
+          color: $text-muted;
           @include viewport-spacing(margin-bottom, 3vmin);
           @include viewport-font-size(1.4vmin);
-          color: $text-muted;
           
           li {
             display: flex;
@@ -344,10 +344,10 @@
         
         .portal-button {
           width: 100%;
-          @include viewport-font-size(1.6vmin);
           text-decoration: none;
           display: block;
           text-align: center;
+          @include viewport-font-size(1.6vmin);
         }
       }
     }
@@ -355,10 +355,10 @@
 }
 
 .landing-footer {
-  @include viewport-spacing(padding, 6vmin);
   background-color: $primary-dark;
   color: $text-secondary;
   text-align: center;
+  @include viewport-spacing(padding, 6vmin);
   
   .footer-container {
     max-width: 1200px;

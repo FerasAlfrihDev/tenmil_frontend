@@ -1,0 +1,10 @@
+@use '../../styles/abstracts/variables' as *;
+@use '../../styles/abstracts/mixins' as *;
+
+.equipments-tab {
+  @include viewport-spacing(padding, $space-base);
+  
+  .api-table {
+    @include viewport-spacing(margin-top, $space-sm);
+  }
+}

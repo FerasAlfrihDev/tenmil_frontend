@@ -21,6 +21,35 @@ html {
   // Base font size using viewport units
   @include body-text;
   
+  // CSS Custom Properties for theme switching
+  // Default to dark theme
+  --text-color: #{$dark-text};
+  --background-color: #{$dark-background};
+  --surface-color: #{$dark-surface};
+  --border-color: #{$dark-border};
+  
+  // Header/Sidebar/Footer colors (always dark in both themes for brand consistency)
+  --header-bg: #{$primary-color};
+  --header-text: #{$dark-text};
+  --sidebar-bg: #{$primary-color};
+  --sidebar-text: #{$selected-color};
+  --sidebar-header-text: #{$dark-text};
+  --footer-bg: #{$primary-color};
+  --footer-text: #{$dark-text};
+  
+  // Main content area (switches between themes)
+  --main-content-bg: #{$light-background};
+  --main-content-text: #{$light-text};
+  
+  // Component colors (for form inputs, buttons, etc.)
+  --input-bg: #{$light-background};
+  --input-text: #{$light-text};
+  --input-border: #{$light-border};
+  --button-bg: #{$primary-color};
+  --button-text: #{$dark-text};
+  --card-bg: #{$light-surface};
+  --card-text: #{$light-text};
+  
   // Responsive overflow handling
   @media (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
     // Large screens: hide horizontal scroll, allow vertical
@@ -37,8 +66,6 @@ html {
 
 body {
   margin: 0;
-  color: $text-dark;
-  background-color: $background-dark;
   // Inherit font settings from html
   font-family: inherit;
   font-size: inherit;
@@ -88,10 +115,66 @@ img {
   outline-offset: 2px;
 }
 
-// Light theme
+// Light theme overrides (system preference)
 @media (prefers-color-scheme: light) {
-  body {
-    color: $text-light;
-    background-color: $background-light;
+  html {
+    --text-color: #{$light-text};
+    --background-color: #{$light-background};
+    --surface-color: #{$light-surface};
+    --border-color: #{$light-border};
+    
+    // Main content switches to light theme
+    --main-content-bg: #{$light-background};
+    --main-content-text: #{$light-text};
+    
+    // Components stay light in light mode
+    --input-bg: #{$light-background};
+    --input-text: #{$light-text};
+    --input-border: #{$light-border};
+    --card-bg: #{$light-surface};
+    --card-text: #{$light-text};
   }
+}
+
+// Manual theme switching via CSS classes
+html.theme-light {
+  --text-color: #{$light-text};
+  --background-color: #{$light-background};
+  --surface-color: #{$light-surface};
+  --border-color: #{$light-border};
+  
+  // Main content switches to light theme
+  --main-content-bg: #{$light-background};
+  --main-content-text: #{$light-text};
+  
+  // Components in light theme
+  --input-bg: #{$light-background};
+  --input-text: #{$light-text};
+  --input-border: #{$light-border};
+  --card-bg: #{$light-surface};
+  --card-text: #{$light-text};
+}
+
+html.theme-dark {
+  --text-color: #{$dark-text};
+  --background-color: #{$dark-background};
+  --surface-color: #{$dark-surface};
+  --border-color: #{$dark-border};
+  
+  // Main content switches to dark theme in manual dark mode
+  --main-content-bg: #{$dark-background};
+  --main-content-text: #{$dark-text};
+  
+  // Components in dark theme
+  --input-bg: #{$dark-surface};
+  --input-text: #{$dark-text};
+  --input-border: #{$dark-border};
+  --card-bg: #{$dark-surface};
+  --card-text: #{$dark-text};
+}
+
+body {
+  // Use CSS custom properties for dynamic theming
+  color: var(--text-color);
+  background-color: var(--background-color);
 }

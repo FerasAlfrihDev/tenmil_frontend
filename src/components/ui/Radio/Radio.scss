@@ -174,8 +174,8 @@
   }
 
   .radio-helper {
-    @include text-xs;
     color: $text-muted;
+    @include text-xs;
 
     &.error {
       color: $error-color;

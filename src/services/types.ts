@@ -41,6 +41,7 @@ export interface LoginResponse {
   token: string;
   user: User;
   expiresIn: number;
+  is_new?: boolean;
 }
 
 export interface User {
@@ -49,7 +50,41 @@ export interface User {
   name: string;
   role: string;
   subdomain?: string;
+  groups?: string[];
+  permissions?: string[];
+  isNew?: boolean;
+  lastLogin?: string;
+  profileComplete?: boolean;
 }
+
+// Backend error format
+export interface BackendError {
+  [key: string]: string | string[];
+}
+
+// Generic backend response format
+export interface BackendResponse<T = any> {
+  data?: T;
+  errors?: BackendError;
+  meta_data: {
+    success: boolean;
+    total?: number;
+    status_code: number;
+    message?: string;
+  };
+}
+
+// Backend login response format
+export interface BackendLoginResponse extends BackendResponse<{
+  access: string;
+  refresh: string;
+  email: string;
+  name: string;
+  tenant_id: string;
+  is_new?: boolean;
+  groups?: string[];
+  permissions?: string[];
+}> {}
 
 // Upload response
 export interface UploadResponse {

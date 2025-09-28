@@ -6,36 +6,25 @@
 @use '../abstracts/mixins' as *;
 
 .card {
-  background-color: $surface-primary;
-  border: 1px solid $border-primary;
-  color: $text-color;
+  background-color: var(--card-bg);
+  border: 1px solid var(--input-border);
+  color: var(--card-text);
   @include card;
   
   &:hover {
-    background-color: $surface-secondary;
-    border-color: $border-focus;
+    background-color: var(--surface-color);
+    border-color: $secondary-color;
   }
   
-  // Cards in main content area should have different styling
+  // Cards in main content area use main content colors
   .app-main & {
-    background-color: rgba($primary-color, 0.05);
-    border-color: $primary-20;
-    color: $main-content-text-color;
+    background-color: var(--card-bg);
+    border-color: var(--input-border);
+    color: var(--main-content-text);
     
     &:hover {
-      background-color: rgba($primary-color, 0.1);
-      border-color: $primary-50;
-    }
-  }
-  
-  @media (prefers-color-scheme: light) {
-    background-color: rgba($background-light, 0.9);
-    border-color: $border-secondary;
-    
-    .app-main & {
-      background-color: rgba($primary-color, 0.05);
-      border-color: $primary-20;
-      color: $main-content-text-color;
+      background-color: var(--surface-color);
+      border-color: $secondary-color;
     }
   }
 }
@@ -51,14 +40,10 @@
 }
 
 .card-footer {
-  border-top: 1px solid $border-secondary;
+  border-top: 1px solid var(--input-border);
+  color: var(--text-color);
+  opacity: 0.7;
   @include small-text;
   @include space-base(margin, top);
   @include space-base(padding, top);
-  color: $text-secondary;
-  
-  @media (prefers-color-scheme: light) {
-    border-top-color: $border-secondary;
-    color: $text-muted;
-  }
 }

@@ -10,12 +10,12 @@
   background-color: $surface-primary;
   border: 1px solid $border-primary;
   border-radius: $border-radius;
-  @include viewport-spacing(padding, $space-lg);
   box-shadow: $box-shadow-base;
+  @include viewport-spacing(padding, $space-lg);
 
   .form-header {
-    @include viewport-spacing(margin, $space-lg, bottom);
     border-bottom: 1px solid $border-secondary;
+    @include viewport-spacing(margin, $space-lg, bottom);
     @include viewport-spacing(padding, $space-md, bottom);
 
     .form-title {
@@ -27,9 +27,9 @@
 
     .form-description {
       color: $text-secondary;
+      line-height: $line-height-relaxed;
       @include text-base;
       @include viewport-spacing(margin, 0);
-      line-height: $line-height-relaxed;
     }
   }
 
@@ -40,10 +40,10 @@
     }
 
     .form-actions {
+      border-top: 1px solid $border-secondary;
       @include flex-between;
       @include viewport-spacing(margin, $space-lg, top);
       @include viewport-spacing(padding, $space-md, top);
-      border-top: 1px solid $border-secondary;
 
       // If only one button, center it
       &:has(.form-btn:only-child) {
@@ -51,8 +51,8 @@
       }
 
       .form-btn {
-        @include button-base;
         min-width: 120px;
+        @include button-base;
         
         &.form-btn-primary {
           background-color: $primary-color;

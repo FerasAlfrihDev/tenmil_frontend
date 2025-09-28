@@ -1,0 +1,265 @@
+@use '../styles/abstracts/variables' as *;
+@use '../styles/abstracts/mixins' as *;
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, 
+    var(--main-content-bg, #f8fafc) 0%, 
+    var(--card-bg, #ffffff) 100%
+  );
+  padding: $space-lg;
+
+  @include viewport-spacing(0);
+  @include viewport-font-size($font-size-base);
+
+  @media (prefers-color-scheme: dark) {
+    background: linear-gradient(135deg, 
+      var(--main-content-bg, #0f172a) 0%, 
+      var(--card-bg, #1e293b) 100%
+    );
+  }
+
+  &.theme-dark {
+    background: linear-gradient(135deg, 
+      var(--main-content-bg, #0f172a) 0%, 
+      var(--card-bg, #1e293b) 100%
+    );
+  }
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 28rem; // 448px equivalent
+  background: var(--card-bg, #ffffff);
+  border-radius: $border-radius-lg;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color, #e2e8f0);
+
+  @include viewport-spacing($space-xl);
+  @include gap-lg;
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--card-bg, #1e293b);
+    border-color: var(--border-color, #334155);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  &.theme-dark {
+    background: var(--card-bg, #1e293b);
+    border-color: var(--border-color, #334155);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.login-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  @include gap-sm;
+}
+
+.login-logo {
+  h1 {
+    font-weight: 700;
+    color: $primary-color;
+    margin: 0;
+    letter-spacing: -0.025em;
+
+    @include viewport-font-size($font-size-xxl);
+  }
+}
+
+.login-title {
+  font-weight: 600;
+  color: var(--card-text, #1e293b);
+  margin: 0;
+
+  @include viewport-font-size($font-size-xl);
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--card-text, #f1f5f9);
+  }
+
+  &.theme-dark {
+    color: var(--card-text, #f1f5f9);
+  }
+}
+
+.login-subtitle {
+  color: var(--card-text, #64748b);
+  margin: 0;
+  opacity: 0.8;
+
+  @include viewport-font-size($font-size-sm);
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--card-text, #94a3b8);
+  }
+
+  &.theme-dark {
+    color: var(--card-text, #94a3b8);
+  }
+}
+
+.login-form-wrapper {
+  width: 100%;
+  
+  .login-form {
+    .form-container {
+      @include gap-lg;
+    }
+    
+    .form-fields {
+      display: flex;
+      flex-direction: column;
+
+      @include gap-lg;
+    }
+    
+    .form-actions {
+      margin-top: $space-lg;
+      
+      .form-btn {
+        width: 100%;
+        font-weight: 600;
+        border-radius: $border-radius-md;
+        transition: all 0.2s ease;
+
+        @include viewport-font-size($font-size-base);
+        @include viewport-spacing($space-md $space-xl);
+        
+        &.form-btn-primary {
+          background: $primary-color;
+          color: white;
+          border: none;
+          
+          &:hover:not(:disabled) {
+            background: darken($primary-color, 8%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+          }
+          
+          &:active:not(:disabled) {
+            transform: translateY(0);
+          }
+          
+          &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+  }
+}
+
+.password-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--input-text, #64748b);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+  
+  &:hover:not(:disabled) {
+    color: var(--input-text, #374151);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--input-text, #94a3b8);
+    
+    &:hover:not(:disabled) {
+      color: var(--input-text, #f1f5f9);
+    }
+  }
+
+  &.theme-dark {
+    color: var(--input-text, #94a3b8);
+    
+    &:hover:not(:disabled) {
+      color: var(--input-text, #f1f5f9);
+    }
+  }
+}
+
+.login-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  border-radius: $border-radius-md;
+  text-align: center;
+  font-weight: 500;
+
+  @include viewport-font-size($font-size-sm);
+  @include viewport-spacing($space-sm);
+
+  @media (prefers-color-scheme: dark) {
+    background: #450a0a;
+    border-color: #7f1d1d;
+    color: #fca5a5;
+  }
+
+  &.theme-dark {
+    background: #450a0a;
+    border-color: #7f1d1d;
+    color: #fca5a5;
+  }
+}
+
+.login-footer {
+  text-align: center;
+  padding-top: $space-md;
+  border-top: 1px solid var(--border-color, #e2e8f0);
+
+  @media (prefers-color-scheme: dark) {
+    border-color: var(--border-color, #334155);
+  }
+
+  &.theme-dark {
+    border-color: var(--border-color, #334155);
+  }
+}
+
+.login-footer-text {
+  color: var(--card-text, #64748b);
+  margin: 0;
+  opacity: 0.7;
+
+  @include viewport-font-size($font-size-xs);
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--card-text, #94a3b8);
+  }
+
+  &.theme-dark {
+    color: var(--card-text, #94a3b8);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 480px) {
+  .login-page {
+    padding: $space-md;
+  }
+  
+  .login-container {
+    max-width: 100%;
+
+    @include viewport-spacing($space-lg);
+  }
+}

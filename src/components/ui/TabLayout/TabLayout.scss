@@ -1,0 +1,166 @@
+// ========================================
+// TAB LAYOUT COMPONENT
+// ========================================
+
+@use 'sass:color';
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.tab-layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .tab-headers {
+    display: flex;
+    position: relative;
+    border-bottom: 1px solid var(--input-border);
+    @include gap-xs;
+
+    .tab-header {
+      position: relative;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all $transition-speed;
+      color: var(--main-content-text);
+      opacity: 0.6;
+      font-family: inherit;
+      white-space: nowrap;
+      outline: none;
+      flex: 1;
+
+      &:hover:not(.disabled) {
+        color: var(--main-content-text);
+        opacity: 1;
+        background-color: var(--surface-color);
+      }
+
+      &:focus-visible {
+        outline: 2px solid $secondary-color;
+        outline-offset: 2px;
+      }
+
+      &.active {
+        color: $secondary-color;
+        opacity: 1;
+        font-weight: $font-weight-medium;
+      }
+
+      &.disabled {
+        color: $text-disabled;
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+    }
+  }
+
+  .tab-content {
+    flex: 1;
+    height: 60vh; // Fixed height for consistent layout
+    overflow-y: auto;
+    background-color: var(--main-content-bg);
+    color: var(--main-content-text);
+    @include viewport-spacing(padding, $space-md, top);
+    @include custom-scrollbar;
+  }
+
+  // Size variants
+  &.small {
+    .tab-headers .tab-header {
+      @include text-sm;
+      @include viewport-spacing(padding, $space-xs, vertical);
+      @include viewport-spacing(padding, $space-sm, horizontal);
+    }
+
+    .tab-content {
+      height: 50vh; // Smaller height for small variant
+      @include viewport-spacing(padding, $space-sm, top);
+    }
+  }
+
+  &.medium {
+    .tab-headers .tab-header {
+      @include text-base;
+      @include viewport-spacing(padding, $space-sm, vertical);
+      @include viewport-spacing(padding, $space-md, horizontal);
+    }
+
+    .tab-content {
+      height: 60vh; // Default height for medium variant
+      @include viewport-spacing(padding, $space-md, top);
+    }
+  }
+
+  &.large {
+    .tab-headers .tab-header {
+      @include text-md;
+      @include viewport-spacing(padding, $space-md, vertical);
+      @include viewport-spacing(padding, $space-lg, horizontal);
+    }
+
+    .tab-content {
+      height: 70vh; // Larger height for large variant
+      @include viewport-spacing(padding, $space-lg, top);
+    }
+  }
+
+  // Style variants
+  &.default {
+    .tab-headers .tab-header {
+      &.active::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: $secondary-color;
+      }
+    }
+  }
+
+  &.pills {
+    .tab-headers {
+      border-bottom: none;
+      @include gap-sm;
+
+      .tab-header {
+        border-radius: $border-radius;
+        background-color: $surface-secondary;
+        border: 1px solid transparent;
+
+        &:hover:not(.disabled) {
+          background-color: $surface-elevated;
+          color: $text-primary;
+        }
+
+        &.active {
+          background-color: $secondary-color;
+          color: $text-color;
+          border-color: $secondary-color;
+        }
+      }
+    }
+
+    .tab-content {
+      @include viewport-spacing(padding, $space-md, top);
+    }
+  }
+
+  &.underline {
+    .tab-headers {
+      border-bottom: 2px solid $border-primary;
+
+      .tab-header {
+        border-bottom: 2px solid transparent;
+        @include viewport-spacing(margin, -2px, bottom);
+
+        &.active {
+          border-bottom-color: $secondary-color;
+        }
+      }
+    }
+  }
+}
+

@@ -18,9 +18,9 @@
 
     .switch-label {
       color: $text-primary;
-      @include text-base;
       cursor: pointer;
       user-select: none;
+      @include text-base;
     }
 
     .switch-container {
@@ -166,8 +166,8 @@
   }
 
   .switch-helper {
-    @include text-xs;
     color: $text-muted;
+    @include text-xs;
     @include viewport-spacing(margin, $space-xs, left);
 
     &.error {

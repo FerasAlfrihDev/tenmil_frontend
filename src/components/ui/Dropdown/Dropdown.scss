@@ -18,8 +18,8 @@
 
   .dropdown-label {
     color: $text-primary;
-    @include text-sm($font-weight-medium);
     cursor: pointer;
+    @include text-sm($font-weight-medium);
 
     .dropdown-required {
       color: $error-color;
@@ -156,23 +156,23 @@
       border: 1px solid $border-primary;
       border-radius: $border-radius;
       box-shadow: $box-shadow-base;
-      @include viewport-spacing(margin, $space-xs, top);
       max-height: 200px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      @include viewport-spacing(margin, $space-xs, top);
 
       .dropdown-search {
-        @include viewport-spacing(padding, $space-sm);
         border-bottom: 1px solid $border-secondary;
+        @include viewport-spacing(padding, $space-sm);
 
         .dropdown-search-input {
           width: 100%;
-          @include viewport-spacing(padding, $space-xs);
           border: 1px solid $border-secondary;
           border-radius: calc(#{$border-radius} / 2);
           background-color: $surface-secondary;
           color: $text-primary;
+          @include viewport-spacing(padding, $space-xs);
           @include text-sm;
 
           &:focus {
@@ -191,12 +191,12 @@
         @include custom-scrollbar;
 
         .dropdown-option {
-          @include viewport-spacing(padding, $space-sm);
           cursor: pointer;
           transition: background-color $transition-speed;
           color: $text-primary;
-          @include text-base;
           border-bottom: 1px solid $border-secondary;
+          @include viewport-spacing(padding, $space-sm);
+          @include text-base;
 
           &:last-child {
             border-bottom: none;
@@ -228,8 +228,8 @@
   }
 
   .dropdown-helper {
-    @include text-xs;
     color: $text-muted;
+    @include text-xs;
 
     &.error {
       color: $error-color;

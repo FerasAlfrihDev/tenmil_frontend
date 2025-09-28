@@ -1,0 +1,55 @@
+// ========================================
+// TABS PAGE LAYOUT
+// ========================================
+
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.tabs-page {
+  @include viewport-spacing(padding, $space-md);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; // Prevent page-level scrolling
+
+  .page-header {
+    @include viewport-spacing(margin, $space-xxl, bottom);
+    flex-shrink: 0; // Prevent header from shrinking
+
+    .page-title {
+      color: $primary-color;
+      @include viewport-spacing(margin, $space-sm, bottom);
+      @include text-xxl($font-weight-semibold);
+    }
+
+    .page-description {
+      color: $text-secondary;
+      @include text-md;
+      max-width: 800px;
+      line-height: $line-height-relaxed;
+    }
+  }
+
+  // Ensure TabLayout takes remaining space and handles its own scrolling
+  .tab-layout {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0; // Allow flex child to shrink below content size
+  }
+}
+
+// Light theme adjustments
+@media (prefers-color-scheme: light) {
+  .tabs-page {
+    .page-header {
+      .page-title {
+        color: $primary-color;
+      }
+
+      .page-description {
+        color: $text-light;
+      }
+    }
+  }
+}

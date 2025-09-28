@@ -15,10 +15,10 @@
     width: 100%;
   }
 
-  .date-picker-label {
+    .date-picker-label {
     color: $text-primary;
-    @include text-sm($font-weight-medium);
     cursor: pointer;
+    @include text-sm($font-weight-medium);
 
     .date-picker-required {
       color: $error-color;
@@ -147,15 +147,15 @@
 
     .date-picker-icon {
       color: $text-secondary;
-      @include text-base;
       pointer-events: none;
+      @include text-base;
       @include viewport-spacing(margin, $space-xs, left);
     }
   }
 
   .date-picker-helper {
-    @include text-xs;
     color: $text-muted;
+    @include text-xs;
 
     &.error {
       color: $error-color;

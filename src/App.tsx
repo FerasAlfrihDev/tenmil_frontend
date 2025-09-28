@@ -1,21 +1,62 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { UserProvider, useUser } from './contexts/UserContext'
+import { ProtectedRoute } from './components/auth'
 import { Layout } from './components/layout'
 import { AdminLayout } from './components/layout/admin'
-import { Dashboard, ComingSoon, LandingPage } from './pages'
+import { ToastContainer } from './components/ui/Toast'
+import { useToast } from './hooks/useToast'
+import { errorHandler } from './services/errorHandler'
+import { 
+  Dashboard, 
+  ComingSoon, 
+  LandingPage, 
+  LoginPage,
+  ChangePasswordPage,
+  AssetsPage, 
+  WorkOrdersPage, 
+  PartsPage, 
+  PurchaseOrdersPage 
+} from './pages'
 import { AdminDashboard, AdminComingSoon } from './pages/admin'
 import apiService from './services/api'
 import { Moon, Sun, Globe, Bell } from 'lucide-react'
 
-function App() {
+// Main App Content Component (inside UserProvider)
+function AppContent() {
   const [count, setCount] = useState(0)
   const [isDarkMode, setIsDarkMode] = useState(true)
   const [showNotifications, setShowNotifications] = useState(false)
   const [showLanguages, setShowLanguages] = useState(false)
+  const { toasts, showError, showWarning, dismissToast } = useToast()
+  const { state: userState } = useUser()
+
+  // Initialize error handler with toast functionality
+  useEffect(() => {
+    errorHandler.setToastHandler((type, title, message) => {
+      if (type === 'error') {
+        showError(title, message);
+      } else if (type === 'warning') {
+        showWarning(title, message);
+      }
+    });
+  }, [showError, showWarning]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode)
   }
+
+  // Update HTML class when theme changes
+  useEffect(() => {
+    const htmlElement = document.documentElement
+    if (isDarkMode) {
+      htmlElement.classList.remove('theme-light')
+      htmlElement.classList.add('theme-dark')
+    } else {
+      htmlElement.classList.remove('theme-dark')
+      htmlElement.classList.add('theme-light')
+    }
+  }, [isDarkMode])
 
   const toggleNotifications = () => {
     setShowNotifications(!showNotifications)
@@ -104,8 +145,11 @@ function App() {
           )}
         </div>
       </div>
-      <div className="header-username">
-        John Smith
+      <div 
+        className="header-username" 
+        title={userState.user?.email || 'Not logged in'}
+      >
+        {userState.user?.name || 'Guest'}
       </div>
     </div>
   )
@@ -131,43 +175,63 @@ function App() {
         >
           <Routes>
             <Route 
+              path="/login" 
+              element={<LoginPage />} 
+            />
+            <Route 
+              path="/change-password" 
+              element={
+                <ProtectedRoute requirePasswordChange={true}>
+                  <ChangePasswordPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
               path="/" 
               element={
-                <AdminDashboard 
-                  isDarkMode={isDarkMode} 
-                  count={count} 
-                  setCount={setCount} 
-                />
+                <ProtectedRoute>
+                  <AdminDashboard 
+                    isDarkMode={isDarkMode} 
+                    count={count} 
+                    setCount={setCount} 
+                  />
+                </ProtectedRoute>
               } 
             />
             <Route 
               path="/companies" 
               element={
-                <AdminComingSoon 
-                  pageName="Company Management" 
-                  description="Manage all companies in the system. Create, edit, and configure company settings, licenses, and permissions."
-                  expectedDate="Q1 2024"
-                />
+                <ProtectedRoute requiredPermissions={['manage_companies']}>
+                  <AdminComingSoon 
+                    pageName="Company Management" 
+                    description="Manage all companies in the system. Create, edit, and configure company settings, licenses, and permissions."
+                    expectedDate="Q1 2024"
+                  />
+                </ProtectedRoute>
               } 
             />
             <Route 
               path="/users" 
               element={
-                <AdminComingSoon 
-                  pageName="User Administration" 
-                  description="Comprehensive user management across all companies. Manage roles, permissions, and user lifecycle."
-                  expectedDate="Q1 2024"
-                />
+                <ProtectedRoute requiredPermissions={['manage_users']}>
+                  <AdminComingSoon 
+                    pageName="User Administration" 
+                    description="Comprehensive user management across all companies. Manage roles, permissions, and user lifecycle."
+                    expectedDate="Q1 2024"
+                  />
+                </ProtectedRoute>
               } 
             />
             <Route 
               path="/settings" 
               element={
-                <AdminComingSoon 
-                  pageName="System Settings" 
-                  description="Global system configuration, security settings, and administrative controls for the entire platform."
-                  expectedDate="Q1 2024"
-                />
+                <ProtectedRoute requiredPermissions={['manage_settings']}>
+                  <AdminComingSoon 
+                    pageName="System Settings" 
+                    description="Global system configuration, security settings, and administrative controls for the entire platform."
+                    expectedDate="Q1 2024"
+                  />
+                </ProtectedRoute>
               } 
             />
           </Routes>
@@ -184,93 +248,107 @@ function App() {
       >
         <Routes>
           <Route 
+            path="/login" 
+            element={<LoginPage />} 
+          />
+          <Route 
+            path="/change-password" 
+            element={
+              <ProtectedRoute requirePasswordChange={true}>
+                <ChangePasswordPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
             path="/" 
             element={
-              <Dashboard 
-                isDarkMode={isDarkMode} 
-                count={count} 
-                setCount={setCount} 
-              />
+              <ProtectedRoute>
+                <Dashboard 
+                  isDarkMode={isDarkMode} 
+                  count={count} 
+                  setCount={setCount} 
+                />
+              </ProtectedRoute>
             } 
           />
           <Route 
             path="/assets" 
             element={
-              <ComingSoon 
-                pageName="Asset Management" 
-                description="Comprehensive asset tracking and maintenance scheduling system. Manage your equipment lifecycle, track maintenance history, and optimize asset performance."
-                expectedDate="Q2 2024"
-              />
+              <ProtectedRoute>
+                <AssetsPage />
+              </ProtectedRoute>
             } 
           />
           <Route 
             path="/work-orders" 
             element={
-              <ComingSoon 
-                pageName="Work Orders" 
-                description="Create, assign, and track work orders. Streamline your maintenance workflow with automated scheduling and progress tracking."
-                expectedDate="Q1 2024"
-              />
+              <ProtectedRoute>
+                <WorkOrdersPage />
+              </ProtectedRoute>
             } 
           />
           <Route 
             path="/parts" 
             element={
-              <ComingSoon 
-                pageName="Parts Inventory" 
-                description="Manage spare parts inventory, track stock levels, and automate reordering. Never run out of critical components again."
-                expectedDate="Q2 2024"
-              />
+              <ProtectedRoute>
+                <PartsPage />
+              </ProtectedRoute>
             } 
           />
           <Route 
             path="/purchase-orders" 
             element={
-              <ComingSoon 
-                pageName="Purchase Orders" 
-                description="Streamline procurement with digital purchase orders. Track approvals, deliveries, and vendor performance."
-                expectedDate="Q2 2024"
-              />
+              <ProtectedRoute>
+                <PurchaseOrdersPage />
+              </ProtectedRoute>
             } 
           />
           <Route 
             path="/billing" 
             element={
-              <ComingSoon 
-                pageName="Billing & Invoicing" 
-                description="Automated billing system with invoice generation, payment tracking, and financial reporting capabilities."
-                expectedDate="Q3 2024"
-              />
+              <ProtectedRoute>
+                <ComingSoon 
+                  pageName="Billing & Invoicing" 
+                  description="Automated billing system with invoice generation, payment tracking, and financial reporting capabilities."
+                  expectedDate="Q3 2024"
+                />
+              </ProtectedRoute>
             } 
           />
           <Route 
             path="/analytics" 
             element={
-              <ComingSoon 
-                pageName="Analytics & Reports" 
-                description="Advanced analytics dashboard with customizable reports, KPI tracking, and performance insights."
-                expectedDate="Q2 2024"
-              />
+              <ProtectedRoute>
+                <ComingSoon 
+                  pageName="Analytics & Reports" 
+                  description="Advanced analytics dashboard with customizable reports, KPI tracking, and performance insights."
+                  expectedDate="Q2 2024"
+                />
+              </ProtectedRoute>
             } 
           />
           <Route 
             path="/users" 
             element={
-              <ComingSoon 
-                pageName="User Management" 
-                description="Manage user accounts, roles, and permissions. Control access level and track user activity."
-                expectedDate="Q1 2024"
-              />
+              <ProtectedRoute requiredPermissions={['manage_users']}>
+                <ComingSoon 
+                  pageName="User Management" 
+                  description="Manage user accounts, roles, and permissions. Control access level and track user activity."
+                  expectedDate="Q1 2024"
+                />
+              </ProtectedRoute>
             } 
           />
           <Route 
             path="/settings" 
             element={
-              <ComingSoon 
-                pageName="System Settings" 
-                description="Configure system preferences, integrations, and customization options to fit your organization's needs."
-                expectedDate="Q1 2024"
-              />
+              <ProtectedRoute requiredPermissions={['manage_settings']}>
+                <ComingSoon 
+                  pageName="System Settings" 
+                  description="Configure system preferences, integrations, and customization options to fit your organization's needs."
+                  expectedDate="Q1 2024"
+                />
+              </ProtectedRoute>
             } 
           />
         </Routes>
@@ -279,10 +357,20 @@ function App() {
   };
 
   return (
+    <div className={isDarkMode ? 'main-content-dark' : ''} style={{ minHeight: '100vh' }}>
+      {renderLayout()}
+      <ToastContainer toasts={toasts} onClose={dismissToast} />
+    </div>
+  )
+}
+
+// Main App Component
+function App() {
+  return (
     <Router>
-      <div className={isDarkMode ? 'main-content-dark' : ''} style={{ minHeight: '100vh' }}>
-        {renderLayout()}
-      </div>
+      <UserProvider>
+        <AppContent />
+      </UserProvider>
     </Router>
   )
 }

@@ -1,0 +1,101 @@
+// ========================================
+// SHARED PLACEHOLDER CONTENT STYLES
+// ========================================
+
+@use 'sass:color';
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+.placeholder-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  text-align: center;
+  @include viewport-spacing(padding, $space-xxl);
+
+  .placeholder-icon {
+    background-color: $secondary-10;
+    color: $secondary-color;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @include viewport-spacing(padding, $space-xxl);
+    @include viewport-spacing(margin, $space-xxl, bottom);
+  }
+
+  .placeholder-title {
+    color: $primary-color;
+    @include viewport-spacing(margin, $space-md, bottom);
+    @include text-xl($font-weight-semibold);
+  }
+
+  .placeholder-description {
+    color: $text-secondary;
+    max-width: 600px;
+    line-height: $line-height-relaxed;
+    @include viewport-spacing(margin, $space-xxl, bottom);
+    @include text-base;
+  }
+
+  .features-card {
+    background: $surface-secondary;
+    border-radius: $border-radius;
+    max-width: 500px;
+    width: 100%;
+    @include viewport-spacing(padding, $space-lg);
+
+    .features-title {
+      color: $primary-color;
+      @include viewport-spacing(margin, $space-md, bottom);
+      @include text-md($font-weight-medium);
+    }
+
+    .features-list {
+      list-style: none;
+      padding: 0;
+      text-align: left;
+
+      .feature-item {
+        color: $text-secondary;
+        display: flex;
+        align-items: center;
+        @include viewport-spacing(margin, $space-sm, bottom);
+        @include text-sm;
+
+        .feature-checkmark {
+          color: $success-color;
+          font-weight: $font-weight-bold;
+          @include viewport-spacing(margin, $space-sm, right);
+        }
+      }
+    }
+  }
+}
+
+// Light theme adjustments
+@media (prefers-color-scheme: light) {
+  .placeholder-content {
+    .placeholder-title {
+      color: $primary-color;
+    }
+
+    .placeholder-description {
+      color: $text-light;
+    }
+
+    .features-card {
+      background: color.scale($background-light, $lightness: -3%);
+
+      .features-title {
+        color: $primary-color;
+      }
+
+      .features-list .feature-item {
+        color: $text-light;
+      }
+    }
+  }
+}

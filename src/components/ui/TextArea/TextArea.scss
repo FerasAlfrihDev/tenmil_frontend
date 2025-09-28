@@ -17,8 +17,8 @@
 
   .textarea-label {
     color: $text-primary;
-    @include text-sm($font-weight-medium);
     cursor: pointer;
+    @include text-sm($font-weight-medium);
 
     .textarea-required {
       color: $error-color;
@@ -77,11 +77,11 @@
       background: transparent;
       color: $text-primary;
       font-family: inherit;
-      @include text-base;
-      @include viewport-spacing(padding, $space-sm);
       border-radius: $border-radius;
       line-height: $line-height-relaxed;
       min-height: 80px;
+      @include text-base;
+      @include viewport-spacing(padding, $space-sm);
 
       &::placeholder {
         color: $text-muted;
@@ -94,8 +94,8 @@
   }
 
   .textarea-helper {
-    @include text-xs;
     color: $text-muted;
+    @include text-xs;
 
     &.error {
       color: $error-color;

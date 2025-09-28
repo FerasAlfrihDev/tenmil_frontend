@@ -118,53 +118,71 @@
   }
 }
 
+// Complete typography mixin with font-size, weight, and line-height
+@mixin viewport-typography($size, $weight: $font-weight-normal, $line-height: $line-height-base, $min-size: null, $max-size: null) {
+  @media (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    // Responsive mode: use viewport units with constraints (≥1536x695)
+    font-weight: $weight;
+    line-height: $line-height;
+    @if $min-size and $max-size {
+      font-size: clamp(#{$min-size}, #{$size}, #{$max-size});
+    } @else if $min-size {
+      font-size: max(#{$size}, #{$min-size});
+    } @else if $max-size {
+      font-size: min(#{$size}, #{$max-size});
+    } @else {
+      font-size: $size;
+    }
+  }
+  
+  @media not all and (min-width: #{$min-responsive-width}) and (min-height: #{$min-responsive-height}) {
+    // Fixed mode: use exact pixel values as if viewport is 1536x695 (<1536x695)
+    font-weight: $weight;
+    line-height: $line-height;
+    $fixed-size: to-fixed-pixels($size);
+    @if $min-size and $max-size {
+      font-size: clamp(#{$min-size}, #{$fixed-size}, #{$max-size});
+    } @else if $min-size {
+      font-size: max(#{$fixed-size}, #{$min-size});
+    } @else if $max-size {
+      font-size: min(#{$fixed-size}, #{$max-size});
+    } @else {
+      font-size: #{$fixed-size};
+    }
+  }
+}
+
 // Typography scale mixins
 @mixin text-xs($weight: $font-weight-normal) {
-  font-weight: $weight;
-  line-height: $line-height-base;
-  @include viewport-font-size($font-size-xs, 10px, 16px);
+  @include viewport-typography($font-size-xs, $weight, $line-height-base, 10px, 16px);
 }
 
 @mixin text-sm($weight: $font-weight-normal) {
-  font-weight: $weight;
-  line-height: $line-height-base;
-  @include viewport-font-size($font-size-sm, 12px, 18px);
+  @include viewport-typography($font-size-sm, $weight, $line-height-base, 12px, 18px);
 }
 
 @mixin text-base($weight: $font-weight-normal) {
-  font-weight: $weight;
-  line-height: $line-height-base;
-  @include viewport-font-size($font-size-base, 14px, 24px);
+  @include viewport-typography($font-size-base, $weight, $line-height-base, 14px, 24px);
 }
 
 @mixin text-md($weight: $font-weight-normal) {
-  font-weight: $weight;
-  line-height: $line-height-base;
-  @include viewport-font-size($font-size-md, 16px, 28px);
+  @include viewport-typography($font-size-md, $weight, $line-height-base, 16px, 28px);
 }
 
 @mixin text-lg($weight: $font-weight-normal) {
-  font-weight: $weight;
-  line-height: $line-height-tight;
-  @include viewport-font-size($font-size-lg, 18px, 36px);
+  @include viewport-typography($font-size-lg, $weight, $line-height-tight, 18px, 36px);
 }
 
 @mixin text-xl($weight: $font-weight-medium) {
-  font-weight: $weight;
-  line-height: $line-height-tight;
-  @include viewport-font-size($font-size-xl, 24px, 48px);
+  @include viewport-typography($font-size-xl, $weight, $line-height-tight, 24px, 48px);
 }
 
 @mixin text-xxl($weight: $font-weight-semibold) {
-  font-weight: $weight;
-  line-height: $line-height-tight;
-  @include viewport-font-size($font-size-xxl, 32px, 64px);
+  @include viewport-typography($font-size-xxl, $weight, $line-height-tight, 32px, 64px);
 }
 
 @mixin text-xxxl($weight: $font-weight-bold) {
-  font-weight: $weight;
-  line-height: $line-height-tight;
-  @include viewport-font-size($font-size-xxxl, 48px, 96px);
+  @include viewport-typography($font-size-xxxl, $weight, $line-height-tight, 48px, 96px);
 }
 
 // Utility typography mixins
@@ -361,9 +379,9 @@
 @mixin layout-grid {
   display: grid;
   grid-template-areas: 
-    "header header"
+    "sidebar header"
     "sidebar main"
-    "footer footer";
+    "sidebar footer";
   grid-template-rows: $header-height 1fr $footer-height;
   grid-template-columns: $sidebar-width 1fr;
   gap: 0; // No gap for main layout
@@ -386,10 +404,10 @@
   font-family: inherit;
   cursor: pointer;
   transition: border-color $transition-speed;
-  @include button-text;
-  @include viewport-spacing(padding, $button-padding-v);
   padding-left: $button-padding-h;
   padding-right: $button-padding-h;
+  @include button-text;
+  @include viewport-spacing(padding, $button-padding-v);
 }
 
 // Card styling

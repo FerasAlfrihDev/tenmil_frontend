@@ -17,8 +17,8 @@
 
   .input-label {
     color: $text-primary;
-    @include text-sm($font-weight-medium);
     cursor: pointer;
+    @include text-sm($font-weight-medium);
 
     .input-required {
       color: $error-color;
@@ -129,8 +129,8 @@
   }
 
   .input-helper {
-    @include text-xs;
     color: $text-muted;
+    @include text-xs;
 
     &.error {
       color: $error-color;

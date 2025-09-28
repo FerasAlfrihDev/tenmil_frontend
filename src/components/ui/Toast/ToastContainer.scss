@@ -1,0 +1,86 @@
+@use '../../../styles/abstracts/variables' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.toast-container {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+
+  @include gap-sm;
+
+  // Position variants
+  &.toast-container-top-right {
+    top: $space-lg;
+    right: $space-lg;
+  }
+
+  &.toast-container-top-left {
+    top: $space-lg;
+    left: $space-lg;
+  }
+
+  &.toast-container-bottom-right {
+    bottom: $space-lg;
+    right: $space-lg;
+    flex-direction: column-reverse;
+  }
+
+  &.toast-container-bottom-left {
+    bottom: $space-lg;
+    left: $space-lg;
+    flex-direction: column-reverse;
+  }
+
+  &.toast-container-top-center {
+    top: $space-lg;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &.toast-container-bottom-center {
+    bottom: $space-lg;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: column-reverse;
+  }
+
+  // Enable pointer events on individual toasts
+  .toast {
+    pointer-events: auto;
+  }
+}
+
+// Mobile responsive adjustments
+@media (max-width: 480px) {
+  .toast-container {
+    &.toast-container-top-right,
+    &.toast-container-top-left {
+      top: $space-md;
+      left: $space-md;
+      right: $space-md;
+    }
+
+    &.toast-container-bottom-right,
+    &.toast-container-bottom-left {
+      bottom: $space-md;
+      left: $space-md;
+      right: $space-md;
+    }
+
+    &.toast-container-top-center {
+      top: $space-md;
+      left: $space-md;
+      right: $space-md;
+      transform: none;
+    }
+
+    &.toast-container-bottom-center {
+      bottom: $space-md;
+      left: $space-md;
+      right: $space-md;
+      transform: none;
+    }
+  }
+}
